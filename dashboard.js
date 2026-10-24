@@ -135,12 +135,84 @@ function renderHistory(st) {
   }
 }
 
+function renderGame(st) {
+  const lv = st.level, xp = st.game.xp;
+  $('lvNum').textContent = lv.level;
+  $('lvGrade').textContent = lv.grade;
+  $('lvNext').textContent = lv.next ? `${xp} XP · encore ${lv.next - xp} XP pour « ${lv.nextGrade} »` : `${xp} XP · grade maximal`;
+  const pct = lv.next ? ((xp - lv.floor) / (lv.next - lv.floor)) * 100 : 100;
+  $('xpFill').style.width = `${Math.max(3, pct)}%`;
+  $('xpBar').ariaLabel = `${Math.round(pct)} % vers le niveau suivant`;
+  const box = $('skills');
+  box.innerHTML = '';
+  for (const [id, s] of Object.entries(skills)) {
+    const on = Boolean(st.game.skills[id]);
+    box.append(el('div', { className: 'skill' + (on ? ' on' : ''), title: s.desc }, el('span', { className: 'e', textContent: s.emoji }), s.name));
+  }
+}
+
+function renderAgenda(st) {
+  const list = $('agenda');
+  list.innerHTML = '';
+  if (!st.connections.calendar) { list.append(el('li', { className: 'muted', textContent: 'Relie ton Google Agenda dans Connexions : Nox te prévient avant chaque rendez-vous.' })); return; }
+  if (!st.events.length) { list.append(el('li', { className: 'muted', textContent: 'Rien de prévu dans les prochaines 24 h.' })); return; }
+  for (const e of st.events) {
+    const t = e.allDay ? 'jour' : new Date(e.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    list.append(el('li', {}, el('time', { textContent: t }), el('span', { textContent: e.title || '(sans titre)' })));
+  }
+}
+
+// Etat d'une connexion : ok, erreur ou a faire
+function connState(id, ok, err, okText) {
+  const s = $(id);
+  s.className = 'state' + (err ? ' err' : ok ? ' ok' : '');
+  s.textContent = err ? err : ok ? okText : 'Non relié';
+}
+function renderConnections(st) {
+  connState('sOpenai', st.hasKey, '', 'Clé enregistrée');
+  if (!st.hasKey) $('sOpenai').textContent = st.demoMode || st.testMode ? 'Mode démo' : 'Non reliée';
+  connState('sAgenda', st.connections.calendar, st.errors.calendar, `Relié · ${st.events.length} à venir`);
+  connState('sGmail', st.connections.gmail, st.errors.gmail, `Relié · ${st.mail.user}`);
+  connState('sTelegram', st.telegram.chatId, st.errors.telegram, `Relié à @${st.telegram.botName}`);
+  if (st.connections.telegram && !st.telegram.chatId) { $('sTelegram').textContent = 'Scanne le QR code'; showQr(); }
+  if (st.telegram.chatId) $('qr').hidden = true;
+  const w = $('watches');
+  w.innerHTML = '';
+  for (const x of st.mail.watches) {
+    const b = el('button', { textContent: '×', ariaLabel: `Ne plus attendre : ${x.query}` });
+    b.onclick = () => window.nox.unwatch(x.id);
+    w.append(el('li', {}, el('span', { textContent: `⏳ J'attends : ${x.query}` }), b));
+  }
+}
+async function showQr(data) {
+  const q = data || await window.nox.telegramQr();
+  if (q?.qr) { $('qr').src = q.qr; $('qr').hidden = false; }
+}
+// Formulaires : un message d'etat a la place du bouton pendant l'envoi
+function wire(formId, action) {
+  $(formId).onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = $(formId).querySelector('button'), label = btn.textContent;
+    btn.disabled = true; btn.textContent = '…';
+    const r = await action();
+    btn.disabled = false; btn.textContent = r?.ok ? '✓' : label;
+    if (r && !r.ok) alert(r.error);
+    for (const i of $(formId).querySelectorAll('input[type=password]')) i.value = '';
+    setTimeout(() => { btn.textContent = label; }, 2000);
+  };
+}
+wire('fOpenai', () => window.nox.setApiKey($('iOpenai').value));
+wire('fAgenda', () => window.nox.setCalendar($('iAgenda').value));
+wire('fGmail', () => window.nox.setGmail($('iGmailUser').value, $('iGmailPass').value));
+wire('fTelegram', async () => { const r = await window.nox.setTelegram($('iTelegram').value); if (r.ok) showQr(r); return r; });
+
+let skills = {};
 function render(st) {
-  renderHeader(st); renderNow(st); renderToday(st); renderSteps(st); renderMemory(st); renderMethods(st); renderHistory(st);
+  renderHeader(st); renderNow(st); renderToday(st); renderGame(st); renderAgenda(st); renderSteps(st); renderMemory(st); renderMethods(st); renderConnections(st); renderHistory(st);
 }
 
 (async () => {
-  ({ methods, onboarding } = await window.nox.getCatalog());
+  ({ methods, onboarding, skills } = await window.nox.getCatalog());
   render(await window.nox.getState());
   window.nox.onState(render);
 })();

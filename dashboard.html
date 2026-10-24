@@ -102,6 +102,42 @@
   .history .state { font-size:var(--text-sm); color:var(--ink-soft); white-space:nowrap; }
   .history .state.ok::before { content:'✓ '; color:var(--ink); font-weight:900; }
 
+  /* Progression (mode jeu) */
+  .level { display:flex; gap:16px; align-items:center; margin-bottom:14px; }
+  .badge-lv { width:64px; height:64px; border-radius:20px; display:grid; place-items:center; font-family:var(--font-title); font-weight:900; font-size:30px;
+    background:linear-gradient(135deg, var(--nox-yellow), var(--nox-yellow-strong)); color:var(--on-accent); box-shadow:var(--shadow-soft); }
+  .level b { display:block; font-family:var(--font-title); font-weight:900; font-size:24px; }
+  .level span { color:var(--ink-soft); font-size:var(--text-sm); }
+  .xpbar { height:12px; border-radius:6px; background:var(--surface-2); overflow:hidden; margin-bottom:16px; }
+  .xpbar i { display:block; height:100%; border-radius:6px; background:linear-gradient(90deg, var(--nox-yellow), var(--chart-bar)); transition:width var(--dur-slow) var(--ease-out); }
+  .skills { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; }
+  .skill { text-align:center; padding:10px 6px; border-radius:14px; background:var(--surface-2); font-size:var(--text-xs); color:var(--ink-soft); }
+  .skill .e { display:block; font-size:24px; filter:grayscale(1); opacity:.35; }
+  .skill.on { background:color-mix(in srgb, var(--nox-yellow) 22%, var(--surface-solid)); color:var(--ink); font-weight:700; }
+  .skill.on .e { filter:none; opacity:1; }
+
+  /* Agenda */
+  .agenda { list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .agenda li { display:flex; gap:14px; align-items:center; padding:10px 12px; border-radius:14px; background:var(--surface-2); }
+  .agenda time { font-family:var(--font-title); font-weight:800; min-width:52px; font-variant-numeric:tabular-nums; }
+
+  /* Connexions */
+  .conns { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:12px; }
+  .conn { border:1.5px solid var(--line); border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:8px; background:var(--surface-2); }
+  .conn b { font-family:var(--font-title); font-weight:800; }
+  .conn small { color:var(--ink-soft); font-size:var(--text-xs); line-height:1.4; }
+  .conn .state { font-size:var(--text-xs); font-weight:700; }
+  .conn .state.ok { color:#2E7D4F; } .conn .state.ok::before { content:'● '; }
+  .conn .state.err { color:var(--danger); }
+  .conn form { display:flex; flex-direction:column; gap:6px; }
+  .conn input { border:1.5px solid var(--line); background:var(--surface-solid); color:var(--ink); border-radius:10px; padding:8px 10px; font-family:inherit; font-size:var(--text-sm); outline:none; min-width:0; }
+  .conn input:focus { border-color:var(--chart-bar); }
+  .mini { border:0; border-radius:10px; padding:8px 12px; font-weight:800; font-family:var(--font-title); background:var(--nox-yellow); color:var(--on-accent); }
+  .watches { list-style:none; display:flex; flex-direction:column; gap:4px; font-size:var(--text-xs); }
+  .watches li { display:flex; justify-content:space-between; gap:6px; }
+  .watches button { border:0; background:none; color:var(--ink-soft); }
+  #qr { width:180px; height:180px; border-radius:12px; align-self:center; }
+
   .foot { margin-top:24px; text-align:center; color:var(--ink-soft); font-size:var(--text-sm); }
   @media (prefers-reduced-motion: reduce) { .card { animation:none; } }
 </style>
@@ -135,6 +171,18 @@
       <table class="sr" id="chartTable"></table>
     </section>
 
+    <section class="card span-6" aria-labelledby="gameTitle">
+      <h2 id="gameTitle">Progression</h2>
+      <div class="level"><div class="badge-lv" id="lvNum">1</div><div><b id="lvGrade">Étincelle</b><span id="lvNext"></span></div></div>
+      <div class="xpbar" role="img" id="xpBar"><i id="xpFill"></i></div>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <section class="card span-6" aria-labelledby="agendaTitle">
+      <h2 id="agendaTitle">Agenda des prochaines 24 h</h2>
+      <ul class="agenda" id="agenda"></ul>
+    </section>
+
     <section class="card span-6" aria-labelledby="stepsTitle">
       <h2 id="stepsTitle">Étapes</h2>
       <ul class="steps" id="steps"></ul>
@@ -149,6 +197,34 @@
     <section class="card span-12" aria-labelledby="methTitle">
       <h2 id="methTitle">Méthodes de travail</h2>
       <div class="methods" id="methods"></div>
+    </section>
+
+    <section class="card span-12" aria-labelledby="connTitle">
+      <h2 id="connTitle">Connexions</h2>
+      <div class="conns">
+        <div class="conn" id="cOpenai">
+          <b>🎙 Voix OpenAI</b><span class="state" id="sOpenai"></span>
+          <small>Ta clé reste chiffrée sur ton PC. Sans clé, Nox tourne en mode démo.</small>
+          <form id="fOpenai"><input type="password" id="iOpenai" placeholder="sk-…" autocomplete="off"><button class="mini">Enregistrer</button></form>
+        </div>
+        <div class="conn" id="cAgenda">
+          <b>📅 Google Agenda</b><span class="state" id="sAgenda"></span>
+          <small>Google Agenda → Paramètres → ton agenda → « Adresse secrète au format iCal ». Rappels 60 et 30 min avant.</small>
+          <form id="fAgenda"><input id="iAgenda" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics"><button class="mini">Relier</button></form>
+        </div>
+        <div class="conn" id="cGmail">
+          <b>📬 Gmail</b><span class="state" id="sGmail"></span>
+          <small>Crée un « mot de passe d'application » sur myaccount.google.com/apppasswords. Nox signale les mails importants et ceux que tu attends.</small>
+          <form id="fGmail"><input id="iGmailUser" placeholder="toi@gmail.com"><input type="password" id="iGmailPass" placeholder="mot de passe d'application" autocomplete="off"><button class="mini">Relier</button></form>
+          <ul class="watches" id="watches"></ul>
+        </div>
+        <div class="conn" id="cTelegram">
+          <b>📱 Telegram</b><span class="state" id="sTelegram"></span>
+          <small>Crée ton bot avec @BotFather, colle son jeton, puis scanne le QR code avec ton téléphone.</small>
+          <form id="fTelegram"><input type="password" id="iTelegram" placeholder="jeton du bot" autocomplete="off"><button class="mini">Relier</button></form>
+          <img id="qr" alt="QR code pour relier Telegram" hidden>
+        </div>
+      </div>
     </section>
 
     <section class="card span-12" aria-labelledby="histTitle">
