@@ -21,17 +21,17 @@ Lire `AGENTS.md` et `DESIGN.md` avant de commencer. Une tâche à la fois, dans 
   Clignement aléatoire, pupilles qui suivent le curseur, bouche synchronisée sur le volume audio, états `listening` / `thinking` / `speaking`, réactions au survol, au clic et au glisser, animations idle variées. Vectoriel net, aucune pixellisation.
   *Fait quand :* sans rien toucher pendant 30 s, elle fait au moins 3 choses différentes ; quand elle parle, sa bouche bouge en rythme.
 
-- [ ] **T4. Elle parle en premier**
+- [x] **T4. Elle parle en premier**
   Au lancement : animation d'entrée puis salutation vocale personnalisée (prénom, heure de la journée, tâche en cours éventuelle).
   *Fait quand :* au démarrage, elle dit bonjour et pose une question sans que j'aie rien fait.
 
-- [ ] **T5. Onboarding parlé**
+- [x] **T5. Onboarding parlé**
   Remplacer le formulaire par la conversation décrite en 4.1 d'`AGENTS.md`, avec boutons Oui / Non en secours.
   *Fait quand :* un inconnu la configure en moins d'une minute sans lire de texte.
 
 ## P1 — Dimanche matin et après-midi
 
-- [ ] **T6. Panneau** (double-clic) : tâche, étapes cochées, minuteur, stats du jour, réglages. Design soigné.
+- [x] **T6. Panneau** (tableau de bord, bouton ▦) : tâche, étapes cochées, minuteur, stats du jour, réglages. Design soigné.
 - [ ] **T7. Polir S2, S3, S4** avec la voix temps réel (relances parlées naturelles).
 - [ ] **T8. Installeur** : `npm.cmd run dist`, tester le `.exe` sur une session propre.
 - [ ] **T9. Dépôt GitHub public** : README avec GIF, captures, instructions.
