@@ -115,7 +115,8 @@
     b: ['TDAH : tu sais quoi faire. Tu n\'arrives juste pas à <span class="hl">commencer</span>.', 'Nox te parle en premier, découpe ta tâche, et reste avec toi jusqu\'au bout.'],
     c: ['23 onglets ouverts. <span class="hl">0 tâche finie</span>.', 'Si tu as un TDAH, tu connais. Nox est le compagnon de bureau qui t\'aide à démarrer, rester et reprendre.']
   };
-  const hook = HOOKS[new URLSearchParams(location.search).get('hook')];
+  // Accroche retenue : A (les autres restent disponibles avec ?hook=b|c)
+  const hook = HOOKS[new URLSearchParams(location.search).get("hook") || "a"];
   if (hook) { document.getElementById('hookTitle').innerHTML = hook[0]; document.getElementById('hookLead').textContent = hook[1]; }
   const n = new URLSearchParams(location.search).get('n');
   if (n) { document.body.classList.add('single'); document.querySelector(`.slide[data-n="${n}"]`).classList.add('show'); }

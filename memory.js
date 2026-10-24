@@ -56,11 +56,59 @@ function suggestMethod(profile = {}) {
   return 'pomodoro';
 }
 
+// ---------- Mode jeu ----------
+// Gagner de l'XP, monter de grade, debloquer des competences. Jamais de serie perdue
+// ni de compteur d'echecs (DESIGN.md : celebrer sans culpabiliser).
+const LEVELS = [
+  [0, 'Étincelle'], [50, 'Démarreur'], [150, 'Explorateur'], [300, 'Bâtisseur'], [500, 'Pilote'],
+  [800, 'Stratège'], [1200, 'Maître du focus'], [1800, 'Légende']
+];
+const XP = { task_started: 5, step: 10, task_done: 50, resume: 15, focus_15: 5, timer_done: 5 };
+const SKILLS = {
+  first_step: { name: 'Premier pas', emoji: '👣', desc: 'Ta toute première étape.', test: (c) => c.steps >= 1 },
+  starter: { name: 'Démarreur', emoji: '🚀', desc: '5 tâches lancées.', test: (c) => c.started >= 5 },
+  finisher: { name: 'Finisseur', emoji: '🏁', desc: '3 tâches terminées.', test: (c) => c.done >= 3 },
+  comeback: { name: 'Retour gagnant', emoji: '🔁', desc: '3 reprises après une pause.', test: (c) => c.resumes >= 3 },
+  deep_focus: { name: 'Plongée', emoji: '🌊', desc: '60 min de focus dans la journée.', test: (c, s) => (todayStats(s).focusMs || 0) >= 3600000 },
+  early_bird: { name: 'Lève-tôt', emoji: '🌅', desc: 'Une étape faite avant 9 h.', test: (c) => c.early >= 1 },
+  steady: { name: 'Constance', emoji: '🌱', desc: 'Des étapes faites sur 3 jours différents.', test: (c, s) => Object.values(s.stats).filter((d) => d.steps > 0).length >= 3 },
+  hundred: { name: 'Centurion', emoji: '💯', desc: '100 étapes faites.', test: (c) => c.steps >= 100 }
+};
+function levelOf(xp) {
+  let i = 0;
+  while (i + 1 < LEVELS.length && xp >= LEVELS[i + 1][0]) i++;
+  const next = LEVELS[i + 1];
+  return { level: i + 1, grade: LEVELS[i][1], floor: LEVELS[i][0], next: next ? next[0] : null, nextGrade: next ? next[1] : null };
+}
+// Ajoute l'XP d'un evenement et renvoie ce qu'il faut celebrer
+function award(state, event) {
+  const g = state.game;
+  const before = levelOf(g.xp).level;
+  g.xp += XP[event] || 0;
+  const c = g.counters;
+  if (event === 'step') { c.steps++; if (new Date().getHours() < 9) c.early++; }
+  if (event === 'task_started') c.started++;
+  if (event === 'task_done') c.done++;
+  if (event === 'resume') c.resumes++;
+  const skills = [];
+  for (const [id, s] of Object.entries(SKILLS)) if (!g.skills[id] && s.test(c, state)) { g.skills[id] = Date.now(); skills.push({ id, name: s.name, emoji: s.emoji }); }
+  const lv = levelOf(g.xp);
+  return { xp: XP[event] || 0, total: g.xp, levelUp: lv.level > before ? lv : null, skills };
+}
+// Fusionne plusieurs recompenses (une etape qui termine aussi la tache)
+function mergeRewards(a, b) {
+  return { xp: a.xp + b.xp, total: b.total, levelUp: b.levelUp || a.levelUp, skills: [...a.skills, ...b.skills] };
+}
+
 function ensure(state) {
   state.profile = state.profile || {};
   state.facts = Array.isArray(state.facts) ? state.facts : [];
   state.journal = Array.isArray(state.journal) ? state.journal : [];
   state.stats = state.stats || {};
+  state.game = state.game || {};
+  state.game.xp = Number(state.game.xp) || 0;
+  state.game.skills = state.game.skills || {};
+  state.game.counters = { steps: 0, started: 0, done: 0, resumes: 0, early: 0, ...(state.game.counters || {}) };
   if (!METHODS[state.method]) state.method = null;
   return state;
 }
@@ -90,6 +138,7 @@ function startTask(state, title, steps) {
   state.task = { id, title: String(title).slice(0, 120), steps: steps.map((s) => String(s).slice(0, 160)), current: 0, startedAt: Date.now() };
   state.journal.push({ id, title: state.task.title, steps: state.task.steps, done: 0, startedAt: state.task.startedAt, completedAt: null });
   state.journal = state.journal.slice(-60);
+  state.lastReward = award(state, 'task_started');
   return state.task;
 }
 
@@ -98,16 +147,18 @@ function completeStep(state) {
   if (!state.task) return { ok: false, error: 'aucune tache en cours' };
   const entry = state.journal.find((j) => j.id === state.task.id);
   bump(state, 'steps');
+  let reward = award(state, 'step');
   if (entry) entry.done = Math.min(entry.steps.length, state.task.current + 1);
   if (state.task.current >= state.task.steps.length - 1) {
     if (entry) entry.completedAt = Date.now();
     bump(state, 'tasksDone');
+    reward = mergeRewards(reward, award(state, 'task_done'));
     const title = state.task.title;
     state.task = null; state.saved = null;
-    return { ok: true, tache_terminee: true, titre: title };
+    return { ok: true, tache_terminee: true, titre: title, xp_gagne: reward.xp, reward };
   }
   state.task.current++;
-  return { ok: true, etape_suivante: state.task.steps[state.task.current] };
+  return { ok: true, etape_suivante: state.task.steps[state.task.current], xp_gagne: reward.xp, reward };
 }
 
 function todayStats(state) { return state.stats[dayKey()] || { steps: 0, tasksDone: 0, focusMs: 0 }; }
@@ -126,6 +177,8 @@ function summary(state) {
   if (recent.length) lines.push(`Taches recentes : ${recent.join(', ')}.`);
   const t = todayStats(state);
   lines.push(`Aujourd'hui : ${t.steps} etapes faites, ${Math.round(t.focusMs / 60000)} min de concentration, ${t.tasksDone} taches terminees.`);
+  const lv = levelOf(state.game.xp);
+  lines.push(`Mode jeu : niveau ${lv.level} (${lv.grade}), ${state.game.xp} XP.`);
   return lines.join('\n');
 }
 
@@ -135,4 +188,4 @@ function timerMinutes(state) {
   return Number(state.profile.focusMin) || m?.focusMin || 15;
 }
 
-module.exports = { METHODS, ONBOARDING, suggestMethod, ensure, dayKey, bump, addFact, removeFact, startTask, completeStep, todayStats, summary, timerMinutes };
+module.exports = { METHODS, ONBOARDING, LEVELS, SKILLS, XP, suggestMethod, ensure, dayKey, bump, addFact, removeFact, startTask, completeStep, todayStats, summary, timerMinutes, levelOf, award };

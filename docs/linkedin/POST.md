@@ -1,4 +1,6 @@
-# Post LinkedIn — v3 (à copier-coller)
+# Post LinkedIn — v4 (à copier-coller)
+
+**Accroche retenue : A.** Le carrousel (`nox-carrousel.pdf`, `slide-1.png`) utilise A. Les variantes B et C restent ci-dessous pour mémoire.
 
 Versions précédentes : `versions/v1` (TDAH, sobre) et `versions/v2` (« Finis enfin… », écartée).
 Choisis **une** accroche (A, B ou C) : elle va avec l'image `accroches/slide-1-X.png`, qui remplace alors la slide 1 du carrousel.
