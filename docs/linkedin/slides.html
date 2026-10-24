@@ -44,8 +44,8 @@
 <!-- 1. Accroche -->
 <section class="slide" data-n="1">
   <p class="kicker">OpenAI DevDay Hackathon · Paris</p>
-  <h1>Finis enfin ce que tu <span class="hl">commences</span>.</h1>
-  <p class="lead">Un compagnon de bureau pensé pour les cerveaux TDAH. Et pour tous ceux qui commencent mille choses.</p>
+  <h1 id="hookTitle">Un compagnon de bureau pour les <span class="hl">cerveaux TDAH</span>.</h1>
+  <p class="lead" id="hookLead">Il te parle en premier, découpe ta tâche, et t'aide à démarrer, rester et reprendre.</p>
   <div class="center"><svg class="m mascot-big" viewBox="0 0 100 100" id="m1"></svg></div>
   <div class="foot"><b>Nox</b><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
 </section>
@@ -57,6 +57,8 @@
   <div class="list">
     <div class="item"><div class="n">1</div><div><b>Démarrer</b><span>La page blanche, les onglets ouverts puis refermés.</span></div></div>
     <div class="item"><div class="n">2</div><div><b>Rester</b><span>Une notification, un collègue, un bruit… et 40 minutes disparaissent.</span></div></div>
+    <!-- (v2) le bruit et les collegues touchent aussi ceux qui n'ont pas de TDAH -->
+
     <div class="item"><div class="n">3</div><div><b>Reprendre</b><span>Après une pause : « j'en étais où, déjà ? »</span></div></div>
   </div>
   <div class="foot"><b>Nox</b><div class="dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
@@ -107,6 +109,14 @@
 <script src="../../mascot.js"></script>
 <script>
   document.getElementById('m1').innerHTML = buildMascot();
+  // Variantes d'accroche pour la slide 1 (?hook=a|b|c), sinon la v1
+  const HOOKS = {
+    a: ['Ton cerveau TDAH n\'est pas <span class="hl">paresseux</span>.', 'Il lui manque juste un démarreur. Voici Nox, le compagnon de bureau qui t\'aide à démarrer, rester et reprendre.'],
+    b: ['TDAH : tu sais quoi faire. Tu n\'arrives juste pas à <span class="hl">commencer</span>.', 'Nox te parle en premier, découpe ta tâche, et reste avec toi jusqu\'au bout.'],
+    c: ['23 onglets ouverts. <span class="hl">0 tâche finie</span>.', 'Si tu as un TDAH, tu connais. Nox est le compagnon de bureau qui t\'aide à démarrer, rester et reprendre.']
+  };
+  const hook = HOOKS[new URLSearchParams(location.search).get('hook')];
+  if (hook) { document.getElementById('hookTitle').innerHTML = hook[0]; document.getElementById('hookLead').textContent = hook[1]; }
   const n = new URLSearchParams(location.search).get('n');
   if (n) { document.body.classList.add('single'); document.querySelector(`.slide[data-n="${n}"]`).classList.add('show'); }
 </script>

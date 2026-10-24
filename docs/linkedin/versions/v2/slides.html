@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Nox — carrousel LinkedIn</title>
+<link rel="stylesheet" href="../../design-tokens.css">
+<style>
+  /* Toujours en clair (export image) */
+  :root { color-scheme:light; --ink:#2A2118; --ink-soft:#6B5D4F; --surface-solid:#FFFAF2; --surface-2:#F5ECDF; --line:rgba(42,33,24,.14); --page:#F6EFE5; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:var(--page); }
+  body { font-family:var(--font-text); color:var(--ink); }
+  .slide { width:1080px; height:1350px; position:relative; overflow:hidden; padding:96px 88px; display:flex; flex-direction:column;
+    background:radial-gradient(1200px 800px at 85% -10%, rgba(240,181,74,.35), transparent 60%), radial-gradient(900px 700px at -10% 110%, rgba(74,156,240,.18), transparent 60%), var(--page);
+    page-break-after:always; break-after:page; }
+  body.single::-webkit-scrollbar { display:none; }
+  body.single .slide { display:none; } body.single .slide.show { display:flex; }
+  .kicker { font-family:var(--font-title); font-weight:800; font-size:26px; letter-spacing:.12em; text-transform:uppercase; color:#8A5A0B; }
+  h1 { font-family:var(--font-title); font-weight:900; font-size:96px; line-height:1.02; letter-spacing:-2px; margin-top:22px; }
+  h2 { font-family:var(--font-title); font-weight:900; font-size:72px; line-height:1.05; letter-spacing:-1.5px; margin-top:18px; }
+  .lead { font-size:36px; line-height:1.4; color:var(--ink-soft); margin-top:28px; max-width:24ch; }
+  .hl { background:linear-gradient(transparent 62%, rgba(240,181,74,.55) 62%); padding:0 4px; }
+  .foot { position:absolute; left:88px; right:88px; bottom:64px; display:flex; justify-content:space-between; align-items:center; font-size:24px; color:var(--ink-soft); }
+  .foot b { font-family:var(--font-title); font-weight:900; color:var(--ink); font-size:30px; }
+  .dots { display:flex; gap:8px; } .dots i { width:28px; height:8px; border-radius:4px; background:var(--line); } .dots i.on { background:#2F7FD6; }
+  .shot { border-radius:36px; box-shadow:0 30px 80px rgba(42,33,24,.22), 0 2px 8px rgba(42,33,24,.12); background:#fff; }
+  .center { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding-bottom:70px; }
+  .center img { max-height:100%; max-width:100%; width:auto !important; object-fit:contain; }
+  .list { margin-top:48px; display:flex; flex-direction:column; gap:26px; }
+  .item { display:flex; gap:28px; align-items:flex-start; background:var(--surface-solid); border:1px solid var(--line); border-radius:28px; padding:30px 34px;
+    box-shadow:0 10px 30px rgba(42,33,24,.10); }
+  .item .n { flex:none; width:64px; height:64px; border-radius:20px; background:#F0B54A; display:grid; place-items:center; font-family:var(--font-title); font-weight:900; font-size:32px; }
+  .item b { display:block; font-family:var(--font-title); font-weight:800; font-size:36px; }
+  .item span { font-size:27px; color:var(--ink-soft); line-height:1.35; }
+  .pill { display:inline-block; background:var(--surface-solid); border:1px solid var(--line); border-radius:999px; padding:14px 24px; font-size:26px; font-weight:600; margin:0 10px 12px 0; }
+  .mascot-big { width:520px; height:520px; margin-bottom:40px; }
+  /* Mascotte (meme dessin que l'appli, humeur happy) */
+  .m .eye { fill:#6FE3A1; } .m .eye-line { fill:none; stroke:#6FE3A1; stroke-width:2.6; stroke-linecap:round; } .m .eye-line.thin { stroke-width:1.8; }
+  .m .led, .m .core { fill:#6FE3A1; } .m .spark { fill:#F0B54A; } .m .shadow { fill:#000; opacity:.14; }
+  .m g.face, .m .dots, .m .wave, .m .mouth-o, .m #mouthOpen { display:none; } .m g.f-happy { display:inline; }
+</style>
+</head>
+<body>
+<!-- 1. Accroche -->
+<section class="slide" data-n="1">
+  <p class="kicker">OpenAI DevDay Hackathon · Paris</p>
+  <h1>Finis enfin ce que tu <span class="hl">commences</span>.</h1>
+  <p class="lead">Un compagnon de bureau pensé pour les cerveaux TDAH. Et pour tous ceux qui commencent mille choses.</p>
+  <div class="center"><svg class="m mascot-big" viewBox="0 0 100 100" id="m1"></svg></div>
+  <div class="foot"><b>Nox</b><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</section>
+
+<!-- 2. Probleme -->
+<section class="slide" data-n="2">
+  <p class="kicker">Le problème</p>
+  <h2>Le TDAH n'est pas un problème de <span class="hl">savoir</span>. C'est un problème de <span class="hl">faire</span>.</h2>
+  <div class="list">
+    <div class="item"><div class="n">1</div><div><b>Démarrer</b><span>La page blanche, les onglets ouverts puis refermés.</span></div></div>
+    <div class="item"><div class="n">2</div><div><b>Rester</b><span>Une notification, un collègue, un bruit… et 40 minutes disparaissent.</span></div></div>
+    <div class="item"><div class="n">3</div><div><b>Reprendre</b><span>Après une pause : « j'en étais où, déjà ? »</span></div></div>
+  </div>
+  <div class="foot"><b>Nox</b><div class="dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+</section>
+
+<!-- 3. Solution -->
+<section class="slide" data-n="3">
+  <p class="kicker">La solution</p>
+  <h2>Une seule <span class="hl">micro-étape</span> à la fois. À voix haute.</h2>
+  <p class="lead">Tu dis ce que tu dois faire. Nox découpe, lance le minuteur et te ramène doucement si tu décroches.</p>
+  <div class="center"><img class="shot" src="mascot.png" alt="La mascotte Nox affiche la première étape" style="width:600px; background:transparent; box-shadow:none"></div>
+  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div></div>
+</section>
+
+<!-- 4. Onboarding -->
+<section class="slide" data-n="4">
+  <p class="kicker">Onboarding fondé sur la recherche</p>
+  <h2>5 questions. Moins d'une minute. Jamais de formulaire.</h2>
+  <div style="margin-top:36px">
+    <span class="pill">Barkley : aider au moment d'agir</span><span class="pill">Safren : découper les tâches</span><span class="pill">Gollwitzer : plans « si… alors… »</span>
+  </div>
+  <div class="center"><img class="shot" src="onboarding.png" alt="Question d'onboarding avec pastilles" style="width:560px; background:transparent; box-shadow:none"></div>
+  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></div></div>
+</section>
+
+<!-- 5. Tableau de bord -->
+<section class="slide" data-n="5">
+  <p class="kicker">Suivi et mémoire</p>
+  <h2>Il se souvient de toi. Et tu vois tes progrès.</h2>
+  <p class="lead">Étapes cochées, minutes de focus, 7 méthodes (Pomodoro, body doubling…). Tout reste sur ton PC, effaçable d'un clic.</p>
+  <div class="center"><img class="shot" src="dashboard.png" alt="Tableau de bord de Nox" style="width:940px"></div>
+  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></div></div>
+</section>
+
+<!-- 6. Tech + appel -->
+<section class="slide" data-n="6">
+  <p class="kicker">Sous le capot</p>
+  <h2>Voix temps réel avec l'API Realtime d'OpenAI.</h2>
+  <div class="list">
+    <div class="item"><div class="n">🎙</div><div><b>gpt-realtime-2.1 en WebRTC</b><span>Mains libres, on peut lui couper la parole. Outils : tâches, minuteur, mémoire.</span></div></div>
+    <div class="item"><div class="n">🧠</div><div><b>Mémoire locale</b><span>Profil, souvenirs, historique, stats. Rien n'est observé sans accord.</span></div></div>
+    <div class="item"><div class="n">✓</div><div><b>Testé de bout en bout</b><span>17 vérifications automatiques sur la vraie appli Electron.</span></div></div>
+  </div>
+  <p class="lead" style="margin-top:44px; max-width:none">Code open source sur <b style="color:var(--ink)">GitHub</b> · lien en commentaire</p>
+  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></div></div>
+</section>
+
+<script src="../../mascot.js"></script>
+<script>
+  document.getElementById('m1').innerHTML = buildMascot();
+  const n = new URLSearchParams(location.search).get('n');
+  if (n) { document.body.classList.add('single'); document.querySelector(`.slide[data-n="${n}"]`).classList.add('show'); }
+</script>
+</body>
+</html>

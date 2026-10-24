@@ -1,22 +1,37 @@
-# Post LinkedIn (à copier-coller)
+# Post LinkedIn — v3 (à copier-coller)
 
-Pièce jointe : `nox-carrousel.pdf` (bouton « Document »), ou la vidéo quand elle sera prête.
-Les 2 premières lignes sont celles qu'on voit avant « … voir plus » : elles doivent arrêter le scroll.
+Versions précédentes : `versions/v1` (TDAH, sobre) et `versions/v2` (« Finis enfin… », écartée).
+Choisis **une** accroche (A, B ou C) : elle va avec l'image `accroches/slide-1-X.png`, qui remplace alors la slide 1 du carrousel.
+Règles suivies : parler du lecteur avant le produit, une seule idée par accroche, du concret, pas de promesse exagérée. Les 2 premières lignes sont les seules visibles avant « … voir plus ».
 
 ---
 
-14 h 00. Tu ouvres ton document pour « juste commencer ».
-14 h 40. Tu es sur YouTube et tu ne sais plus ce que tu étais venu faire.
+## Accroche A — « Ton cerveau TDAH n'est pas paresseux. »
 
-Ce n'est pas de la paresse. C'est ton cerveau qui lâche au moment de passer à l'action.
+Ton cerveau TDAH n'est pas paresseux.
+Il lui manque juste un démarreur.
 
-Pour des millions de personnes avec un TDAH, c'est tous les jours. Mais soyons honnêtes : on est nombreux à commencer mille choses sans les finir. Une notification, un collègue, un bruit dans l'open space… et impossible de retrouver le fil.
+## Accroche B — « Tu sais quoi faire. Tu n'arrives juste pas à commencer. »
+
+TDAH : tu sais exactement quoi faire.
+Tu n'arrives juste pas à commencer.
+
+## Accroche C — « 23 onglets ouverts. 0 tâche finie. »
+
+23 onglets ouverts. 0 tâche finie.
+Si tu as un TDAH, tu viens de te reconnaître.
+
+---
+
+## Suite du post (la même pour A, B ou C)
+
+On t'a dit « t'as qu'à t'organiser ». Tu as essayé les to-do lists, les agendas, les applis. Elles attendent toutes que tu fasses le premier pas. C'est justement celui-là qui bloque.
 
 Alors j'ai construit Nox.
 
-Nox est un petit compagnon qui vit sur ton bureau. Il ne t'envoie pas une liste de tâches de plus. Il fait ce qu'un bon coach ferait, assis à côté de toi :
+Nox est un petit compagnon qui vit sur ton bureau. Il ne t'envoie pas une liste de tâches de plus. Il fait ce que ferait quelqu'un assis à côté de toi :
 
-→ Il te parle en premier. Tu lui dis ce que tu dois faire, à voix haute, comme à un ami.
+→ Il te parle en premier. Tu lui dis ce que tu dois faire, à voix haute.
 → Il découpe tout en micro-étapes de 2 à 10 minutes. Tu ne vois que la prochaine.
 → Il lance un minuteur visible. Le temps redevient concret.
 → Tu décroches ? Il te ramène doucement. Sans jugement.
@@ -24,23 +39,25 @@ Nox est un petit compagnon qui vit sur ton bureau. Il ne t'envoie pas une liste 
 → Tu oublies les pauses ? Il t'en propose une, et garde ta place.
 → Il se souvient de toi : ce qui te bloque, ton moment d'énergie, ce qui t'aide. Tout reste sur ton PC.
 
-Rien n'est inventé au hasard : l'onboarding (5 questions, moins d'une minute) et les 7 méthodes intégrées (Pomodoro, body doubling, règle des 5 minutes, plans « si… alors… »…) s'appuient sur la recherche sur le TDAH et les fonctions exécutives.
+Rien n'est inventé au hasard : l'onboarding (5 questions, moins d'une minute) et les 7 méthodes intégrées (Pomodoro, body doubling, règle des 5 minutes, plans « si… alors… ») s'appuient sur la recherche sur le TDAH et les fonctions exécutives.
 
-Je l'ai conçu pour le TDAH. Je me suis rendu compte qu'il servait à tous ceux qui veulent simplement finir ce qu'ils commencent.
+Je l'ai pensé d'abord pour le TDAH. Mais si une notification, un collègue ou un bruit suffit à te faire perdre le fil, il est aussi pour toi.
 
-Construit en un week-end pour l'OpenAI DevDay Community Hackathon à Paris, avec l'API Realtime d'OpenAI pour une conversation vocale fluide.
+Construit pour l'OpenAI DevDay Community Hackathon à Paris, avec l'API Realtime d'OpenAI pour une conversation vocale fluide.
 
 Tu veux le tester en avant-première ?
 💬 Commente « NOX » et je t'envoie la version de test.
-🔁 Et si tu connais quelqu'un qui commence tout et ne finit rien, partage-lui ce post. Il te remerciera (quand il aura fini).
+🔁 Tu connais quelqu'un qui commence tout et ne finit rien ? Envoie-lui ce post.
 
-#parisdevdayhack #OpenAI #TDAH #ADHD #Neurodiversité #Productivité #Focus #Accessibilité
+#parisdevdayhack #OpenAI #TDAH #ADHD #Neurodiversité #Productivité #Accessibilité
 
 ---
 
-**Premier commentaire (à poster juste après)** :
+**Premier commentaire (juste après la publication)** :
 Le code est open source 👉 https://github.com/<ton-compte>/nox
-Mention : @borvibe @OpenAI
+Mentions : @borvibe @OpenAI
 
-**Pourquoi « Commente NOX » plutôt qu'un lien de téléchargement** :
-l'installeur actuel embarquerait ta clé OpenAI (voir TASKS.md, T8). En attendant un serveur qui garde la clé, tu envoies la version de test à la main, et les commentaires font monter le post dans le fil.
+**Conseils de publication** (pratiques largement rapportées, pas des règles officielles de LinkedIn) :
+- le lien GitHub en premier commentaire plutôt que dans le post ;
+- un carrousel PDF retient plus longtemps l'attention qu'un texte seul ;
+- réponds aux premiers commentaires rapidement : les commentaires pèsent plus que les « j'aime ».

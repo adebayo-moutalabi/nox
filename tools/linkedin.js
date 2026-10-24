@@ -107,19 +107,55 @@ async function slides() {
       })()`);
       images.push(png);
     }
-    // PDF : les 6 slides, une par page (format document LinkedIn)
-    await w.loadFile(file);
-    await new Promise((r) => setTimeout(r, 600));
-    const pdf = await w.webContents.printToPDF({ printBackground: true, pageSize: { width: 1080 / 96, height: 1350 / 96 }, margins: { marginType: 'none' } });
     w.destroy();
-    return { images, pdf: pdf.toString('base64') };
+    return { images };
   }, file);
   const pngs = result.images.map((b64, i) => {
     const p = path.join(OUT, `slide-${i + 1}.png`);
     fs.writeFileSync(p, Buffer.from(b64, 'base64'));
     return p;
   });
-  fs.writeFileSync(path.join(OUT, 'nox-carrousel.pdf'), Buffer.from(result.pdf, 'base64'));
+  // PDF : une image pleine page par slide, sans aucune marge (format document LinkedIn).
+  // Fond a la couleur des slides : aucun liseré blanc aux arrondis de taille de page.
+  const pdfHtml = path.join(OUT, '_pdf.html');
+  fs.writeFileSync(pdfHtml, `<!doctype html><style>@page{size:1080px 1350px;margin:0}html,body{margin:0;padding:0;background:#F6EFE5}
+    .p{width:1080px;height:1350px;overflow:hidden;break-after:page}.p:last-child{break-after:auto}.p img{display:block;width:1080px;height:1350px}</style>
+    ${pngs.map((p) => `<div class="p"><img src="${path.basename(p)}"></div>`).join('')}`);
+  const pdf = await app.evaluate(async ({ BrowserWindow }, f) => {
+    const w = new BrowserWindow({ width: 1080, height: 1350, show: false });
+    await w.loadFile(f);
+    await new Promise((r) => setTimeout(r, 800));
+    const out = await w.webContents.printToPDF({ printBackground: true, preferCSSPageSize: true, margins: { marginType: 'none' } });
+    w.destroy();
+    return out.toString('base64');
+  }, pdfHtml);
+  fs.writeFileSync(path.join(OUT, 'nox-carrousel.pdf'), Buffer.from(pdf, 'base64'));
+  fs.rmSync(pdfHtml);
+  // Variantes d'accroche (slide 1) a comparer
+  const variants = await app.evaluate(async ({ BrowserWindow }, file) => {
+    const w = new BrowserWindow({ width: 1080, height: 1350, show: false, useContentSize: true, frame: false });
+    const out = {};
+    for (const hook of ['a', 'b', 'c']) {
+      await w.loadFile(file, { query: { n: '1', hook } });
+      await new Promise((r) => setTimeout(r, 600));
+      const top = await w.webContents.capturePage();
+      const offset = Math.max(0, 1350 - top.getSize().height);
+      await w.webContents.executeJavaScript(`window.scrollTo(0, ${offset})`);
+      await new Promise((r) => setTimeout(r, 300));
+      const bottom = await w.webContents.capturePage();
+      out[hook] = await w.webContents.executeJavaScript(`(async () => {
+        const load = (src) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+        const [a, b] = await Promise.all([load('${top.toDataURL()}'), load('${bottom.toDataURL()}')]);
+        const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
+        const g = c.getContext('2d'); g.drawImage(b, 0, ${offset}); g.drawImage(a, 0, 0);
+        return c.toDataURL('image/png').split(',')[1];
+      })()`);
+    }
+    w.destroy();
+    return out;
+  }, file);
+  fs.mkdirSync(path.join(OUT, 'accroches'), { recursive: true });
+  for (const [k, b64] of Object.entries(variants)) fs.writeFileSync(path.join(OUT, 'accroches', `slide-1-${k}.png`), Buffer.from(b64, 'base64'));
   await app.close();
   fs.rmSync(data, { recursive: true, force: true });
   return pngs;

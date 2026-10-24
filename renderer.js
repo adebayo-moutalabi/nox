@@ -337,7 +337,8 @@ function showCard({ text, options = [], input = false, step = 0, total = 0, skip
     if (total) {
       const dots = document.createElement('div'); dots.className = 'dots-progress';
       dots.setAttribute('aria-label', `Question ${step} sur ${total}`);
-      for (let i = 1; i <= total; i++) { const d = document.createElement('i'); if (i <= step) d.className = 'on'; dots.append(d); }
+      for (let i = 1; i <= total; i++) { const d = document.createElement('i'); if (i < step) d.className = 'on'; if (i === step) d.className = 'cur'; dots.append(d); }
+      const count = document.createElement('span'); count.textContent = `${step} / ${total}`; dots.append(count);
       bubble.append(dots);
     }
     const q = document.createElement('p'); q.className = 'q'; q.textContent = text; bubble.append(q);
