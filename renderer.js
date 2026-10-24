@@ -107,6 +107,7 @@ function startTimer(min) {
     if (left <= 0) {
       stopTimer();
       setMood('proud');
+      window.nox.timerDone();
       const m = methods[currentMethod];
       const pause = m?.breakMin ? ` Methode ${m.name} : propose une vraie pause de ${m.breakMin} min.` : '';
       systemEvent(`Le minuteur de ${min} min est termine. Demande gentiment si l'etape est faite et propose la suite.${pause}`);
@@ -328,7 +329,10 @@ let lastMove = '';
 // Une question a la fois, grosses pastilles, toujours "Passer". Elle est aussi dite a voix haute,
 // et on peut repondre en parlant (clic sur la mascotte) ou en ecrivant.
 let card = null, pendingAnswer = null, methods = {}, currentMethod = null;
-function showCard({ text, options = [], input = false, step = 0, total = 0, skip = 'Passer' }) {
+// Une seule carte a la fois : les suivantes (mail, recompense) attendent leur tour
+let cardQueue = Promise.resolve();
+function showCardQueued(opts) { const p = cardQueue.then(() => showCard(opts)); cardQueue = p.catch(() => {}); return p; }
+function showCard({ text, options = [], input = false, secret = false, error = '', step = 0, total = 0, skip = 'Passer' }) {
   return new Promise((resolve) => {
     card = true;
     clearTimeout(hideTimer);
@@ -342,6 +346,7 @@ function showCard({ text, options = [], input = false, step = 0, total = 0, skip
       bubble.append(dots);
     }
     const q = document.createElement('p'); q.className = 'q'; q.textContent = text; bubble.append(q);
+    if (error) { const er = document.createElement('p'); er.className = 'err'; er.textContent = error; bubble.append(er); }
     const finish = (v) => { card = null; pendingAnswer = null; bubble.classList.remove('card'); resolve(v); };
     const pills = document.createElement('div'); pills.className = 'pills';
     for (const [value, label] of options) {
@@ -351,7 +356,8 @@ function showCard({ text, options = [], input = false, step = 0, total = 0, skip
     }
     if (input) {
       const row = document.createElement('form'); row.className = 'answer';
-      const f = document.createElement('input'); f.placeholder = 'Écris ici…'; f.maxLength = 40;
+      const f = document.createElement('input'); f.placeholder = secret ? 'sk-…' : 'Écris ici…'; f.maxLength = secret ? 300 : 40;
+      if (secret) { f.type = 'password'; f.autocomplete = 'off'; f.spellcheck = false; }
       const ok = document.createElement('button'); ok.className = 'pill on'; ok.textContent = 'OK';
       row.onsubmit = (e) => { e.preventDefault(); if (f.value.trim()) finish(f.value.trim()); };
       row.append(f, ok); bubble.append(row);
@@ -374,6 +380,18 @@ async function runOnboarding(st) {
   setMood('happy');
   const hello = `Salut, je suis ${st.name} ! ${onboarding.length} petites questions et on s'y met. Tu peux répondre en cliquant, en écrivant, ou en me parlant.`;
   await showCard({ text: hello, options: [['go', 'C\'est parti']], skip: null });
+  // Cle OpenAI de l'utilisateur (chiffree sur son PC), ou mode demo sans cle
+  if (!st.hasKey && !st.testMode && !st.demoMode) {
+    let error = '';
+    for (;;) {
+      const v = await showCard({ text: 'Pour te parler avec ma vraie voix, colle ta clé OpenAI. Elle reste chiffrée sur ton PC.', input: true, secret: true, error,
+        options: [['demo', 'Essayer sans clé']], skip: null });
+      if (v === 'demo' || v === null) { await window.nox.setDemo(true); break; }
+      const r = await window.nox.setApiKey(v);
+      if (r.ok) break;
+      error = r.error;
+    }
+  }
   const answers = {};
   for (let i = 0; i < onboarding.length; i++) {
     const q = onboarding[i];
@@ -395,6 +413,29 @@ window.nox.onAskWatch(async () => {
   await window.nox.setSettings({ watchWindows: v === 'yes', watchAsked: true });
   const st = await window.nox.getState();
   say(v === 'yes' ? 'Merci ! Je veille, sans juger.' : 'Pas de souci, je ne regarde rien.', st.task?.steps?.[st.task.current]);
+});
+
+// ---------- Mode jeu : niveau gagne, competence debloquee ----------
+window.nox.onReward(async (r) => {
+  await new Promise((res) => setTimeout(res, 3500)); // laisse d'abord lire la reponse de Nox
+  const parts = [];
+  if (r.levelUp) parts.push(`Niveau ${r.levelUp.level} : ${r.levelUp.grade} !`);
+  for (const s of r.skills) parts.push(`Compétence débloquée : ${s.emoji} ${s.name}`);
+  setMood('proud'); flash('jump', 500);
+  showCardQueued({ text: `🎉 ${parts.join(' · ')}`, options: [['ok', 'Trop bien']], skip: null });
+});
+
+// ---------- Mail important ou attendu ----------
+window.nox.onMail(async (m) => {
+  const who = m.from.replace(/\s*<.*>/, '');
+  setMood('happy');
+  const v = await showCardQueued({ text: `📬 ${m.watched ? 'Le mail que tu attendais est arrivé' : 'Mail important'} de ${who} : « ${m.subject} ». Je te le lis ?`,
+    options: [['read', 'Lis-le'], ['later', 'Plus tard']], skip: null });
+  if (v !== 'read') return;
+  const r = await window.nox.readMail(m.id);
+  if (!r) return;
+  say(r.summary, r.subject);
+  talk(`${r.summary}. ${r.text.slice(0, 500)}`);
 });
 
 // ---------- Reglages ----------
