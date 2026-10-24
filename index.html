@@ -20,6 +20,22 @@
   #bubble.show { opacity:1; transform:none; pointer-events:auto; }
   #bubble .step { display:block; margin-top:6px; font-size:var(--text-sm); font-weight:600; color:var(--step-ink); }
 
+  /* Carte de question : une question a la fois, grosses pastilles */
+  #bubble.card { max-height:none; width:280px; padding:14px; }
+  #bubble .q { font-family:var(--font-title); font-weight:800; font-size:var(--text-lg); line-height:1.25; margin-bottom:10px; }
+  #bubble .pills { display:flex; flex-wrap:wrap; gap:6px; }
+  #bubble .pill { border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:var(--radius-pill);
+    padding:6px 11px; font-size:12px; font-weight:600; cursor:pointer; }
+  #bubble .pill:hover { border-color:var(--nox-blue); }
+  #bubble .pill.on, #bubble .pills .pill:first-child:last-child { background:var(--nox-yellow); color:var(--on-accent); border-color:transparent; }
+  #bubble .answer { display:flex; gap:6px; margin-bottom:6px; }
+  #bubble .answer input { flex:1; min-width:0; border:1px solid var(--line); background:var(--surface-solid); color:var(--ink);
+    border-radius:var(--radius-pill); padding:7px 12px; font-size:var(--text-md); outline:none; }
+  #bubble .skip { display:block; margin:8px 0 0 auto; background:none; border:0; color:var(--ink-soft); font-size:var(--text-xs); cursor:pointer; text-decoration:underline; }
+  #bubble .dots-progress { display:flex; gap:4px; margin-bottom:8px; }
+  #bubble .dots-progress i { width:18px; height:4px; border-radius:2px; background:var(--line); }
+  #bubble .dots-progress i.on { background:var(--nox-blue); }
+
   /* Mascotte */
   #stage { position:relative; width:130px; height:130px; cursor:grab; touch-action:none; }
   .drag #stage { cursor:grabbing; }
@@ -109,6 +125,8 @@
   #bar button { background:transparent; border:0; color:var(--bar-fg); width:30px; height:30px;
     border-radius:50%; cursor:pointer; font-size:15px; display:grid; place-items:center; }
   #bar button:hover { background:var(--bar-hover); }
+  #bar .ico { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  #voice .wave-off { display:none; } #voice.muted .wave-on { display:none; } #voice.muted .wave-off { display:inline; }
   /* Micro actif : couleur + pulsation (l'info ne passe pas que par la couleur) */
   #mic.rec { background:var(--danger); animation:pulse 1s infinite; }
   @keyframes pulse { 50% { box-shadow:0 0 0 6px var(--danger-halo); } }
@@ -151,21 +169,12 @@
 
   <div id="bar">
     <input id="input" placeholder="Dis-moi ce que tu dois faire…">
-    <button id="write" title="Écrire" aria-label="Écrire un message">✎</button>
-    <button id="mic" title="Parler" aria-label="Parler">🎙</button>
-    <button id="voice" title="Voix on/off" aria-label="Couper la voix">🔊</button>
-    <button id="settings" title="Réglages" aria-label="Réglages">⚙</button>
-  </div>
-
-  <!-- Premier lancement -->
-  <div class="panel" id="onboard">
-    <h2 id="hello">Salut, je suis Nox 👋</h2>
-    <p>Je reste sur ton bureau pour t'aider à <b>démarrer</b>, <b>rester</b> et <b>reprendre</b>. Une seule petite étape à la fois, sans jugement.</p>
-    <label>Ton prénom <input id="obName" placeholder="Facultatif"></label>
-    <label><input type="checkbox" id="obWatch"> Je peux voir quelle appli ou quel onglet est ouvert, pour te ramener doucement si tu décroches. (Rien ne quitte ton PC à part le titre de la fenêtre, et seulement quand tu as une tâche en cours.)</label>
-    <label>Je te parle plutôt…
-      <select id="obFirm"><option value="douce">Tout doux</option><option value="normale">Normalement</option><option value="stricte">Comme un coach strict</option></select></label>
-    <button class="go" id="obGo">C'est parti</button>
+    <!-- Icones vectorielles au trait (2 px), heritent de la couleur du texte -->
+    <button id="write" title="Écrire" aria-label="Écrire un message"><svg class="ico" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>
+    <button id="mic" title="Parler" aria-label="Parler"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button>
+    <button id="voice" title="Voix on/off" aria-label="Couper la voix"><svg class="ico" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave-on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="wave-off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+    <button id="dashboard" title="Tableau de bord" aria-label="Ouvrir le tableau de bord"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg></button>
+    <button id="settings" title="Réglages" aria-label="Réglages"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
   </div>
 
   <!-- Réglages -->
@@ -176,6 +185,8 @@
     <label>Fermeté
       <select id="pFirm"><option value="douce">Tout doux</option><option value="normale">Normale</option><option value="stricte">Coach strict</option></select></label>
     <label><input type="checkbox" id="pWatch"> Voir l'appli / l'onglet actif</label>
+    <button class="ghost" id="pDash">Ouvrir le tableau de bord</button>
+    <button class="ghost" id="pOnboard">Refaire l'onboarding</button>
     <button class="ghost" id="pReset">Terminer la tâche en cours</button>
     <button class="ghost" id="pQuit">Quitter Nox</button>
     <button class="go" id="pSave">OK</button>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Nox — Tableau de bord</title>
+<link rel="stylesheet" href="design-tokens.css">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; }
+  body { font-family:var(--font-text); color:var(--ink); background:var(--page); font-size:var(--text-md); line-height:1.45;
+    -webkit-font-smoothing:antialiased; }
+  button { font-family:inherit; cursor:pointer; transition:transform var(--dur-fast) var(--ease-spring), background var(--dur-fast), border-color var(--dur-fast); }
+  button:active { transform:scale(var(--press-scale)); }
+  :focus-visible { outline:none; box-shadow:var(--focus-ring); }
+
+  .wrap { max-width:1120px; margin:0 auto; padding:32px 32px 48px; }
+  header { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:24px; }
+  .hello { font-family:var(--font-title); font-weight:900; font-size:34px; letter-spacing:-.5px; line-height:1.1; }
+  .date { color:var(--ink-soft); margin-top:4px; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:var(--radius-pill); background:var(--surface);
+    border:1px solid var(--line); box-shadow:var(--shadow-soft); font-weight:600; white-space:nowrap; }
+  .badge { font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); border:1px solid var(--line); border-radius:var(--radius-pill); padding:2px 8px; }
+
+  .grid { display:grid; grid-template-columns:repeat(12, 1fr); gap:16px; }
+  .card { background:var(--surface-solid); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow-soft); padding:22px;
+    animation:rise var(--dur-slow) var(--ease-out) both; }
+  @keyframes rise { from { opacity:0; transform:translateY(8px); } }
+  .span-8 { grid-column:span 8; } .span-4 { grid-column:span 4; } .span-6 { grid-column:span 6; } .span-12 { grid-column:span 12; }
+  @media (max-width: 900px) { .span-8, .span-4, .span-6 { grid-column:span 12; } }
+  h2 { font-family:var(--font-title); font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); margin-bottom:14px; }
+
+  /* Maintenant */
+  .now { position:relative; overflow:hidden; background:linear-gradient(135deg, var(--surface-solid) 55%, color-mix(in srgb, var(--nox-yellow) 22%, var(--surface-solid))); }
+  .task-title { color:var(--ink-soft); font-weight:600; }
+  .step-now { font-family:var(--font-title); font-weight:900; font-size:30px; line-height:1.15; letter-spacing:-.3px; margin:6px 0 18px; max-width:30ch; }
+  .progress { display:flex; gap:6px; margin-bottom:20px; }
+  .progress i { flex:1; height:8px; border-radius:4px; background:var(--line); }
+  .progress i.done { background:var(--nox-yellow); }
+  .progress i.cur { background:var(--chart-bar); }
+  .actions { display:flex; flex-wrap:wrap; gap:10px; }
+  .btn { border:0; border-radius:14px; padding:12px 18px; font-weight:800; font-family:var(--font-title); font-size:15px; }
+  .btn.primary { background:var(--nox-yellow); color:var(--on-accent); }
+  .btn.primary:hover { background:var(--nox-yellow-strong); }
+  .btn.secondary { background:transparent; color:var(--ink); border:1.5px solid var(--line); }
+  .btn.secondary:hover { border-color:var(--chart-bar); }
+  .new { display:flex; gap:10px; }
+  .new input { flex:1; min-width:0; border:1.5px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:14px;
+    padding:12px 16px; font-size:15px; font-family:inherit; outline:none; }
+  .new input:focus { border-color:var(--chart-bar); }
+  .empty-hint { color:var(--ink-soft); margin:6px 0 16px; }
+
+  /* Aujourd'hui */
+  .stats { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:18px; }
+  .stat b { display:block; font-family:var(--font-title); font-weight:900; font-size:32px; line-height:1; font-variant-numeric:tabular-nums; }
+  .stat span { color:var(--ink-soft); font-size:var(--text-sm); }
+  .chart-title { font-size:var(--text-sm); color:var(--ink-soft); margin-bottom:8px; }
+  .bars { display:flex; align-items:flex-end; gap:2px; height:92px; border-bottom:1px solid var(--line); }
+  .bar { flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%; position:relative; }
+  .bar i { display:block; background:var(--chart-bar); border-radius:4px 4px 0 0; min-height:2px; margin:0 3px; }
+  .bar:hover i { filter:brightness(1.12); }
+  .bar .tip { position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--bar-bg); color:var(--bar-fg);
+    font-size:var(--text-xs); padding:3px 7px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity var(--dur-fast); }
+  .bar:hover .tip { opacity:1; }
+  .bar-labels { display:flex; gap:2px; margin-top:6px; }
+  .bar-labels span { flex:1; text-align:center; font-size:var(--text-xs); color:var(--ink-soft); }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+  /* Etapes */
+  .steps { list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .steps li { display:flex; gap:12px; align-items:flex-start; padding:10px 12px; border-radius:14px; background:var(--surface-2); }
+  .steps li .box { flex:none; width:22px; height:22px; border-radius:7px; border:2px solid var(--line); display:grid; place-items:center; font-size:13px; font-weight:900; }
+  .steps li.done { color:var(--ink-soft); }
+  .steps li.done span { text-decoration:line-through; }
+  .steps li.done .box { background:var(--nox-yellow); border-color:transparent; color:var(--on-accent); }
+  .steps li.cur { outline:2px solid var(--chart-bar); background:var(--surface-solid); font-weight:600; }
+  .steps li.cur .box { border-color:var(--chart-bar); }
+
+  /* Methodes */
+  .methods { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+  .method { text-align:left; border:1.5px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:16px; padding:14px; }
+  .method:hover { border-color:var(--chart-bar); }
+  .method.on { border-color:var(--nox-yellow); background:color-mix(in srgb, var(--nox-yellow) 18%, var(--surface-solid)); }
+  .method .e { font-size:22px; }
+  .method b { display:block; font-family:var(--font-title); font-weight:800; margin:6px 0 2px; }
+  .method small { color:var(--ink-soft); font-size:var(--text-sm); line-height:1.35; display:block; }
+  .method .tag { display:inline-block; margin-top:8px; font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); }
+
+  /* Memoire */
+  .profile { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .profile span { background:var(--surface-2); border-radius:var(--radius-pill); padding:6px 12px; font-size:var(--text-sm); }
+  .profile span b { font-weight:700; }
+  .facts { list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .facts li { display:flex; justify-content:space-between; gap:10px; align-items:center; padding:8px 12px; border-radius:12px; background:var(--surface-2); }
+  .facts button { border:0; background:none; color:var(--ink-soft); font-size:16px; line-height:1; padding:2px 6px; border-radius:6px; }
+  .facts button:hover { background:var(--line); color:var(--ink); }
+  .muted { color:var(--ink-soft); }
+
+  /* Historique */
+  .history { list-style:none; display:flex; flex-direction:column; }
+  .history li { display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); }
+  .history li:last-child { border-bottom:0; }
+  .history .state { font-size:var(--text-sm); color:var(--ink-soft); white-space:nowrap; }
+  .history .state.ok::before { content:'✓ '; color:var(--ink); font-weight:900; }
+
+  .foot { margin-top:24px; text-align:center; color:var(--ink-soft); font-size:var(--text-sm); }
+  @media (prefers-reduced-motion: reduce) { .card { animation:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1 class="hello" id="hello">Bonjour</h1>
+      <p class="date" id="date"></p>
+    </div>
+    <div class="chip" id="methodChip" title="Méthode active">—</div>
+  </header>
+
+  <main class="grid">
+    <section class="card now span-8" aria-labelledby="nowTitle">
+      <h2 id="nowTitle">Maintenant</h2>
+      <div id="nowBody"></div>
+    </section>
+
+    <section class="card span-4" aria-labelledby="todayTitle">
+      <h2 id="todayTitle">Aujourd'hui</h2>
+      <div class="stats">
+        <div class="stat"><b id="sSteps">0</b><span>étapes faites</span></div>
+        <div class="stat"><b id="sFocus">0</b><span>min de focus</span></div>
+        <div class="stat"><b id="sTasks">0</b><span>tâches finies</span></div>
+      </div>
+      <p class="chart-title" id="chartTitle">Minutes de concentration, 7 derniers jours</p>
+      <div class="bars" id="bars" role="img" aria-describedby="chartTable"></div>
+      <div class="bar-labels" id="barLabels" aria-hidden="true"></div>
+      <table class="sr" id="chartTable"></table>
+    </section>
+
+    <section class="card span-6" aria-labelledby="stepsTitle">
+      <h2 id="stepsTitle">Étapes</h2>
+      <ul class="steps" id="steps"></ul>
+    </section>
+
+    <section class="card span-6" aria-labelledby="memTitle">
+      <h2 id="memTitle">Ce que Nox sait de toi</h2>
+      <div class="profile" id="profile"></div>
+      <ul class="facts" id="facts"></ul>
+    </section>
+
+    <section class="card span-12" aria-labelledby="methTitle">
+      <h2 id="methTitle">Méthodes de travail</h2>
+      <div class="methods" id="methods"></div>
+    </section>
+
+    <section class="card span-12" aria-labelledby="histTitle">
+      <h2 id="histTitle">Historique</h2>
+      <ul class="history" id="history"></ul>
+    </section>
+  </main>
+  <p class="foot">Tout reste sur ton PC. Supprime un souvenir d'un clic sur ×.</p>
+</div>
+<script src="dashboard.js"></script>
+</body>
+</html>

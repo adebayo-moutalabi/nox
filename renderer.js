@@ -22,6 +22,8 @@ function setAct(a) { act = a || ''; appEl.dataset.act = act; }
 function flash(cls, ms) { appEl.classList.add(cls); setTimeout(() => appEl.classList.remove(cls), ms); }
 
 function say(text, step) {
+  if (card) return; // une question (onboarding, permission) est affichee : on ne l'ecrase pas
+  bubble.classList.remove('card');
   bubble.innerHTML = '';
   bubble.append(document.createTextNode(text));
   if (step) { const s = document.createElement('span'); s.className = 'step'; s.textContent = '→ ' + step; bubble.append(s); }
@@ -75,12 +77,14 @@ async function handle(out) {
   say(out.reply, step);
   talk(out.reply);
   if (out.taskDone) { stopTimer(); flash('jump', 500); }
-  if (out.action?.type === 'start_timer') startTimer(Number(out.action.value) || 5);
+  if (out.action?.type === 'start_timer') startTimer(Number(out.action.value) || st.timerMin);
   if (out.action?.type === 'pause') stopTimer();
 }
 
 async function ask(text) {
   if (!text.trim()) return;
+  if (pendingAnswer) { pendingAnswer(text.trim()); return; } // reponse parlee/ecrite a une question
+  if (mood === 'idle') setMood('focus');
   if (mood === 'idle') setMood('focus');
   setAct('thinking');
   say('…');
@@ -103,10 +107,13 @@ function startTimer(min) {
     if (left <= 0) {
       stopTimer();
       setMood('proud');
-      systemEvent(`Le minuteur de ${min} min est termine. Demande gentiment si l'etape est faite et propose la suite.`);
+      const m = methods[currentMethod];
+      const pause = m?.breakMin ? ` Methode ${m.name} : propose une vraie pause de ${m.breakMin} min.` : '';
+      systemEvent(`Le minuteur de ${min} min est termine. Demande gentiment si l'etape est faite et propose la suite.${pause}`);
     }
   }, 1000);
 }
+window.nox.onStartTimer((min) => startTimer(min));
 function stopTimer() { clearInterval(timer); timer = null; $('ringBar').style.strokeDashoffset = 377; $('timerLabel').style.display = 'none'; }
 
 // ---------- Texte ----------
@@ -133,7 +140,8 @@ async function refreshStep() {
 }
 async function toggleVoice() {
   if (Realtime.open) { Realtime.close(); return; }
-  if (recorder && recorder.state === 'recording') { toggleMic(); return; }
+  // Pendant une question, la reponse parlee passe par le micro classique (transcription)
+  if (pendingAnswer || (recorder && recorder.state === 'recording')) { toggleMic(); return; }
   stopSpeaking();
   if (mood === 'idle') setMood('focus');
   setAct('thinking');
@@ -191,10 +199,10 @@ async function toggleMic() {
       $('mic').classList.remove('rec');
       stream.getTracks().forEach((t) => t.stop());
       setAct('thinking');
-      say('Je t\'écoute…');
+      if (!card) say('Je t\'écoute…');
       const buf = await new Blob(chunks, { type: 'audio/webm' }).arrayBuffer();
       const text = await window.nox.transcribe(buf);
-      if (text) ask(text); else { setAct(''); say('Je n\'ai pas bien entendu, tu peux répéter ?'); }
+      if (text) ask(text); else { setAct(''); if (!card) say('Je n\'ai pas bien entendu, tu peux répéter ?'); }
     };
     recorder.start();
     $('mic').classList.add('rec');
@@ -205,7 +213,7 @@ async function toggleMic() {
 $('mic').onclick = toggleVoice;
 $('voice').onclick = () => {
   voiceOn = !voiceOn;
-  $('voice').textContent = voiceOn ? '🔊' : '🔈';
+  $('voice').classList.toggle('muted', !voiceOn);
   $('voice').setAttribute('aria-label', voiceOn ? 'Couper la voix' : 'Activer la voix');
   if (!voiceOn) stopSpeaking();
 };
@@ -316,6 +324,78 @@ let lastMove = '';
   }, 6000 + Math.random() * 4000);
 })();
 
+// ---------- Cartes de question (onboarding, permissions) ----------
+// Une question a la fois, grosses pastilles, toujours "Passer". Elle est aussi dite a voix haute,
+// et on peut repondre en parlant (clic sur la mascotte) ou en ecrivant.
+let card = null, pendingAnswer = null, methods = {}, currentMethod = null;
+function showCard({ text, options = [], input = false, step = 0, total = 0, skip = 'Passer' }) {
+  return new Promise((resolve) => {
+    card = true;
+    clearTimeout(hideTimer);
+    bubble.innerHTML = '';
+    bubble.classList.add('show', 'card');
+    if (total) {
+      const dots = document.createElement('div'); dots.className = 'dots-progress';
+      dots.setAttribute('aria-label', `Question ${step} sur ${total}`);
+      for (let i = 1; i <= total; i++) { const d = document.createElement('i'); if (i <= step) d.className = 'on'; dots.append(d); }
+      bubble.append(dots);
+    }
+    const q = document.createElement('p'); q.className = 'q'; q.textContent = text; bubble.append(q);
+    const finish = (v) => { card = null; pendingAnswer = null; bubble.classList.remove('card'); resolve(v); };
+    const pills = document.createElement('div'); pills.className = 'pills';
+    for (const [value, label] of options) {
+      const b = document.createElement('button'); b.className = 'pill'; b.textContent = label;
+      b.onclick = () => finish(value);
+      pills.append(b);
+    }
+    if (input) {
+      const row = document.createElement('form'); row.className = 'answer';
+      const f = document.createElement('input'); f.placeholder = 'Écris ici…'; f.maxLength = 40;
+      const ok = document.createElement('button'); ok.className = 'pill on'; ok.textContent = 'OK';
+      row.onsubmit = (e) => { e.preventDefault(); if (f.value.trim()) finish(f.value.trim()); };
+      row.append(f, ok); bubble.append(row);
+      setTimeout(() => f.focus(), 50);
+    }
+    if (options.length) bubble.append(pills);
+    if (skip) { const s = document.createElement('button'); s.className = 'skip'; s.textContent = skip; s.onclick = () => finish(null); bubble.append(s); }
+    // Reponse parlee ou ecrite dans la barre : on la rapproche d'une pastille
+    pendingAnswer = (said) => {
+      const low = said.toLowerCase();
+      const hit = options.find(([v, l]) => low.includes(String(l).toLowerCase().split(' ')[0]) || low.includes(String(v)));
+      if (hit) finish(hit[0]); else if (input) finish(said.replace(/^(je m'appelle|moi c'est|c'est)\s*/i, '').replace(/[.!]$/, ''));
+    };
+    talk(text);
+  });
+}
+
+async function runOnboarding(st) {
+  const { onboarding } = await window.nox.getCatalog();
+  setMood('happy');
+  const hello = `Salut, je suis ${st.name} ! ${onboarding.length} petites questions et on s'y met. Tu peux répondre en cliquant, en écrivant, ou en me parlant.`;
+  await showCard({ text: hello, options: [['go', 'C\'est parti']], skip: null });
+  const answers = {};
+  for (let i = 0; i < onboarding.length; i++) {
+    const q = onboarding[i];
+    const text = q.key === 'blocker' && answers.name ? `${answers.name}, qu'est-ce qui te freine le plus ?` : q.ask;
+    flash('jump', 450);
+    const v = await showCard({ text, options: q.options || [], input: q.input, step: i + 1, total: onboarding.length });
+    if (v !== null) answers[q.key] = v;
+  }
+  await window.nox.saveProfile(answers);
+  setMood('proud'); flash('jump', 500);
+  setAct('thinking');
+  window.nox.onboardingDone(); // Nox annonce la methode choisie et demande sur quoi on bosse
+}
+
+// Acces a la fenetre active : demande au lancement de la premiere tache (le moment ou il sert)
+window.nox.onAskWatch(async () => {
+  await new Promise((r) => setTimeout(r, 5000)); // laisse le temps de lire la premiere etape
+  const v = await showCard({ text: 'Je peux voir quelle appli est ouverte, pour te ramener doucement si tu décroches ? Seul le titre de la fenêtre est utilisé.', options: [['yes', 'Oui'], ['no', 'Non merci']], skip: null });
+  await window.nox.setSettings({ watchWindows: v === 'yes', watchAsked: true });
+  const st = await window.nox.getState();
+  say(v === 'yes' ? 'Merci ! Je veille, sans juger.' : 'Pas de souci, je ne regarde rien.', st.task?.steps?.[st.task.current]);
+});
+
 // ---------- Reglages ----------
 $('settings').onclick = async () => {
   const st = await window.nox.getState();
@@ -323,17 +403,21 @@ $('settings').onclick = async () => {
   $('prefs').classList.add('show');
 };
 $('pSave').onclick = async () => {
-  const st = await window.nox.setSettings({ mode: $('pMode').value, firmness: $('pFirm').value, watchWindows: $('pWatch').checked });
+  const st = await window.nox.setSettings({ mode: $('pMode').value, firmness: $('pFirm').value, watchWindows: $('pWatch').checked, watchAsked: true });
   $('prefs').classList.remove('show');
   setMood(st.mode === 'repos' || st.mode === 'off' ? 'idle' : 'focus');
 };
 $('pReset').onclick = async () => { await window.nox.resetTask(); stopTimer(); $('prefs').classList.remove('show'); say('Tâche terminée. Bravo !'); setMood('proud'); };
+$('pOnboard').onclick = async () => { $('prefs').classList.remove('show'); await window.nox.resetOnboarding(); runOnboarding(await window.nox.getState()); };
 $('pQuit').onclick = () => window.nox.quit();
+$('dashboard').onclick = () => window.nox.openDashboard();
+$('pDash').onclick = () => { $('prefs').classList.remove('show'); window.nox.openDashboard(); };
 
 // ---------- Evenements proactifs ----------
 window.nox.onProactive(handle);
 window.nox.onMood(setMood);
 window.nox.onError((m) => { setAct(''); say('Oups : ' + m); });
+window.nox.onState((st) => { currentMethod = st.method; });
 // Evenement proactif pendant une session vocale ouverte (absence, decrochage, hyperfocus)
 window.nox.onEvent(({ reason, mood: m }) => {
   if (m) setMood(m);
@@ -345,28 +429,18 @@ window.nox.setRealtimeActive(false); // au rechargement, aucune session n'est ou
 // ---------- Demarrage : elle atterrit, puis parle en premier ----------
 (async () => {
   const st = await window.nox.getState();
-  $('hello').textContent = `Salut, je suis ${st.name} 👋`;
+  ({ methods } = await window.nox.getCatalog());
+  currentMethod = st.method;
   document.title = st.name;
-  const sleeping = st.onboarded && (st.mode === 'repos' || st.mode === 'off');
+  const onboarded = Boolean(st.profile?.onboardedAt);
+  const sleeping = onboarded && (st.mode === 'repos' || st.mode === 'off');
   setMood(sleeping ? 'idle' : 'happy');
   if (!reducedMotion) flash('enter', 1000);
   await new Promise((r) => setTimeout(r, reducedMotion ? 0 : 1000));
 
-  if (!st.onboarded) {
-    $('onboard').classList.add('show');
-    const intro = `Salut, je suis ${st.name} ! Je t'aide à démarrer, une petite étape à la fois. Dis-moi juste ton prénom.`;
-    say(intro); talk(intro);
-    $('obGo').onclick = async () => {
-      const userName = $('obName').value.trim();
-      await window.nox.setSettings({ onboarded: true, userName, watchWindows: $('obWatch').checked, firmness: $('obFirm').value });
-      $('onboard').classList.remove('show');
-      setMood('happy');
-      const hi = `${userName ? userName + ', sur' : 'Sur'} quoi tu bosses aujourd'hui ? Dis-le moi, on commence petit.`;
-      say(hi); talk(hi);
-    };
-  } else if (sleeping) {
-    setMood('idle');
-  } else {
+  if (!onboarded) runOnboarding(st);
+  else if (sleeping) setMood('idle');
+  else {
     setAct('thinking');
     window.nox.greet(); // la reponse arrive par onProactive
   }

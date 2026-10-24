@@ -33,6 +33,8 @@
   --ground-shadow: #000;        /* ombre de la mascotte au sol */
   --ring-track: rgba(42, 33, 24, .10);
   --zz: #7B6F9E;
+  --chart-bar: #2F7FD6;         /* barres du tableau (validees : contraste >= 3:1 sur la surface) */
+  --page: #F6EFE5;              /* fond du tableau de bord (sous les cartes) */
 
   /* Lueur de la mascotte selon l'humeur */
   --glow-focus: #4A9CF0;
@@ -79,6 +81,8 @@
     --bar-bg: rgba(20, 17, 14, .92);
     --ring-track: rgba(255, 248, 238, .14);
     --zz: #B3A8D6;
+    --chart-bar: #3B8EE8;
+    --page: #17130F;
     --shadow-soft: 0 8px 24px rgba(0, 0, 0, .45), 0 1px 3px rgba(0, 0, 0, .3);
   }
 }
