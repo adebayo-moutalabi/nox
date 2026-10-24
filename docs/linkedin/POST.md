@@ -1,30 +1,46 @@
 # Post LinkedIn (à copier-coller)
 
-Pièce jointe : `nox-carrousel.pdf` (bouton « Document » de LinkedIn), ou les 6 images `slide-1.png` à `slide-6.png`.
+Pièce jointe : `nox-carrousel.pdf` (bouton « Document »), ou la vidéo quand elle sera prête.
+Les 2 premières lignes sont celles qu'on voit avant « … voir plus » : elles doivent arrêter le scroll.
 
 ---
 
-Le TDAH n'est pas un problème de savoir. C'est un problème de faire.
+14 h 00. Tu ouvres ton document pour « juste commencer ».
+14 h 40. Tu es sur YouTube et tu ne sais plus ce que tu étais venu faire.
 
-Démarrer une tâche. Rester dessus. Reprendre après une interruption. Ce sont les trois murs que je voulais faire tomber.
+Ce n'est pas de la paresse. C'est ton cerveau qui lâche au moment de passer à l'action.
 
-Pour l'OpenAI DevDay Community Hackathon à Paris, j'ai construit **Nox** : un petit compagnon qui vit sur ton bureau et qui te parle en premier.
+Pour des millions de personnes avec un TDAH, c'est tous les jours. Mais soyons honnêtes : on est nombreux à commencer mille choses sans les finir. Une notification, un collègue, un bruit dans l'open space… et impossible de retrouver le fil.
 
-🎙 Tu lui dis ce que tu dois faire, à voix haute. Il découpe ta tâche en micro-étapes de 2 à 10 minutes, lance un minuteur visible, et te ramène doucement si tu décroches.
-🧠 Il se souvient de toi : ce qui te freine, ton moment d'énergie, ce qui t'aide. Tout reste sur ton PC.
-📋 Un tableau de bord montre tes étapes cochées et tes minutes de focus, avec 7 méthodes (Pomodoro, body doubling, règle des 5 minutes…).
-🔬 L'onboarding (5 questions, moins d'une minute) s'appuie sur la recherche : aider au moment d'agir (Barkley), découper les tâches (TCC de Safren), plans « si… alors… » (Gollwitzer).
+Alors j'ai construit Nox.
 
-Sous le capot : Electron + l'API Realtime d'OpenAI (gpt-realtime-2.1 en WebRTC) pour une conversation mains libres, et des tests automatiques de bout en bout sur la vraie appli.
+Nox est un petit compagnon qui vit sur ton bureau. Il ne t'envoie pas une liste de tâches de plus. Il fait ce qu'un bon coach ferait, assis à côté de toi :
 
-Le code est open source, lien en commentaire 👇
+→ Il te parle en premier. Tu lui dis ce que tu dois faire, à voix haute, comme à un ami.
+→ Il découpe tout en micro-étapes de 2 à 10 minutes. Tu ne vois que la prochaine.
+→ Il lance un minuteur visible. Le temps redevient concret.
+→ Tu décroches ? Il te ramène doucement. Sans jugement.
+→ Tu es interrompu ? À ton retour : « Tu en étais à… ». Tu reprends en 5 secondes.
+→ Tu oublies les pauses ? Il t'en propose une, et garde ta place.
+→ Il se souvient de toi : ce qui te bloque, ton moment d'énergie, ce qui t'aide. Tout reste sur ton PC.
 
-Si tu as un TDAH (ou que tu procrastines comme un champion), je serais ravi d'avoir ton retour.
+Rien n'est inventé au hasard : l'onboarding (5 questions, moins d'une minute) et les 7 méthodes intégrées (Pomodoro, body doubling, règle des 5 minutes, plans « si… alors… »…) s'appuient sur la recherche sur le TDAH et les fonctions exécutives.
 
-#parisdevdayhack #OpenAI #TDAH #ADHD #Neurodiversité #Productivité #Accessibilité
+Je l'ai conçu pour le TDAH. Je me suis rendu compte qu'il servait à tous ceux qui veulent simplement finir ce qu'ils commencent.
+
+Construit en un week-end pour l'OpenAI DevDay Community Hackathon à Paris, avec l'API Realtime d'OpenAI pour une conversation vocale fluide.
+
+Tu veux le tester en avant-première ?
+💬 Commente « NOX » et je t'envoie la version de test.
+🔁 Et si tu connais quelqu'un qui commence tout et ne finit rien, partage-lui ce post. Il te remerciera (quand il aura fini).
+
+#parisdevdayhack #OpenAI #TDAH #ADHD #Neurodiversité #Productivité #Focus #Accessibilité
 
 ---
 
-**Commentaire à poster juste après** : Le code : https://github.com/<ton-compte>/nox
+**Premier commentaire (à poster juste après)** :
+Le code est open source 👉 https://github.com/<ton-compte>/nox
+Mention : @borvibe @OpenAI
 
-Pense à mentionner les organisateurs (@borvibe, @OpenAI) comme demandé dans TASKS.md.
+**Pourquoi « Commente NOX » plutôt qu'un lien de téléchargement** :
+l'installeur actuel embarquerait ta clé OpenAI (voir TASKS.md, T8). En attendant un serveur qui garde la clé, tu envoies la version de test à la main, et les commentaires font monter le post dans le fil.
