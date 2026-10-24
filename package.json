@@ -1,0 +1,22 @@
+{
+  "name": "nox-desktop",
+  "version": "0.1.0",
+  "description": "Mascotte de bureau anti-procrastination (TDAH et au-dela)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.rekj.nox",
+    "productName": "Nox",
+    "win": { "target": "nsis" }
+  }
+}
