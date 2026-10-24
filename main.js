@@ -90,7 +90,11 @@ let realtimeActive = false;    // une session vocale temps reel est ouverte dans
 
 function loadState() {
   const useLegacy = !process.env.NOX_USER_DATA && !fs.existsSync(STATE_FILE());
+  const defaults = state;
   try { state = { ...state, ...JSON.parse(fs.readFileSync(useLegacy ? LEGACY_STATE_FILE() : STATE_FILE(), 'utf8')) }; } catch {}
+  // Les sous-objets des connexions gardent leurs valeurs par defaut s'ils viennent d'une ancienne version
+  for (const k of ['calendar', 'mail', 'telegram']) state[k] = { ...defaults[k], ...(state[k] || {}) };
+  state.secrets = state.secrets || {};
   memory.ensure(state);
   // Ancien prenom (avant le profil)
   if (state.userName && !state.profile.name) state.profile.name = state.userName;
@@ -541,12 +545,14 @@ function tick() {
   if (wasIdle && idle < 5) {
     wasIdle = false;
     focusMs = 0; hyperfocusNotified = false; lastCheckIn = Date.now(); // l'absence compte comme une pause
+    if (state.saved) celebrate(memory.award(state, 'resume'));
     if (state.saved) proactive(`L'utilisateur revient apres une absence. Il travaillait sur "${state.saved.task}", etape "${state.saved.step}". Accueille-le et rappelle-lui exactement ou il en etait.`, 'happy');
   }
   // 3) Temps de concentration : stats du jour + hyperfocus
   if (state.task && !wasIdle) {
     focusMs += 3000;
     memory.bump(state, 'focusMs', 3000);
+    if (focusMs % 900000 === 0) celebrate(memory.award(state, 'focus_15')); // +XP par quart d'heure de focus
     if (++ticks % 10 === 0) saveState(); // toutes les 30 s, pour le tableau de bord
   }
   if (state.task && !hyperfocusNotified && focusMs > HYPERFOCUS_MIN * 60000) {
@@ -566,7 +572,65 @@ ipcMain.handle('nox:ask', async (_e, text) => { try { return await think(text); 
 ipcMain.handle('nox:speak', async (_e, text) => { try { return await speak(text); } catch { return null; } });
 ipcMain.handle('nox:transcribe', async (_e, buf) => { try { return await transcribe(buf); } catch (e) { return ''; } });
 ipcMain.handle('nox:getState', () => publicState());
-ipcMain.handle('nox:getCatalog', () => ({ methods: memory.METHODS, onboarding: memory.ONBOARDING }));
+// (les competences contiennent leur test : on n'envoie que nom, emoji et description)
+const SKILLS_PUBLIC = Object.fromEntries(Object.entries(memory.SKILLS).map(([id, { test, ...s }]) => [id, s]));
+ipcMain.handle('nox:getCatalog', () => ({ methods: memory.METHODS, onboarding: memory.ONBOARDING, levels: memory.LEVELS, skills: SKILLS_PUBLIC, xp: memory.XP }));
+// ---------- Connexions : cle OpenAI et mode demo ----------
+ipcMain.handle('nox:setApiKey', async (_e, key) => {
+  key = String(key || '').trim();
+  if (!/^sk-[\w-]{20,}$/.test(key)) return { ok: false, error: 'Ça ne ressemble pas à une clé OpenAI (elle commence par sk-).' };
+  try {
+    const res = await fetch('https://api.openai.com/v1/models', { headers: { Authorization: `Bearer ${key}` } });
+    if (!res.ok) return { ok: false, error: res.status === 401 ? 'Clé refusée par OpenAI.' : `OpenAI répond ${res.status}.` };
+  } catch { return { ok: false, error: 'Pas de connexion à OpenAI.' }; }
+  setSecret('openai', key);
+  state.demoMode = false;
+  saveState();
+  return { ok: true };
+});
+ipcMain.handle('nox:setDemo', (_e, on) => { state.demoMode = Boolean(on); saveState(); return publicState(); });
+ipcMain.handle('nox:forgetApiKey', () => { setSecret('openai', ''); saveState(); return publicState(); });
+ipcMain.on('nox:timerDone', () => { celebrate(memory.award(state, 'timer_done')); saveState(); });
+// ---------- Connexions : agenda, Gmail, Telegram ----------
+ipcMain.handle('nox:setCalendar', async (_e, url) => {
+  url = String(url || '').trim();
+  if (url && !/^(https|webcal):\/\/.+/i.test(url)) return { ok: false, error: 'Colle l’adresse qui commence par https:// (format iCal).' };
+  state.calendar.url = url;
+  await checkCalendar();
+  saveState();
+  return integrationErrors.calendar ? { ok: false, error: integrationErrors.calendar } : { ok: true, count: integ.upcoming(calendarEvents).length };
+});
+ipcMain.handle('nox:setGmail', async (_e, user, pass) => {
+  user = String(user || '').trim(); pass = String(pass || '').replace(/\s+/g, '');
+  if (!user) { state.mail.user = ''; setSecret('gmail', ''); saveState(); return { ok: true }; }
+  try { await integ.fetchNewMail({ user, pass, lastUid: 0 }); } catch (e) { return { ok: false, error: `Connexion refusée : ${e.message.slice(0, 120)}` }; }
+  state.mail.user = user; state.mail.lastUid = 0; setSecret('gmail', pass);
+  await checkMail(); // memorise la position : seuls les nouveaux mails seront signales
+  saveState();
+  return { ok: true };
+});
+ipcMain.handle('nox:unwatch', (_e, id) => { state.mail.watches = state.mail.watches.filter((w) => w.id !== id); saveState(); return true; });
+ipcMain.handle('nox:readMail', (_e, id) => {
+  const m = state.mail.pending.find((x) => x.id === id);
+  if (!m) return null;
+  state.mail.pending = state.mail.pending.filter((x) => x !== m);
+  saveState();
+  return { from: m.from, subject: m.subject, summary: m.summary, text: m.text };
+});
+ipcMain.handle('nox:setTelegram', async (_e, token) => {
+  token = String(token || '').trim();
+  if (!token) { setSecret('telegram', ''); state.telegram = { botName: '', chatId: null, pairCode: '', offset: 0 }; saveState(); return { ok: true }; }
+  try {
+    const me = await integ.tg(token, 'getMe');
+    setSecret('telegram', token);
+    state.telegram.botName = me.username;
+    state.telegram.pairCode = Math.random().toString(36).slice(2, 8).toUpperCase();
+    saveState();
+    telegramLoop();
+    return { ok: true, ...(await integ.pairingQr(me.username, state.telegram.pairCode)) };
+  } catch (e) { return { ok: false, error: e.message }; }
+});
+ipcMain.handle('nox:telegramQr', async () => (state.telegram.botName && state.telegram.pairCode ? integ.pairingQr(state.telegram.botName, state.telegram.pairCode) : null));
 ipcMain.handle('nox:setSettings', (_e, s) => {
   for (const k of SETTINGS_KEYS) if (k in s) state[k] = s[k];
   if (s.method !== undefined && !memory.METHODS[state.method]) state.method = null;
@@ -590,6 +654,7 @@ ipcMain.handle('nox:forgetFact', (_e, id) => { memory.removeFact(state, id); sav
 ipcMain.handle('nox:completeStep', () => {
   const r = memory.completeStep(state);
   if (r.tache_terminee) focusMs = 0;
+  celebrate(r.reward);
   saveState();
   if (r.ok) proactive(r.tache_terminee ? `L'utilisateur a coche la derniere etape de "${r.titre}" dans le tableau. Felicite-le pour la tache entiere.` : `L'utilisateur a coche une etape dans le tableau. Felicite en 3 mots et annonce l'etape suivante : "${r.etape_suivante}".`, 'proud');
   return r;
@@ -635,6 +700,10 @@ app.whenReady().then(() => {
   createWindow();
   syncWindowWatcher();
   setInterval(tick, 3000);
+  // Connexions : agenda toutes les 5 min, mails toutes les 3 min, Telegram en ecoute continue
+  setTimeout(checkCalendar, 8000); setInterval(checkCalendar, 5 * 60000);
+  setTimeout(checkMail, 12000); setInterval(checkMail, 3 * 60000);
+  if (getSecret('telegram')) telegramLoop();
   // En dev (npm start), on n'inscrit pas Electron au demarrage de Windows
   if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: true });
 });
