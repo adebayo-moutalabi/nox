@@ -1,0 +1,5 @@
+FR
+Je viens de créer Nox 🤖 : un petit robot de bureau qui aide les personnes TDAH à démarrer leurs tâches (et bientôt les personnes âgées avec la paperasse). Regarde l'histoire de Lea en 2 min 👇 Gratuit pour Windows : https://get-nox.github.io
+
+EN
+I just built Nox 🤖: a little desktop robot that helps people with ADHD get started (and soon, older people with their paperwork). Watch Lea's story in 2 min 👇 Free for Windows: https://get-nox.github.io
