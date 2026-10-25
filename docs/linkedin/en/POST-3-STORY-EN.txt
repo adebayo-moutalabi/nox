@@ -1,19 +1,24 @@
-Lea has ADHD. Her report has been “almost started” for three days. 📄
-Her grandma Rose has a 12-page tax form she doesn't understand. 🧾
+Lea is 24. She was diagnosed with ADHD three years ago.
+She's bright, creative… and every day, starting a task feels like climbing a wall. 🧗‍♀️
 
-Different people. Same problem: 𝘁𝗵𝗲 𝗳𝗶𝗿𝘀𝘁 𝗺𝗼𝘃𝗲.
+To-do lists, planners, alarms, five different apps: she tried them all.
+They all have the same problem: 𝘁𝗵𝗲𝘆 𝘄𝗮𝗶𝘁 𝗳𝗼𝗿 𝘆𝗼𝘂.
 
-Every app waits for you to open it. Nox doesn't wait. 🤖
+So we built Nox, a little robot that lives on your desktop and 𝗺𝗮𝗸𝗲𝘀 𝘁𝗵𝗲 𝗳𝗶𝗿𝘀𝘁 𝗺𝗼𝘃𝗲. 🤖
 
-In this 90-second story, you'll see Nox:
-🗣 talk to Lea first
-🪜 turn a big report into one tiny 5-minute step
-📺 notice the cat video… and bring her back, kindly
-🎉 celebrate the step she finally finished
+In this short story, you'll see Nox:
+🪜 turn a scary report into one tiny 5-minute step
+🫶 notice the cat video… and bring Lea back, kindly
+📅 remind her of a call she totally forgot
+📬 flag the email that matters
+⭐ celebrate every step she finishes
 
-And what's coming next: Nox helping Grandma Rose with her form, box by box, in simple words. She checks it. She sends it. 💛
+And then her grandma Rose calls about a 12-page tax form. 🧾
+That's what's coming next: Nox reading forms out loud, explaining every box in simple words, and filling them in with her. She checks it. She sends it. 💛
 
-Nox is free for Windows today (English & French), built in one weekend at the OpenAI DevDay Community Hackathon in Paris.
+Nox started with ADHD. Next, it's for everyone the computer leaves behind: paperwork, low vision, older people.
+
+Free for Windows today (English & French), built in one weekend at the OpenAI DevDay Community Hackathon in Paris.
 
 Who in your life needs a Nox? Tag them 👇
 
