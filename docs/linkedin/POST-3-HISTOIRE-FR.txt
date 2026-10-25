@@ -1,30 +1,13 @@
-Lea a 24 ans. On lui a diagnostiqué un TDAH il y a trois ans.
-Elle est brillante, créative… et chaque jour, commencer une tâche, c'est escalader un mur. 🧗‍♀️
+Lea a un TDAH. Le plus dur, c'est de commencer. 🧗‍♀️
 
-To-do lists, agendas, alarmes, cinq applis différentes : elle a tout essayé.
-Elles ont toutes le même défaut : 𝗲𝗹𝗹𝗲𝘀 𝘁'𝗮𝘁𝘁𝗲𝗻𝗱𝗲𝗻𝘁.
+Alors on a créé Nox : un petit robot de bureau qui fait le premier pas. 🤖
 
-Alors on a créé Nox, un petit robot qui vit sur ton bureau et qui 𝗳𝗮𝗶𝘁 𝗹𝗲 𝗽𝗿𝗲𝗺𝗶𝗲𝗿 𝗽𝗮𝘀. 🤖
+Construit en un week-end au hackathon OpenAI DevDay à Paris. Gratuit pour Windows.
 
-Dans cette petite histoire, tu vas voir Nox :
-🪜 transformer un rapport qui fait peur en une seule petite étape de 5 minutes
-🫶 remarquer la vidéo de chats… et ramener Lea, gentiment
-📅 lui rappeler l'appel qu'elle avait complètement oublié
-📬 lui signaler le mail important
-⭐ fêter chaque étape terminée
+Qui, autour de toi, aurait besoin d'un Nox ? 👇
 
-Et puis sa grand-mère Rose appelle, à cause d'une déclaration d'impôts de 12 pages. 🧾
-C'est la suite de Nox : lire les formulaires à voix haute, expliquer chaque case avec des mots simples, et les remplir avec elle. Elle vérifie. C'est elle qui envoie. 💛
-
-Nox a commencé avec le TDAH. Demain, il est pour tous ceux que l'ordinateur laisse de côté : la paperasse, les personnes malvoyantes, les personnes âgées.
-
-Gratuit pour Windows (français et anglais), construit en un week-end au hackathon OpenAI DevDay Community à Paris.
-
-Qui, autour de toi, aurait besoin d'un Nox ? Identifie-le 👇
-
-#TDAH #Accessibilité #Inclusion #OpenAI #Hackathon #BuildInPublic
+#TDAH #Accessibilité #OpenAI #BuildInPublic
 
 ---
 Premier commentaire :
-🌐 Essayer Nox (gratuit, Windows) : https://get-nox.github.io
-💻 Code : https://github.com/adebayo-moutalabi/nox
+🌐 https://get-nox.github.io
