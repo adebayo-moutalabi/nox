@@ -29,6 +29,18 @@ Cocher `[x]` quand c'est fait **et testé**.
 - [x] **Réactions émotionnelles** : « t'es mignon », « merci », « je suis fatigué »… → Nox rougit, sourit timidement, fait un câlin virtuel, s'inquiète. Nouvelles expressions (gêné, ému, fatigué) dans `mascot.js`.
 - [x] **Ouvrir la bonne appli selon la tâche** : « je dois travailler sur mon Word » → propose d'ouvrir Word ; « développer l'appli » → VS Code ; « mon rapport sur GitHub » → GitHub. Liste d'applis étendue + proposition au lancement de la tâche.
 
+### 🟠 Prévus par la spécification (AGENTS.md), pas encore faits
+- [ ] **Raccourci pour parler** : `Ctrl+Alt+K` pour que Nox écoute, sans cliquer (AGENTS 4.2).
+- [ ] **Rouvrir l'appli au retour** : après une absence, Nox propose de rouvrir l'appli de la tâche (scénario S3).
+- [ ] **Horaires actifs** : Nox dort en dehors des heures choisies (scénario S5, AGENTS 4.3).
+- [ ] **Panneau au double-clic** sur la mascotte (AGENTS 4.3).
+
+### 🟠 À vérifier en vrai (non testable automatiquement)
+- [ ] **Voix temps réel avec ta clé** : parler, couper la parole, délai de réponse, en français et en anglais (T1, T2).
+- [ ] **Ouverture réelle** de Word, VS Code… depuis la carte « Tu veux que je l'ouvre ? ».
+- [ ] **Connexions réelles** : Google Agenda (rappel 30 min avant), Gmail (mail important), Telegram (QR code).
+- [ ] **Installeur** sur un autre PC, ou une session Windows vierge.
+
 ### 🟢 Plus longues
 - [ ] **Suivi de l'appli de travail** : vérifier, avec permission, que la personne est bien sur l'appli prévue (VS Code, Word…) et la ramener doucement sinon.
 - [ ] **Version web** de Nox (dans le navigateur) et **extension Chrome**, pour communiquer avec les pages ouvertes.
