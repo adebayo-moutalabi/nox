@@ -33,6 +33,7 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     await mascot.waitForSelector('#bubble.card .q', { timeout: 8000 });
     check('Onboarding affiche au premier lancement', true);
     await mascot.screenshot({ path: path.join(SHOTS, '01-onboarding-intro.png'), omitBackground: true });
+    await mascot.click('#bubble .pill:has-text("Français")');
     await mascot.click('text=C\'est parti');
     await mascot.fill('#bubble .answer input', 'Habib');
     await mascot.click('#bubble .answer button');

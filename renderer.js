@@ -9,6 +9,8 @@ let voiceOn = true, hideTimer = null, timer = null, recorder = null, chunks = []
 const MOODS = ['idle', 'focus', 'happy', 'worried', 'proud'];
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let mood = 'focus', act = ''; // act : '' | listening | thinking | speaking
+let lang = 'fr';               // langue de l'interface et de la conversation (voir i18n.js)
+const T = (key, vars) => t(lang, key, vars);
 
 // Humeur (visage, couleur) et activite (ecoute, reflexion, parole) sont independantes
 function setMood(m) {
@@ -146,14 +148,14 @@ async function toggleVoice() {
   stopSpeaking();
   if (mood === 'idle') setMood('focus');
   setAct('thinking');
-  say('Je me connecte…');
+  say(T('say.connecting'));
   try {
     await Realtime.connect();
     await refreshStep();
     lastVoiceAt = Date.now();
     $('mic').classList.add('rec');
     setAct('listening');
-    say('Je t\'écoute, vas-y !', currentStep);
+    say(T('say.listening'), currentStep);
   } catch (e) {
     console.warn('Temps reel indisponible, ancien systeme :', e.message);
     Realtime.close();
@@ -182,8 +184,8 @@ Realtime.on = {
     if (r?.tache_terminee) { stopTimer(); setMood('proud'); flash('jump', 500); }
     return r;
   },
-  error(m) { say('Oups : ' + m); },
-  closed() { $('mic').classList.remove('rec'); rtAnalyser = null; setAct(''); say('Micro coupé. Clique sur moi pour reparler.'); }
+  error(m) { say(T('say.oops') + m); },
+  closed() { $('mic').classList.remove('rec'); rtAnalyser = null; setAct(''); say(T('say.micOff')); }
 };
 setInterval(() => { if (Realtime.open && act !== 'speaking' && Date.now() - lastVoiceAt > RT_IDLE_MS) Realtime.close(); }, 15000);
 
@@ -200,22 +202,22 @@ async function toggleMic() {
       $('mic').classList.remove('rec');
       stream.getTracks().forEach((t) => t.stop());
       setAct('thinking');
-      if (!card) say('Je t\'écoute…');
+      if (!card) say(T('say.listeningShort'));
       const buf = await new Blob(chunks, { type: 'audio/webm' }).arrayBuffer();
       const text = await window.nox.transcribe(buf);
-      if (text) ask(text); else { setAct(''); if (!card) say('Je n\'ai pas bien entendu, tu peux répéter ?'); }
+      if (text) ask(text); else { setAct(''); if (!card) say(T('say.notHeard')); }
     };
     recorder.start();
     $('mic').classList.add('rec');
     if (mood === 'idle') setMood('focus');
     setAct('listening');
-  } catch { setAct(''); say('Je n\'ai pas accès au micro.'); }
+  } catch { setAct(''); say(T('say.noMic')); }
 }
 $('mic').onclick = toggleVoice;
 $('voice').onclick = () => {
   voiceOn = !voiceOn;
   $('voice').classList.toggle('muted', !voiceOn);
-  $('voice').setAttribute('aria-label', voiceOn ? 'Couper la voix' : 'Activer la voix');
+  $('voice').setAttribute('aria-label', T(voiceOn ? 'btn.voiceOff' : 'btn.voiceOn'));
   if (!voiceOn) stopSpeaking();
 };
 
@@ -332,7 +334,7 @@ let card = null, pendingAnswer = null, methods = {}, currentMethod = null;
 // Une seule carte a la fois : les suivantes (mail, recompense) attendent leur tour
 let cardQueue = Promise.resolve();
 function showCardQueued(opts) { const p = cardQueue.then(() => showCard(opts)); cardQueue = p.catch(() => {}); return p; }
-function showCard({ text, options = [], input = false, secret = false, error = '', step = 0, total = 0, skip = 'Passer' }) {
+function showCard({ text, options = [], input = false, secret = false, error = '', step = 0, total = 0, skip = T('card.skip') }) {
   return new Promise((resolve) => {
     card = true;
     clearTimeout(hideTimer);
@@ -340,7 +342,7 @@ function showCard({ text, options = [], input = false, secret = false, error = '
     bubble.classList.add('show', 'card');
     if (total) {
       const dots = document.createElement('div'); dots.className = 'dots-progress';
-      dots.setAttribute('aria-label', `Question ${step} sur ${total}`);
+      dots.setAttribute('aria-label', T('card.progress', { step, total }));
       for (let i = 1; i <= total; i++) { const d = document.createElement('i'); if (i < step) d.className = 'on'; if (i === step) d.className = 'cur'; dots.append(d); }
       const count = document.createElement('span'); count.textContent = `${step} / ${total}`; dots.append(count);
       bubble.append(dots);
@@ -356,9 +358,9 @@ function showCard({ text, options = [], input = false, secret = false, error = '
     }
     if (input) {
       const row = document.createElement('form'); row.className = 'answer';
-      const f = document.createElement('input'); f.placeholder = secret ? 'sk-…' : 'Écris ici…'; f.maxLength = secret ? 300 : 40;
+      const f = document.createElement('input'); f.placeholder = secret ? 'sk-…' : T('card.write'); f.maxLength = secret ? 300 : 40;
       if (secret) { f.type = 'password'; f.autocomplete = 'off'; f.spellcheck = false; }
-      const ok = document.createElement('button'); ok.className = 'pill on'; ok.textContent = 'OK';
+      const ok = document.createElement('button'); ok.className = 'pill on'; ok.textContent = T('card.ok');
       row.onsubmit = (e) => { e.preventDefault(); if (f.value.trim()) finish(f.value.trim()); };
       row.append(f, ok); bubble.append(row);
       setTimeout(() => f.focus(), 50);
@@ -375,27 +377,37 @@ function showCard({ text, options = [], input = false, secret = false, error = '
   });
 }
 
+// Change la langue de toute l'interface (textes statiques + catalogue)
+async function setLang(l) {
+  lang = l;
+  applyI18n(lang);
+  ({ methods } = await window.nox.getCatalog());
+}
+
 async function runOnboarding(st) {
-  const { onboarding } = await window.nox.getCatalog();
   setMood('happy');
-  const hello = `Salut, je suis ${st.name} ! ${onboarding.length} petites questions et on s'y met. Tu peux répondre en cliquant, en écrivant, ou en me parlant.`;
-  await showCard({ text: hello, options: [['go', 'C\'est parti']], skip: null });
-  // Cle OpenAI de l'utilisateur (chiffree sur son PC), ou mode demo sans cle
+  // 1) Langue : pre-reglee sur celle de Windows, l'utilisateur confirme ou change
+  const chosen = await showCard({ text: T('card.lang'), options: [['fr', 'Français'], ['en', 'English']], skip: null });
+  await window.nox.setSettings({ lang: chosen });
+  await setLang(chosen);
+  const { onboarding } = await window.nox.getCatalog();
+  await showCard({ text: T('ob.hello', { name: st.name, n: onboarding.length }), options: [['go', T('ob.go')]], skip: null });
+  // 2) Cle OpenAI de l'utilisateur (chiffree sur son PC), ou mode demo sans cle
   if (!st.hasKey && !st.testMode && !st.demoMode) {
     let error = '';
     for (;;) {
-      const v = await showCard({ text: 'Pour te parler avec ma vraie voix, colle ta clé OpenAI. Elle reste chiffrée sur ton PC.', input: true, secret: true, error,
-        options: [['demo', 'Essayer sans clé']], skip: null });
+      const v = await showCard({ text: T('ob.key'), input: true, secret: true, error, options: [['demo', T('ob.demo')]], skip: null });
       if (v === 'demo' || v === null) { await window.nox.setDemo(true); break; }
       const r = await window.nox.setApiKey(v);
       if (r.ok) break;
       error = r.error;
     }
   }
+  // 3) Les 5 questions
   const answers = {};
   for (let i = 0; i < onboarding.length; i++) {
     const q = onboarding[i];
-    const text = q.key === 'blocker' && answers.name ? `${answers.name}, qu'est-ce qui te freine le plus ?` : q.ask;
+    const text = q.key === 'blocker' && answers.name ? T('ob.blockerNamed', { name: answers.name }) : q.ask;
     flash('jump', 450);
     const v = await showCard({ text, options: q.options || [], input: q.input, step: i + 1, total: onboarding.length });
     if (v !== null) answers[q.key] = v;
@@ -409,28 +421,29 @@ async function runOnboarding(st) {
 // Acces a la fenetre active : demande au lancement de la premiere tache (le moment ou il sert)
 window.nox.onAskWatch(async () => {
   await new Promise((r) => setTimeout(r, 5000)); // laisse le temps de lire la premiere etape
-  const v = await showCard({ text: 'Je peux voir quelle appli est ouverte, pour te ramener doucement si tu décroches ? Seul le titre de la fenêtre est utilisé.', options: [['yes', 'Oui'], ['no', 'Non merci']], skip: null });
+  const v = await showCard({ text: T('watch.ask'), options: [['yes', T('watch.yes')], ['no', T('watch.no')]], skip: null });
   await window.nox.setSettings({ watchWindows: v === 'yes', watchAsked: true });
   const st = await window.nox.getState();
-  say(v === 'yes' ? 'Merci ! Je veille, sans juger.' : 'Pas de souci, je ne regarde rien.', st.task?.steps?.[st.task.current]);
+  say(T(v === 'yes' ? 'say.watchYes' : 'say.watchNo'), st.task?.steps?.[st.task.current]);
 });
 
 // ---------- Mode jeu : niveau gagne, competence debloquee ----------
 window.nox.onReward(async (r) => {
   await new Promise((res) => setTimeout(res, 3500)); // laisse d'abord lire la reponse de Nox
+  const { skills, levels } = await window.nox.getCatalog();
   const parts = [];
-  if (r.levelUp) parts.push(`Niveau ${r.levelUp.level} : ${r.levelUp.grade} !`);
-  for (const s of r.skills) parts.push(`Compétence débloquée : ${s.emoji} ${s.name}`);
+  if (r.levelUp) parts.push(T('reward.level', { level: r.levelUp.level, grade: levels[r.levelUp.level - 1]?.[1] || r.levelUp.grade }));
+  for (const s of r.skills) parts.push(T('reward.skill', { emoji: s.emoji, name: skills[s.id]?.name || s.name }));
   setMood('proud'); flash('jump', 500);
-  showCardQueued({ text: `🎉 ${parts.join(' · ')}`, options: [['ok', 'Trop bien']], skip: null });
+  showCardQueued({ text: `🎉 ${parts.join(' · ')}`, options: [['ok', T('reward.ok')]], skip: null });
 });
 
 // ---------- Mail important ou attendu ----------
 window.nox.onMail(async (m) => {
   const who = m.from.replace(/\s*<.*>/, '');
   setMood('happy');
-  const v = await showCardQueued({ text: `📬 ${m.watched ? 'Le mail que tu attendais est arrivé' : 'Mail important'} de ${who} : « ${m.subject} ». Je te le lis ?`,
-    options: [['read', 'Lis-le'], ['later', 'Plus tard']], skip: null });
+  const v = await showCardQueued({ text: `📬 ${T('mail.ask', { kind: T(m.watched ? 'mail.watched' : 'mail.important'), from: T('mail.from'), who, subject: m.subject })}`,
+    options: [['read', T('mail.read')], ['later', T('mail.later')]], skip: null });
   if (v !== 'read') return;
   const r = await window.nox.readMail(m.id);
   if (!r) return;
@@ -441,15 +454,17 @@ window.nox.onMail(async (m) => {
 // ---------- Reglages ----------
 $('settings').onclick = async () => {
   const st = await window.nox.getState();
-  $('pMode').value = st.mode; $('pFirm').value = st.firmness; $('pWatch').checked = st.watchWindows;
+  $('pLang').value = st.lang; $('pMode').value = st.mode; $('pFirm').value = st.firmness; $('pWatch').checked = st.watchWindows;
   $('prefs').classList.add('show');
 };
 $('pSave').onclick = async () => {
-  const st = await window.nox.setSettings({ mode: $('pMode').value, firmness: $('pFirm').value, watchWindows: $('pWatch').checked, watchAsked: true });
+  const changed = $('pLang').value !== lang;
+  const st = await window.nox.setSettings({ lang: $('pLang').value, mode: $('pMode').value, firmness: $('pFirm').value, watchWindows: $('pWatch').checked, watchAsked: true });
   $('prefs').classList.remove('show');
+  if (changed) { await setLang(st.lang); if (Realtime.open) Realtime.close(); } // la voix reprend dans la nouvelle langue au prochain clic
   setMood(st.mode === 'repos' || st.mode === 'off' ? 'idle' : 'focus');
 };
-$('pReset').onclick = async () => { await window.nox.resetTask(); stopTimer(); $('prefs').classList.remove('show'); say('Tâche terminée. Bravo !'); setMood('proud'); };
+$('pReset').onclick = async () => { await window.nox.resetTask(); stopTimer(); $('prefs').classList.remove('show'); say(T('say.taskDone')); setMood('proud'); };
 $('pOnboard').onclick = async () => { $('prefs').classList.remove('show'); await window.nox.resetOnboarding(); runOnboarding(await window.nox.getState()); };
 $('pQuit').onclick = () => window.nox.quit();
 $('dashboard').onclick = () => window.nox.openDashboard();
@@ -458,8 +473,8 @@ $('pDash').onclick = () => { $('prefs').classList.remove('show'); window.nox.ope
 // ---------- Evenements proactifs ----------
 window.nox.onProactive(handle);
 window.nox.onMood(setMood);
-window.nox.onError((m) => { setAct(''); say('Oups : ' + m); });
-window.nox.onState((st) => { currentMethod = st.method; });
+window.nox.onError((m) => { setAct(''); say(T('say.oops') + m); });
+window.nox.onState((st) => { currentMethod = st.method; if (st.lang && st.lang !== lang) setLang(st.lang); });
 // Evenement proactif pendant une session vocale ouverte (absence, decrochage, hyperfocus)
 window.nox.onEvent(({ reason, mood: m }) => {
   if (m) setMood(m);
@@ -471,7 +486,7 @@ window.nox.setRealtimeActive(false); // au rechargement, aucune session n'est ou
 // ---------- Demarrage : elle atterrit, puis parle en premier ----------
 (async () => {
   const st = await window.nox.getState();
-  ({ methods } = await window.nox.getCatalog());
+  await setLang(st.lang || 'fr');
   currentMethod = st.method;
   document.title = st.name;
   const onboarded = Boolean(st.profile?.onboardedAt);

@@ -163,7 +163,7 @@
 <div id="app" class="focus">
   <div id="bubble"></div>
 
-  <div id="stage" title="Clique pour me parler, glisse-moi où tu veux" role="button" aria-label="Parler à la mascotte">
+  <div id="stage" data-i18n-title="stage.title" data-i18n-aria="stage.aria" role="button">
     <svg id="ring" viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="60"/><circle class="bar" id="ringBar" cx="65" cy="65" r="60" stroke-dasharray="377" stroke-dashoffset="377"/></svg>
     <span id="timerLabel"></span>
     <span id="zz">z z</span>
@@ -172,31 +172,34 @@
   </div>
 
   <div id="bar">
-    <input id="input" placeholder="Dis-moi ce que tu dois faire…">
+    <input id="input" data-i18n-ph="input.ph">
     <!-- Icones vectorielles au trait (2 px), heritent de la couleur du texte -->
-    <button id="write" title="Écrire" aria-label="Écrire un message"><svg class="ico" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>
-    <button id="mic" title="Parler" aria-label="Parler"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button>
-    <button id="voice" title="Voix on/off" aria-label="Couper la voix"><svg class="ico" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave-on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="wave-off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
-    <button id="dashboard" title="Tableau de bord" aria-label="Ouvrir le tableau de bord"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg></button>
-    <button id="settings" title="Réglages" aria-label="Réglages"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
+    <button id="write" data-i18n-title="btn.write" data-i18n-aria="btn.write"><svg class="ico" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>
+    <button id="mic" data-i18n-title="btn.mic" data-i18n-aria="btn.mic"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button>
+    <button id="voice" data-i18n-title="btn.voiceOff" data-i18n-aria="btn.voiceOff"><svg class="ico" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave-on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="wave-off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+    <button id="dashboard" data-i18n-title="btn.dashboard" data-i18n-aria="btn.dashboard"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg></button>
+    <button id="settings" data-i18n-title="btn.settings" data-i18n-aria="btn.settings"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
   </div>
 
   <!-- Réglages -->
   <div class="panel" id="prefs">
-    <h2>Réglages</h2>
-    <label>Mode
-      <select id="pMode"><option value="travail">Travail</option><option value="etudes">Études</option><option value="repos">Repos (je dors)</option><option value="off">Off</option></select></label>
-    <label>Fermeté
-      <select id="pFirm"><option value="douce">Tout doux</option><option value="normale">Normale</option><option value="stricte">Coach strict</option></select></label>
-    <label><input type="checkbox" id="pWatch"> Voir l'appli / l'onglet actif</label>
-    <button class="ghost" id="pDash">Ouvrir le tableau de bord</button>
-    <button class="ghost" id="pOnboard">Refaire l'onboarding</button>
-    <button class="ghost" id="pReset">Terminer la tâche en cours</button>
-    <button class="ghost" id="pQuit">Quitter Nox</button>
-    <button class="go" id="pSave">OK</button>
+    <h2 data-i18n="prefs.title"></h2>
+    <label><span data-i18n="prefs.lang"></span>
+      <select id="pLang"><option value="fr">Français</option><option value="en">English</option></select></label>
+    <label><span data-i18n="prefs.mode"></span>
+      <select id="pMode"><option value="travail" data-i18n="mode.travail"></option><option value="etudes" data-i18n="mode.etudes"></option><option value="repos" data-i18n="mode.repos"></option><option value="off" data-i18n="mode.off"></option></select></label>
+    <label><span data-i18n="prefs.firm"></span>
+      <select id="pFirm"><option value="douce" data-i18n="firm.douce"></option><option value="normale" data-i18n="firm.normale"></option><option value="stricte" data-i18n="firm.stricte"></option></select></label>
+    <label><input type="checkbox" id="pWatch"> <span data-i18n="prefs.watch"></span></label>
+    <button class="ghost" id="pDash" data-i18n="prefs.dash"></button>
+    <button class="ghost" id="pOnboard" data-i18n="prefs.onboard"></button>
+    <button class="ghost" id="pReset" data-i18n="prefs.reset"></button>
+    <button class="ghost" id="pQuit" data-i18n="prefs.quit"></button>
+    <button class="go" id="pSave" data-i18n="prefs.ok"></button>
   </div>
 </div>
 
+<script src="i18n.js"></script>
 <script src="mascot.js"></script>
 <script src="realtime.js"></script>
 <script src="renderer.js"></script>
