@@ -1,6 +1,6 @@
 {
   "name": "nox-desktop",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Mascotte de bureau anti-procrastination (TDAH et au-dela)",
   "main": "main.js",
   "scripts": {

@@ -10,11 +10,11 @@ Projet réalisé pour l'**OpenAI DevDay Community Hackathon Paris** (piste Impac
   <img src="docs/linkedin/slide-5.png" width="32%" alt="Tableau de bord">
 </p>
 
-**Site de présentation : [get-nox.github.io](https://get-nox.github.io)** · **Télécharger : [dernière version](https://github.com/adebayo-moutalabi/nox/releases/latest)**
+**Français / English** · **Site de présentation : [get-nox.github.io](https://get-nox.github.io)** · **Télécharger : [dernière version](https://github.com/adebayo-moutalabi/nox/releases/latest)**
 
 ## Télécharger (Windows)
 
-1. Va dans **[Releases](../../releases)** et télécharge `Nox.Setup.1.0.0.exe`.
+1. Va dans **[Releases](../../releases)** et télécharge `Nox.Setup.1.1.0.exe`.
 2. Double-clique : Nox s'installe en un clic, se lance, puis démarre avec Windows.
 3. L'onboarding te demande ta **clé OpenAI** (elle reste chiffrée sur ton PC) ou te laisse **essayer sans clé** (mode démo, cerveau local).
 
