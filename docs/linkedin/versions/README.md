@@ -6,3 +6,4 @@
 - **v3** : 3 accroches candidates (A, B, C), slide 1 = v1. Choix retenu ensuite : **A**.
 - **v4** : accroche A appliquee (slide 1 + post). Slide 6 encore avec 17 verifications.
 - **v5** : identique a v4, avant ajout des vrais liens (site noxapp.github.io, depot adebayo-moutalabi/nox).
+- **v6** : premier commentaire avec noxapp.github.io (adresse abandonnee, nom pris) avant passage a get-nox.github.io.

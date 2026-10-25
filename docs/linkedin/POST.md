@@ -56,7 +56,7 @@ Tu veux le tester en avant-première ?
 ---
 
 **Premier commentaire (juste après la publication)** :
-Télécharge Nox 👉 https://noxapp.github.io
+Télécharge Nox 👉 https://get-nox.github.io
 Le code est open source 👉 https://github.com/adebayo-moutalabi/nox
 Mentions : @borvibe @OpenAI
 
