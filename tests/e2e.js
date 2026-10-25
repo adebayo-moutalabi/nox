@@ -59,6 +59,10 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     await mascot.screenshot({ path: path.join(SHOTS, '03-premiere-etape.png'), omitBackground: true });
 
     // 3) Permission demandee au lancement de la premiere tache
+    // 3a) Appli utile : "rapport" -> Nox propose Word (le test refuse, pour ne rien ouvrir)
+    await mascot.waitForSelector('#bubble.card >> text=Ça se fait dans Word', { timeout: 6000 });
+    check('Appli proposee selon la tache (rapport -> Word)', (await state(mascot)).task.app === 'word');
+    await mascot.click('#bubble .pill:has-text("Pas besoin")');
     await mascot.waitForSelector('#bubble.card >> text=Je peux voir quelle appli', { timeout: 9000 });
     check('Acces a la fenetre demande au bon moment', true);
     await mascot.click('#bubble .pill:has-text("Non merci")');
@@ -141,6 +145,10 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     // 5d) Mails : attente d'un mail precis + tri sans IA
     check('Mail attendu reconnu', matchWatch({ query: 'mail de la CAF' }, { from: 'CAF <noreply@caf.fr>', subject: 'Votre attestation' }));
     check('Mail sans rapport ignore', !matchWatch({ query: 'Marie Dupont' }, { from: 'Newsletter <news@x.fr>', subject: 'Promo' }));
+    const { detectApp } = require('../apps');
+    check('Detection d\'appli : presentation -> PowerPoint, appli -> VS Code, GitHub cite -> GitHub',
+      detectApp('Préparer la présentation du client') === 'powerpoint' && detectApp('Développer l\'application mobile') === 'vscode' && detectApp('Mettre à jour mon rapport sur GitHub') === 'github');
+    check('Detection d\'appli : rien de force quand ce n\'est pas evident', detectApp('Ranger mon bureau') === null);
     check('Mail urgent repere', looksImportant({ subject: 'Rappel : facture à régler', text: '' }) && !looksImportant({ subject: 'Les nouveautés de la semaine', text: '' }));
 
     // 5e) Fenetre de Nox : visible en entier, taille reglable, mode discret

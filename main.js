@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const memory = require('./memory');
 const integ = require('./integrations');
+const apps = require('./apps');
 const { fakeThink } = require('./fake-ai');
 const i18n = require('./i18n');
 // Texte d'interface dans la langue choisie
@@ -302,6 +303,9 @@ async function doThink(userText) {
 function startTask(title, steps) {
   memory.startTask(state, title, steps);
   focusMs = 0; hyperfocusNotified = false; lastCheckIn = Date.now();
+  // Appli utile pour cette tache (Word, VS Code, GitHub…) : Nox propose de l'ouvrir
+  const appId = apps.detectApp(title);
+  if (appId) { state.task.app = appId; send('nox:suggestApp', { id: appId, name: apps.APPS[appId].name }); }
   // Permission de voir la fenetre active : demandee la premiere fois qu'elle devient utile
   if (!state.watchAsked) send('nox:askWatch');
 }
@@ -760,6 +764,7 @@ ipcMain.handle('nox:newTask', async (_e, text) => {
 ipcMain.on('nox:startTimer', (_e, min) => send('nox:startTimer', Number(min) || memory.timerMinutes(state)));
 ipcMain.on('nox:openDashboard', () => openDashboard());
 ipcMain.on('nox:hide', () => toggleNox(false));
+ipcMain.handle('nox:openApp', (_e, id) => apps.openApp(id, shell));
 ipcMain.on('nox:show', () => toggleNox(true));
 // Salutation au lancement : Nox parle en premier
 ipcMain.handle('nox:greet', () => {

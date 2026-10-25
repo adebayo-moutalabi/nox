@@ -421,10 +421,20 @@ async function runOnboarding(st) {
 // Acces a la fenetre active : demande au lancement de la premiere tache (le moment ou il sert)
 window.nox.onAskWatch(async () => {
   await new Promise((r) => setTimeout(r, 5000)); // laisse le temps de lire la premiere etape
-  const v = await showCard({ text: T('watch.ask'), options: [['yes', T('watch.yes')], ['no', T('watch.no')]], skip: null });
+  const v = await showCardQueued({ text: T('watch.ask'), options: [['yes', T('watch.yes')], ['no', T('watch.no')]], skip: null });
   await window.nox.setSettings({ watchWindows: v === 'yes', watchAsked: true });
   const st = await window.nox.getState();
   say(T(v === 'yes' ? 'say.watchYes' : 'say.watchNo'), st.task?.steps?.[st.task.current]);
+});
+
+// ---------- Appli utile pour la tache : Nox propose de l'ouvrir ----------
+window.nox.onSuggestApp(async ({ id, name }) => {
+  await new Promise((r) => setTimeout(r, 1800)); // laisse d'abord lire la premiere etape
+  const v = await showCardQueued({ text: T('app.ask', { app: name }), options: [['yes', T('app.yes')], ['no', T('app.no')]], skip: null });
+  if (v !== 'yes') return;
+  const r = await window.nox.openApp(id);
+  setMood(r.ok ? 'happy' : 'worried');
+  say(T(r.how === 'app' ? 'app.opened' : r.how === 'web' ? 'app.web' : 'app.none', { app: name }), currentStep);
 });
 
 // ---------- Mode jeu : niveau gagne, competence debloquee ----------
