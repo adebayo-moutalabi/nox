@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nox — LinkedIn carousel (EN)</title>
+<link rel="stylesheet" href="../../design-tokens.css">
+<style>
+  /* Toujours en clair (export image) */
+  :root { color-scheme:light; --ink:#2A2118; --ink-soft:#6B5D4F; --surface-solid:#FFFAF2; --surface-2:#F5ECDF; --line:rgba(42,33,24,.14); --page:#F6EFE5; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:var(--page); }
+  body { font-family:var(--font-text); color:var(--ink); }
+  .slide { width:1080px; height:1350px; position:relative; overflow:hidden; padding:96px 88px; display:flex; flex-direction:column;
+    background:radial-gradient(1200px 800px at 85% -10%, rgba(240,181,74,.35), transparent 60%), radial-gradient(900px 700px at -10% 110%, rgba(74,156,240,.18), transparent 60%), var(--page);
+    page-break-after:always; break-after:page; }
+  body.single::-webkit-scrollbar { display:none; }
+  body.single .slide { display:none; } body.single .slide.show { display:flex; }
+  .kicker { font-family:var(--font-title); font-weight:800; font-size:26px; letter-spacing:.12em; text-transform:uppercase; color:#8A5A0B; }
+  h1 { font-family:var(--font-title); font-weight:900; font-size:96px; line-height:1.02; letter-spacing:-2px; margin-top:22px; }
+  h2 { font-family:var(--font-title); font-weight:900; font-size:72px; line-height:1.05; letter-spacing:-1.5px; margin-top:18px; }
+  .lead { font-size:36px; line-height:1.4; color:var(--ink-soft); margin-top:28px; max-width:24ch; }
+  .hl { background:linear-gradient(transparent 62%, rgba(240,181,74,.55) 62%); padding:0 4px; }
+  .foot { position:absolute; left:88px; right:88px; bottom:64px; display:flex; justify-content:space-between; align-items:center; font-size:24px; color:var(--ink-soft); }
+  .foot b { font-family:var(--font-title); font-weight:900; color:var(--ink); font-size:30px; }
+  .sig { display:flex; align-items:baseline; gap:14px; } .sig span { font-size:22px; }
+  .cta { margin-top:40px; display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+  .cta span { font-size:26px; color:var(--ink-soft); }
+  .cta b { font-family:var(--font-title); font-weight:900; font-size:52px; background:#F0B54A; color:#2A2118; padding:14px 30px; border-radius:24px; box-shadow:0 14px 40px rgba(240,181,74,.4); }
+  .note { position:absolute; left:0; right:0; bottom:150px; text-align:center; font-size:20px; color:var(--ink-soft); }
+  .dots { display:flex; gap:8px; } .dots i { width:28px; height:8px; border-radius:4px; background:var(--line); } .dots i.on { background:#2F7FD6; }
+  .shot { border-radius:36px; box-shadow:0 30px 80px rgba(42,33,24,.22), 0 2px 8px rgba(42,33,24,.12); background:#fff; }
+  .center { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding-bottom:70px; }
+  .center img { max-height:100%; max-width:100%; width:auto !important; object-fit:contain; }
+  .list { margin-top:48px; display:flex; flex-direction:column; gap:26px; }
+  .item { display:flex; gap:28px; align-items:flex-start; background:var(--surface-solid); border:1px solid var(--line); border-radius:28px; padding:30px 34px;
+    box-shadow:0 10px 30px rgba(42,33,24,.10); }
+  .item .n { flex:none; width:64px; height:64px; border-radius:20px; background:#F0B54A; display:grid; place-items:center; font-family:var(--font-title); font-weight:900; font-size:32px; }
+  .item b { display:block; font-family:var(--font-title); font-weight:800; font-size:36px; }
+  .item span { font-size:27px; color:var(--ink-soft); line-height:1.35; }
+  .pill { display:inline-block; background:var(--surface-solid); border:1px solid var(--line); border-radius:999px; padding:14px 24px; font-size:26px; font-weight:600; margin:0 10px 12px 0; }
+  .mascot-big { width:520px; height:520px; margin-bottom:40px; }
+  /* Mascotte (meme dessin que l'appli, humeur happy) */
+  .m .eye { fill:#6FE3A1; } .m .eye-line { fill:none; stroke:#6FE3A1; stroke-width:2.6; stroke-linecap:round; } .m .eye-line.thin { stroke-width:1.8; }
+  .m .led, .m .core { fill:#6FE3A1; } .m .spark { fill:#F0B54A; } .m .shadow { fill:#000; opacity:.14; }
+  .m g.face, .m .dots, .m .wave, .m .mouth-o, .m #mouthOpen { display:none; } .m g.f-happy { display:inline; }
+</style>
+</head>
+<body>
+<!-- 1. Hook -->
+<section class="slide" data-n="1">
+  <p class="kicker">OpenAI DevDay Hackathon · Paris</p>
+  <h1>Your ADHD brain isn't <span class="hl">lazy</span>.</h1>
+  <p class="lead">It just needs a starter. Meet Nox, the desktop buddy that helps you start, stay focused, and pick up where you left off.</p>
+  <div class="center"><svg class="m mascot-big" viewBox="0 0 100 100" id="m1"></svg></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>by Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</section>
+
+<!-- 2. Problem -->
+<section class="slide" data-n="2">
+  <p class="kicker">The problem</p>
+  <h2>ADHD isn't about <span class="hl">knowing</span> what to do. It's about <span class="hl">doing</span> it.</h2>
+  <div class="list">
+    <div class="item"><div class="n">1</div><div><b>Starting</b><span>The blank page. Ten tabs opened, then closed.</span></div></div>
+    <div class="item"><div class="n">2</div><div><b>Staying on it</b><span>One notification, a coworker, a noise… and 40 minutes are gone.</span></div></div>
+    <div class="item"><div class="n">3</div><div><b>Getting back to it</b><span>After a break: "Wait… where was I?"</span></div></div>
+  </div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>by Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+</section>
+
+<!-- 3. Solution -->
+<section class="slide" data-n="3">
+  <p class="kicker">The solution</p>
+  <h2>One <span class="hl">tiny step</span> at a time. Out loud.</h2>
+  <p class="lead">Tell Nox what you need to do. It breaks it down, starts a timer, and gently pulls you back when you drift.</p>
+  <div class="center"><img class="shot" src="mascot.png" alt="Nox on the desktop, showing the first step and a timer" style="width:600px; background:transparent; box-shadow:none"></div>
+  <p class="note">App interface in French · English version coming soon</p>
+  <div class="foot"><span class="sig"><b>Nox</b><span>by Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div></div>
+</section>
+
+<!-- 4. Onboarding -->
+<section class="slide" data-n="4">
+  <p class="kicker">Research-backed onboarding</p>
+  <h2>5 questions. Under a minute. No forms.</h2>
+  <div style="margin-top:36px">
+    <span class="pill">Barkley: help at the moment of action</span><span class="pill">Safren: break tasks down</span><span class="pill">Gollwitzer: "if… then…" plans</span>
+  </div>
+  <div class="center"><img class="shot" src="onboarding.png" alt="Onboarding question with big tappable answers" style="width:560px; background:transparent; box-shadow:none"></div>
+  <p class="note">App interface in French · English version coming soon</p>
+  <div class="foot"><span class="sig"><b>Nox</b><span>by Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></div></div>
+</section>
+
+<!-- 5. Dashboard -->
+<section class="slide" data-n="5">
+  <p class="kicker">Progress & memory</p>
+  <h2>It remembers you. And you see your progress.</h2>
+  <p class="lead">Steps checked off, focus minutes, 7 work methods (Pomodoro, body doubling…). Everything stays on your PC, and you can delete it in one click.</p>
+  <div class="center"><img class="shot" src="dashboard.png" alt="Nox dashboard: current step, focus minutes, progress" style="width:940px"></div>
+  <p class="note">App interface in French · English version coming soon</p>
+  <div class="foot"><span class="sig"><b>Nox</b><span>by Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></div></div>
+</section>
+
+<!-- 6. Under the hood + CTA -->
+<section class="slide" data-n="6">
+  <p class="kicker">Under the hood</p>
+  <h2>Real-time voice, powered by the OpenAI Realtime API.</h2>
+  <div class="list">
+    <div class="item"><div class="n">🎙</div><div><b>gpt-realtime-2.1 over WebRTC</b><span>Hands-free, and you can interrupt it anytime. Tools: tasks, timer, memory.</span></div></div>
+    <div class="item"><div class="n">📅</div><div><b>Calendar, Gmail, Telegram</b><span>A heads-up before meetings, important emails read out loud, and nudges on your phone.</span></div></div>
+    <div class="item"><div class="n">🏆</div><div><b>Game mode</b><span>XP, ranks, skills to unlock. No streak to lose, ever.</span></div></div>
+  </div>
+  <div class="cta"><span>Free for Windows · open source</span><b>get-nox.github.io</b></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>by Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></div></div>
+</section>
+
+<script src="../../mascot.js"></script>
+<script>
+  document.getElementById('m1').innerHTML = buildMascot();
+  const n = new URLSearchParams(location.search).get('n');
+  if (n) { document.body.classList.add('single'); document.querySelector(`.slide[data-n="${n}"]`).classList.add('show'); }
+</script>
+</body>
+</html>

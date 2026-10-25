@@ -78,14 +78,16 @@ async function captures() {
   for (const d of [data, fresh]) fs.rmSync(d, { recursive: true, force: true });
 }
 
-async function slides() {
+// Une langue = un fichier de slides, un dossier de sortie et un nom de PDF
+async function slides({ html = 'slides.html', outDir = OUT, pdfName = 'nox-carrousel.pdf', variants: withVariants = true } = {}) {
+  fs.mkdirSync(outDir, { recursive: true });
   const data = fs.mkdtempSync(path.join(os.tmpdir(), 'nox-demo-'));
   // Windows limite une fenetre a la hauteur de l'ecran : chaque slide est capturee
   // en deux morceaux (haut, puis bas apres defilement) recolles dans un canvas 1080x1350
   const app = await electron.launch({ args: ['--force-device-scale-factor=1', '.'], cwd: ROOT,
     env: { ...process.env, NOX_FAKE_AI: '1', NOX_USER_DATA: data, REALTIME: 'off' } });
   await app.firstWindow();
-  const file = path.join(OUT, 'slides.html');
+  const file = path.join(OUT, html);
   // Une fenetre hors ecran par slide, capturee a 1080x1350
   // (pas de require dans evaluate : les images reviennent en base64 et sont ecrites ici)
   const result = await app.evaluate(async ({ BrowserWindow }, file) => {
@@ -114,13 +116,13 @@ async function slides() {
     return { images };
   }, file);
   const pngs = result.images.map((b64, i) => {
-    const p = path.join(OUT, `slide-${i + 1}.png`);
+    const p = path.join(outDir, `slide-${i + 1}.png`);
     fs.writeFileSync(p, Buffer.from(b64, 'base64'));
     return p;
   });
   // PDF : une image pleine page par slide, sans aucune marge (format document LinkedIn).
   // Fond a la couleur des slides : aucun liseré blanc aux arrondis de taille de page.
-  const pdfHtml = path.join(OUT, '_pdf.html');
+  const pdfHtml = path.join(outDir, '_pdf.html');
   fs.writeFileSync(pdfHtml, `<!doctype html><style>@page{size:1080px 1350px;margin:0}html,body{margin:0;padding:0;background:#F6EFE5}
     .p{width:1080px;height:1350px;overflow:hidden;break-after:page}.p:last-child{break-after:auto}.p img{display:block;width:1080px;height:1350px}</style>
     ${pngs.map((p) => `<div class="p"><img src="${path.basename(p)}"></div>`).join('')}`);
@@ -132,8 +134,9 @@ async function slides() {
     w.destroy();
     return out.toString('base64');
   }, pdfHtml);
-  fs.writeFileSync(path.join(OUT, 'nox-carrousel.pdf'), Buffer.from(pdf, 'base64'));
+  fs.writeFileSync(path.join(outDir, pdfName), Buffer.from(pdf, 'base64'));
   fs.rmSync(pdfHtml);
+  if (!withVariants) { await app.close(); fs.rmSync(data, { recursive: true, force: true }); return pngs; }
   // Variantes d'accroche (slide 1) a comparer
   const variants = await app.evaluate(async ({ BrowserWindow }, file) => {
     const w = new BrowserWindow({ width: 1080, height: 1350, show: false, useContentSize: true, frame: false });
@@ -167,6 +170,12 @@ async function slides() {
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   await captures();
-  const pngs = await slides();
-  console.log('OK', pngs.map((p) => path.basename(p)).join(', '), '+ nox-carrousel.pdf');
+  // `node tools/linkedin.js en` : seulement la version anglaise
+  if (process.argv[2] !== 'en') {
+    const pngs = await slides();
+    console.log('OK FR', pngs.map((p) => path.basename(p)).join(', '), '+ nox-carrousel.pdf');
+  }
+  // Version anglaise (meme captures, textes ecrits pour un public anglophone)
+  const en = await slides({ html: 'slides-en.html', outDir: path.join(OUT, 'en'), pdfName: 'nox-carousel-en.pdf', variants: false });
+  console.log('OK EN', en.map((p) => path.basename(p)).join(', '), '+ en/nox-carousel-en.pdf');
 })().catch((e) => { console.error(e); process.exit(1); });
