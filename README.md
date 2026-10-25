@@ -10,7 +10,7 @@ Projet réalisé pour l'**OpenAI DevDay Community Hackathon Paris** (piste Impac
   <img src="docs/linkedin/slide-5.png" width="32%" alt="Tableau de bord">
 </p>
 
-**Site de présentation** : `https://<ton-compte>.github.io/nox/` (dossier `docs/`, publié avec GitHub Pages).
+**Site de présentation : [noxapp.github.io](https://noxapp.github.io)** · **Télécharger : [dernière version](https://github.com/adebayo-moutalabi/nox/releases/latest)**
 
 ## Télécharger (Windows)
 

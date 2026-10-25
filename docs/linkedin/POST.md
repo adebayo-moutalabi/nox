@@ -56,7 +56,8 @@ Tu veux le tester en avant-première ?
 ---
 
 **Premier commentaire (juste après la publication)** :
-Le code est open source 👉 https://github.com/<ton-compte>/nox
+Télécharge Nox 👉 https://noxapp.github.io
+Le code est open source 👉 https://github.com/adebayo-moutalabi/nox
 Mentions : @borvibe @OpenAI
 
 **Conseils de publication** (pratiques largement rapportées, pas des règles officielles de LinkedIn) :

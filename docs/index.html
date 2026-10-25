@@ -7,7 +7,8 @@
 <meta name="description" content="Nox te parle en premier, découpe ta tâche en micro-étapes et t'aide à démarrer, rester concentré et reprendre. Gratuit pour Windows.">
 <meta property="og:title" content="Nox — ton cerveau TDAH n'est pas paresseux">
 <meta property="og:description" content="Un compagnon de bureau qui t'aide à démarrer, rester et reprendre. Une micro-étape à la fois.">
-<meta property="og:image" content="linkedin/slide-1.png">
+<meta property="og:image" content="https://noxapp.github.io/linkedin/slide-1.png">
+<meta property="og:url" content="https://noxapp.github.io/">
 <link rel="icon" href="assets/icon.png">
 <link rel="stylesheet" href="assets/design-tokens.css">
 <style>
@@ -256,7 +257,7 @@
     </div>
     <details style="margin-top:22px">
       <summary style="cursor:pointer; font-weight:700">Pour les développeurs : lancer depuis le code</summary>
-<pre><code>git clone &lt;adresse du dépôt&gt;
+<pre><code>git clone https://github.com/adebayo-moutalabi/nox.git
 cd nox
 npm install
 npm start            # NOX_FAKE_AI=1 pour le cerveau de test, sans clé
@@ -320,15 +321,11 @@ npm run dist         # construit l'installeur dans dist/</code></pre>
 <script>
   document.getElementById('mascot').innerHTML = buildMascot();
 
-  // Liens du depot : deduits de l'adresse GitHub Pages (<compte>.github.io/<depot>/)
-  const owner = location.hostname.endsWith('.github.io') ? location.hostname.split('.')[0] : null;
-  const repo = owner ? (location.pathname.split('/').filter(Boolean)[0] || `${owner}.github.io`) : null;
-  const base = owner ? `https://github.com/${owner}/${repo}` : null;
-  if (base) {
-    for (const a of document.querySelectorAll('a.dl')) a.href = `${base}/releases/latest`;
-    for (const a of document.querySelectorAll('a.repo')) a.href = base;
-    for (const a of document.querySelectorAll('a.repo-file')) a.href = `${base}/blob/main/${a.dataset.path}`;
-  }
+  // Liens vers le depot du projet (le site, lui, est publie sur noxapp.github.io)
+  const REPO = 'https://github.com/adebayo-moutalabi/nox';
+  for (const a of document.querySelectorAll('a.dl')) a.href = `${REPO}/releases/latest`;
+  for (const a of document.querySelectorAll('a.repo')) a.href = REPO;
+  for (const a of document.querySelectorAll('a.repo-file')) a.href = `${REPO}/blob/main/${a.dataset.path}`;
 
   // Video : affichee des que docs/video/nox-demo.mp4 existe
   const video = document.getElementById('demoVideo');
