@@ -34,7 +34,7 @@ Lire `AGENTS.md` et `DESIGN.md` avant de commencer. Une tâche à la fois, dans 
 - [x] **T6. Panneau** (tableau de bord, bouton ▦) : tâche, étapes cochées, minuteur, stats du jour, réglages. Design soigné.
 - [ ] **T7. Polir S2, S3, S4** avec la voix temps réel (relances parlées naturelles).
 - [x] **T8. Installeur** : `npm.cmd run dist`, tester le `.exe` sur une session propre. (Testé : appli packagée, dossier de données vierge, sans clé.)
-- [ ] **T9. Dépôt GitHub public** (README prêt ; publication et Release à faire) : README avec GIF, captures, instructions.
+- [x] **T9. Dépôt GitHub public** (github.com/adebayo-moutalabi/nox, Release v1.0.0, site get-nox.github.io) : README avec GIF, captures, instructions.
 
 ## P2 — Dimanche soir (non négociable)
 
