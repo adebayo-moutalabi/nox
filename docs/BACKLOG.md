@@ -67,7 +67,7 @@ Tes retours d'abord (ce que tu veux ajouter, améliorer, mettre en avant). Piste
 ## 6. Communication 🟢
 
 - [ ] Second post LinkedIn avec la vidéo v2 : texte prêt dans `docs/linkedin/en/POST-2-VIDEO-EN.txt` (anglais), puis version française.
-- [ ] **Post « histoire »** : vidéo verticale `video/Nox-story-v4.mp4` (HD, 21,7 Mo, sous-titres courts) et `video/Nox-story-v4-light.mp4` (WhatsApp, 12,9 Mo) ; textes EN, FR et WhatsApp prêts ; v1 et v2 gardées + texte `docs/linkedin/en/POST-3-STORY-EN.txt`.
+- [ ] **Post « histoire »** : vidéo verticale `video/Nox-story-v4-LinkedIn.mp4` (HD, 25 Mo) et `video/Nox-story-v4-WhatsApp.mp4` (13 Mo), format standard yuv420p niveau 4.1/3.1 (les anciennes en yuvj420p étaient refusées) ; textes EN, FR et WhatsApp prêts ; v1 et v2 gardées + texte `docs/linkedin/en/POST-3-STORY-EN.txt`.
 - [ ] Mettre à jour le texte du premier post avec la v3.
 - [ ] Régénérer le PDF français du carrousel (`node tools/linkedin.js`).
 
