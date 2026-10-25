@@ -7,7 +7,7 @@ Cocher `[x]` quand c'est fait **et testé**.
 
 ## 1. Publication 🔴
 
-- [ ] **Release v1.2.0** (appli bilingue + corrections) sur GitHub, avec `dist/Nox Setup 1.2.0.exe`. Sans elle, le bouton « Télécharger » donne l'ancienne version, uniquement en français.
+- [ ] **Release v1.3.0** (notes, émotions, bonne appli) sur GitHub, avec `dist/Nox Setup 1.3.0.exe` et la section v1.3.0 de CHANGELOG.md. Sans elle, le bouton « Télécharger » donne l'ancienne version, uniquement en français.
 - [x] **Post LinkedIn en anglais** (publié, voir linkedin/PUBLISHED.md ; mettre à jour le texte avec la v3) : texte `docs/linkedin/en/POST-FINAL-EN.txt` + `docs/linkedin/en/nox-carousel-en.pdf`, puis premier commentaire avec les liens.
 - [ ] Régénérer le **PDF français** (`node tools/linkedin.js`, PDF fermé dans la visionneuse).
 - [ ] Second post LinkedIn plus tard (vidéo, ou version française).
@@ -25,9 +25,9 @@ Cocher `[x]` quand c'est fait **et testé**.
 ## 3. Nouvelles fonctionnalités
 
 ### 🟠 Rapides et impressionnantes
-- [ ] **Notes (façon Google Keep)** : « Nox, note que je dois rappeler Marie » → la note est enregistrée, visible et effaçable dans le tableau de bord, relue à la demande.
-- [ ] **Réactions émotionnelles** : « t'es mignon », « merci », « je suis fatigué »… → Nox rougit, sourit timidement, fait un câlin virtuel, s'inquiète. Nouvelles expressions (gêné, ému, fatigué) dans `mascot.js`.
-- [ ] **Ouvrir la bonne appli selon la tâche** : « je dois travailler sur mon Word » → propose d'ouvrir Word ; « développer l'appli » → VS Code ; « mon rapport sur GitHub » → GitHub. Liste d'applis étendue + proposition au lancement de la tâche.
+- [x] **Notes (façon Google Keep)** : « Nox, note que je dois rappeler Marie » → la note est enregistrée, visible et effaçable dans le tableau de bord, relue à la demande.
+- [x] **Réactions émotionnelles** : « t'es mignon », « merci », « je suis fatigué »… → Nox rougit, sourit timidement, fait un câlin virtuel, s'inquiète. Nouvelles expressions (gêné, ému, fatigué) dans `mascot.js`.
+- [x] **Ouvrir la bonne appli selon la tâche** : « je dois travailler sur mon Word » → propose d'ouvrir Word ; « développer l'appli » → VS Code ; « mon rapport sur GitHub » → GitHub. Liste d'applis étendue + proposition au lancement de la tâche.
 
 ### 🟢 Plus longues
 - [ ] **Suivi de l'appli de travail** : vérifier, avec permission, que la personne est bien sur l'appli prévue (VS Code, Word…) et la ramener doucement sinon.

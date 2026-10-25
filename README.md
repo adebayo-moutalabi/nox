@@ -29,6 +29,9 @@ Projet réalisé pour l'**OpenAI DevDay Community Hackathon Paris** (piste Impac
 | **Mémoire** | Profil, souvenirs appris en parlant, historique des tâches, stats par jour. Tout reste en local, consultable et effaçable. |
 | **Tableau de bord** | Étape en cours, étapes cochées, minutes de focus sur 7 jours, progression, agenda, connexions, historique. |
 | **Mode jeu** | XP à chaque étape, 8 grades (de Étincelle à Légende), 8 compétences à débloquer. Jamais de série perdue ni de compteur d'échecs. |
+| **Notes express** | « Nox, note que… » : les notes s'affichent en post-it dans le tableau de bord, et Nox les relit à la demande. |
+| **La bonne appli** | Un rapport → Word, une présentation → PowerPoint, du code → VS Code… Nox propose de l'ouvrir (ou sa version web). |
+| **Émotions** | Un compliment le fait rougir, un merci lui met des cœurs dans les yeux, ta fatigue le rend compatissant. |
 | **7 méthodes** | Règle des 5 minutes, Pomodoro, body doubling, Si… alors…, time-boxing, manger la grenouille, règle des 2 minutes. Méthode suggérée selon ton profil. |
 | **Google Agenda** | Avec l'adresse secrète iCal : Nox te prévient 60 et 30 min avant un rendez-vous, propose de préparer, et passe ta journée en revue le matin. |
 | **Gmail** | Avec un mot de passe d'application : Nox repère les mails importants, propose de te les lire, et te prévient quand un mail attendu arrive (« préviens-moi si la CAF m'écrit »). |

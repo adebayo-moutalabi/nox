@@ -5,6 +5,44 @@ Each section is ready to paste into the matching GitHub Release description.
 
 ---
 
+## v1.3.0
+
+🌐 **https://get-nox.github.io**
+
+### 🇬🇧 English
+
+**New**
+- **Quick notes**: say or type "Nox, note that I need to call Sam" (or "remind me to…"). Your notes show up as sticky cards in the dashboard, where you can also add or delete them, and Nox reads them back when you ask.
+- **The right app for the task**: start "write my report" and Nox offers to open Word; a presentation → PowerPoint, a budget → Excel, coding → VS Code, and GitHub, Notion or Gmail when you mention them. It only opens it if you say yes, and uses the web version if the app isn't installed.
+- **Nox has feelings**: tell it it's cute and it blushes 🙈, say thanks and its eyes turn into hearts 💛, say you're exhausted and it gets it and offers a break 🥱.
+
+**Install**
+1. Download **Nox.Setup.1.3.0.exe** below.
+2. Double-click it: Nox installs in one click and launches.
+3. If Windows shows "Windows protected your PC": click **More info** → **Run anyway** (the installer is not signed yet).
+4. Paste your OpenAI key (encrypted on your PC), or choose **Try without a key**.
+
+Updating from an older version: just install this one, your profile, notes and history are kept.
+
+### 🇫🇷 Français
+
+**Nouveau**
+- **Notes express** : dis ou écris « Nox, note que je dois rappeler Sam » (ou « rappelle-moi de… »). Tes notes s'affichent sur des post-it dans le tableau de bord, où tu peux aussi en ajouter ou en supprimer, et Nox te les relit quand tu veux.
+- **La bonne appli pour la tâche** : lance « rédiger mon rapport » et Nox propose d'ouvrir Word ; une présentation → PowerPoint, un budget → Excel, du code → VS Code, et GitHub, Notion ou Gmail quand tu les cites. Il ne l'ouvre que si tu dis oui, et utilise la version web si l'appli n'est pas installée.
+- **Nox a des émotions** : dis-lui qu'il est mignon et il rougit 🙈, dis merci et ses yeux deviennent des cœurs 💛, dis que tu es épuisé et il comprend et propose une pause 🥱.
+
+**Installer**
+1. Télécharge **Nox.Setup.1.3.0.exe** ci-dessous.
+2. Double-clique : Nox s'installe en un clic et se lance.
+3. Si Windows affiche « Windows a protégé votre ordinateur » : **Informations complémentaires** → **Exécuter quand même** (l'installeur n'est pas encore signé).
+4. Colle ta clé OpenAI (chiffrée sur ton PC), ou choisis **Essayer sans clé**.
+
+Mise à jour depuis une ancienne version : installe simplement celle-ci, ton profil, tes notes et ton historique sont conservés.
+
+Windows 10/11, 64-bit.
+
+---
+
 ## v1.2.0
 
 🌐 **https://get-nox.github.io**
