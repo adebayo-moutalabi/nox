@@ -38,6 +38,11 @@ const text = (page, sel) => page.locator(sel).innerText();
     await mascot.press('#input', 'Enter');
     await mascot.waitForFunction(() => document.querySelector('#bubble').innerText.includes('Open the document'), null, { timeout: 5000 });
     check('EN : tache decoupee en anglais', true);
+    await mascot.click('#write');
+    await mascot.fill('#input', "you're so cute");
+    await mascot.press('#input', 'Enter');
+    const shy = await mascot.waitForFunction(() => document.getElementById('app').classList.contains('shy'), null, { timeout: 5000 }).then(() => true, () => false);
+    check('EN : compliment, Nox rougit', shy && (await text(mascot, '#bubble')).includes('blush'));
     await mascot.waitForSelector('#bubble.card >> text=Can I see which app', { timeout: 9000 });
     await mascot.click('#bubble .pill:has-text("No thanks")');
 

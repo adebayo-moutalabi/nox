@@ -6,7 +6,7 @@ const $ = (id) => document.getElementById(id);
 const appEl = $('app'), bubble = $('bubble'), input = $('input'), bar = $('bar'), stage = $('stage');
 const lookEl = $('look'), mouthEl = $('mouthOpen'), mascotEl = $('mascot');
 let voiceOn = true, hideTimer = null, timer = null, recorder = null, chunks = [], audio = null;
-const MOODS = ['idle', 'focus', 'happy', 'worried', 'proud'];
+const MOODS = ['idle', 'focus', 'happy', 'worried', 'proud', 'shy', 'love', 'tired'];
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let mood = 'focus', act = ''; // act : '' | listening | thinking | speaking
 let lang = 'fr';               // langue de l'interface et de la conversation (voir i18n.js)

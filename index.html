@@ -54,6 +54,7 @@
   /* Couleurs lumineuses selon l'humeur */
   #app { --glow:var(--glow-focus); }
   #app.happy { --glow:var(--glow-happy); } #app.proud { --glow:var(--glow-proud); } #app.worried { --glow:var(--glow-worried); } #app.idle { --glow:var(--glow-idle); }
+  #app.shy { --glow:#FF9EC4; } #app.love { --glow:#FF7AA8; } #app.tired { --glow:#9AA8C8; }
   #mascot .eye { fill:var(--glow); transition:fill var(--dur-slow); }
   #mascot .eye-line { fill:none; stroke:var(--glow); stroke-width:2.6; stroke-linecap:round; transition:stroke var(--dur-slow); }
   #mascot .eye-line.thin { stroke-width:1.8; }
@@ -70,11 +71,19 @@
 
   .worried #mascot { animation:shake .5s ease-in-out 3; }
   .proud #mascot, .happy #mascot { animation:hop .6s ease-in-out 2; }
+  /* Gene : il se tortille ; touche : il sautille ; fatigue : il s'affaisse */
+  .shy #mascot { animation:shy .9s ease-in-out 2; } .love #mascot { animation:hop .5s ease-in-out 3; }
+  .tired #mascot .body { transform:translateY(2px) scale(1.03,.96); }
+  @keyframes shy { 25% { transform:rotate(-6deg); } 75% { transform:rotate(6deg); } }
+  #mascot .blush { fill:#FF8FB8; opacity:.85; }
+  #mascot .heart { fill:#FF7AA8; transform-box:fill-box; transform-origin:center; animation:float-up 1.8s ease-in-out infinite; }
+  #mascot .heart.h2 { animation-delay:.6s; }
+  @keyframes float-up { 0% { transform:translateY(4px) scale(.6); opacity:0; } 40% { opacity:1; } 100% { transform:translateY(-10px) scale(1.1); opacity:0; } }
   @keyframes bob { 50% { transform:translateY(-4px); } }
   @keyframes hop { 50% { transform:translateY(-12px); } }
   @keyframes shake { 25% { transform:translateX(-3px); } 75% { transform:translateX(3px); } }
   #mascot g.face { display:none; }
-  .idle g.f-idle, .happy g.f-happy, .focus g.f-focus, .worried g.f-worried, .proud g.f-proud { display:inline !important; }
+  .idle g.f-idle, .happy g.f-happy, .focus g.f-focus, .worried g.f-worried, .proud g.f-proud, .shy g.f-shy, .love g.f-love, .tired g.f-tired { display:inline !important; }
   /* Survol : elle sourit (sauf quand elle dort) */
   #app.hover:not(.idle) g.face { display:none !important; }
   #app.hover:not(.idle) g.f-happy { display:inline !important; }
@@ -97,7 +106,7 @@
 
   /* Bouche : sourire au repos, ouverture selon le volume quand elle parle */
   #mascot .mouth-o { display:none; }
-  .worried #mascot .mouth .smile { display:none; } .worried #mascot .mouth-o { display:inline; }
+  .worried #mascot .mouth .smile, .tired #mascot .mouth .smile { display:none; } .worried #mascot .mouth-o, .tired #mascot .mouth-o { display:inline; }
   .idle #mascot .mouth .smile { display:none; }
   #app.talking #mascot .mouth .smile, #app.talking #mascot .mouth-o { display:none; }
 

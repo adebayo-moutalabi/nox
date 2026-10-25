@@ -79,6 +79,13 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     await mascot.waitForFunction(async () => (await window.nox.getState()).notes.length === 1, null, { timeout: 5000 });
     check('Note dictee enregistree', (await state(mascot)).notes[0].text === 'je dois rappeler Marie demain');
 
+    // 4c) Reaction emotionnelle : un compliment fait rougir Nox
+    await mascot.click('#write');
+    await mascot.fill('#input', "t'es trop mignon");
+    await mascot.press('#input', 'Enter');
+    const shy = await mascot.waitForFunction(() => document.getElementById('app').classList.contains('shy'), null, { timeout: 5000 }).then(() => true, () => false);
+    check('Compliment : Nox rougit (humeur shy)', shy && (await bubbleText(mascot)).includes('rougir'));
+
     // 5) Tableau de bord
     const [dash] = await Promise.all([app.waitForEvent('window'), mascot.click('#dashboard')]);
     await dash.waitForSelector('#stepNow');

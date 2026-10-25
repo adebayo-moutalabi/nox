@@ -15,6 +15,9 @@ const R = {
     bravo: 'Bravo ! Étape suivante.',
     noted: 'Noté, je retiens.',
     noteSaved: "C'est noté 📝",
+    shy: "Oh… merci 🙈 Tu vas me faire rougir. Bon, on s'y remet ?",
+    love: "Ooh, ça me touche ! 💛 Je suis là pour toi.",
+    tired: "Je te comprends… 🥱 Et si on faisait une vraie pause de 5 min ? Je garde ta place.",
     split: 'Ok, on découpe. Première étape, et je lance le minuteur.',
     steps: ['Ouvre le document', 'Écris le plan en 3 points', 'Rédige la première partie'],
     more: "Dis-m'en un peu plus ?"
@@ -33,6 +36,9 @@ const R = {
     bravo: 'Nice! Next step.',
     noted: "Noted, I'll remember that.",
     noteSaved: 'Got it, noted 📝',
+    shy: "Oh… thank you 🙈 You're making me blush. Shall we get back to it?",
+    love: "Aww, that means a lot! 💛 I'm here for you.",
+    tired: "I get it… 🥱 How about a real 5-minute break? I'll save your spot.",
     split: "Ok, let's break it down. Here's step one, and I'm starting the timer.",
     steps: ['Open the document', 'Write a 3-point outline', 'Draft the first part'],
     more: 'Tell me a bit more?'
@@ -61,6 +67,10 @@ function fakeThink(state, text) {
   if (state.task && /(c'est fait|fini|termin|c'est bon|done|finished)/.test(t)) {
     return { reply: r.bravo, mood: 'proud', action: { type: 'done_step' } };
   }
+  // Emotions : compliment -> gene, affection -> touche, fatigue -> compatit
+  if (/(t'es (trop )?(mignon|beau|chou|adorable|cool)|tu es (trop )?(mignon|beau|adorable)|you'?re (so )?(cute|adorable|awesome)|so cute)/i.test(t)) return { reply: r.shy, mood: 'shy' };
+  if (/(je t'adore|je t'aime|t'es le meilleur|tu es le meilleur|merci beaucoup|love you|you'?re the best|thank you so much)/i.test(t)) return { reply: r.love, mood: 'love' };
+  if (/(je suis (trop |tellement )?(fatigu|crev|épuis|epuis)|i'?m (so |really )?(tired|exhausted|drained))/i.test(t)) return { reply: r.tired, mood: 'tired' };
   // Note dictee : "note que…", "rappelle-moi de…", "note that…", "remind me to…"
   const note = text.match(/^\s*(?:nox,?\s*)?(?:note que|note :|prends note que|rappelle-moi de|note that|take a note:?|remind me to)\s*(.+)/i);
   if (note) return { reply: r.noteSaved, mood: 'happy', action: { type: 'note', value: note[1].trim() } };

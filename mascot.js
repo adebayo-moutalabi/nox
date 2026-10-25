@@ -17,12 +17,25 @@ function buildMascot() {
               <path d="M35 40 l8 -3 M65 40 l-8 -3" class="eye-line thin"/>`,
     // yeux etoiles
     proud: `<path d="M40 39 l1.8 4.2 4.4 .4 -3.4 2.9 1 4.4 -3.8 -2.3 -3.8 2.3 1 -4.4 -3.4 -2.9 4.4 -.4z" class="eye"/>
-            <path d="M60 39 l1.8 4.2 4.4 .4 -3.4 2.9 1 4.4 -3.8 -2.3 -3.8 2.3 1 -4.4 -3.4 -2.9 4.4 -.4z" class="eye"/>`
+            <path d="M60 39 l1.8 4.2 4.4 .4 -3.4 2.9 1 4.4 -3.8 -2.3 -3.8 2.3 1 -4.4 -3.4 -2.9 4.4 -.4z" class="eye"/>`,
+    // gene (compliment) : petits yeux plisses vers le bas
+    shy: `<path d="M35 46 q5 -5 10 0 M55 46 q5 -5 10 0" class="eye-line"/>`,
+    // touche (merci, affection) : yeux en coeur
+    love: `<path d="M40 49 c-3.2 -2.2 -6 -4.2 -6 -7 a3 3 0 0 1 6 -1 a3 3 0 0 1 6 1 c0 2.8 -2.8 4.8 -6 7z" class="eye"/>
+           <path d="M60 49 c-3.2 -2.2 -6 -4.2 -6 -7 a3 3 0 0 1 6 -1 a3 3 0 0 1 6 1 c0 2.8 -2.8 4.8 -6 7z" class="eye"/>`,
+    // fatigue : paupieres lourdes sur des yeux mi-clos
+    tired: `<rect x="36" y="44" width="7" height="6" rx="3" class="eye"/><rect x="57" y="44" width="7" height="6" rx="3" class="eye"/>
+            <path d="M34 43.5 h11 M55 43.5 h11" class="eye-line thin"/>`
   };
   // Decors hors de la visiere (ne clignent pas)
   const extras = {
     worried: `<path d="M76 26 q3 5 0 7 q-3 -2 0 -7z" fill="#8fd8ff"/>`,
-    proud: `<path d="M10 22 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5z M88 14 l1 3 3 1 -3 1 -1 3 -1 -3 -3 -1 3 -1z" class="spark"/>`
+    proud: `<path d="M10 22 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5z M88 14 l1 3 3 1 -3 1 -1 3 -1 -3 -3 -1 3 -1z" class="spark"/>`,
+    // joues roses lumineuses sur la visiere
+    shy: `<ellipse cx="35" cy="57" rx="4.5" ry="2.4" class="blush"/><ellipse cx="65" cy="57" rx="4.5" ry="2.4" class="blush"/>`,
+    // petits coeurs qui s'envolent
+    love: `<path class="heart h1" d="M16 30 c-2 -1.4 -3.8 -2.6 -3.8 -4.4 a1.9 1.9 0 0 1 3.8 -.6 a1.9 1.9 0 0 1 3.8 .6 c0 1.8 -1.8 3 -3.8 4.4z"/>
+           <path class="heart h2" d="M84 24 c-2.4 -1.6 -4.4 -3 -4.4 -5.2 a2.2 2.2 0 0 1 4.4 -.7 a2.2 2.2 0 0 1 4.4 .7 c0 2.2 -2 3.6 -4.4 5.2z"/>`
   };
   return `
   <defs>
