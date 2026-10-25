@@ -40,13 +40,13 @@ Cocher `[x]` quand c'est fait **et testé**.
 
 ## 4. Site get-nox.github.io 🟠
 
-- [ ] Tous les liens externes dans un nouvel onglet.
-- [ ] SEO complet : titre et description, aperçus LinkedIn et X, adresse canonique, données structurées, sitemap, robots.txt, textes alternatifs.
-- [ ] Auteur affiché « Adebayo MOUTALABI », avec liens vers le portfolio (https://adebayo-moutalabi.github.io/) et LinkedIn (https://www.linkedin.com/in/adebayo-moutalabi/).
-- [ ] Français et anglais selon la langue du navigateur, avec un bouton pour changer.
-- [ ] Captures en anglais pour la version anglaise.
-- [ ] **Copywriting à retravailler.**
-- [ ] **FAQ** : « C'est gratuit ? », « Il me faut une clé OpenAI ? », « Mes données vont où ? », « Ça marche sur Mac ? », « Pourquoi Windows dit que l'appli n'est pas signée ? », « Je n'ai pas de TDAH, c'est pour moi ? »…
+- [x] Tous les liens externes dans un nouvel onglet.
+- [x] SEO complet : titre et description, aperçus LinkedIn et X, adresse canonique, données structurées, sitemap, robots.txt, textes alternatifs.
+- [x] Auteur affiché « Adebayo MOUTALABI », avec liens vers le portfolio (https://adebayo-moutalabi.github.io/) et LinkedIn (https://www.linkedin.com/in/adebayo-moutalabi/).
+- [x] Français et anglais selon la langue du navigateur, avec un bouton pour changer.
+- [x] Captures en anglais pour la version anglaise.
+- [x] **Copywriting retravaillé** (récit 14 h / 14 h 41, bénéfices, 3 étapes).
+- [x] **FAQ** (9 questions) : « C'est gratuit ? », « Il me faut une clé OpenAI ? », « Mes données vont où ? », « Ça marche sur Mac ? », « Pourquoi Windows dit que l'appli n'est pas signée ? », « Je n'ai pas de TDAH, c'est pour moi ? »…
 - [ ] Intégrer la vidéo quand elle sera prête (`video/nox-demo.mp4`).
 
 ## 5. Vidéo de 2 minutes 🟠

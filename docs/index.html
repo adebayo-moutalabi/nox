@@ -1,16 +1,57 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nox — le compagnon de bureau pour les cerveaux TDAH</title>
-<meta name="description" content="Nox te parle en premier, découpe ta tâche en micro-étapes et t'aide à démarrer, rester concentré et reprendre. Gratuit pour Windows.">
-<meta property="og:title" content="Nox — ton cerveau TDAH n'est pas paresseux">
-<meta property="og:description" content="Un compagnon de bureau qui t'aide à démarrer, rester et reprendre. Une micro-étape à la fois.">
-<meta property="og:image" content="https://get-nox.github.io/linkedin/slide-1.png">
+<title>Nox — the desktop buddy for ADHD brains | Free for Windows</title>
+<meta name="description" content="Nox talks to you first, breaks your task into tiny steps, starts a timer and gently brings you back when you drift. Free for Windows, in English and French.">
+<meta name="author" content="Adebayo MOUTALABI">
+<meta name="keywords" content="ADHD, TDAH, focus, procrastination, productivity, desktop assistant, Pomodoro, body doubling, executive function">
+<link rel="canonical" href="https://get-nox.github.io/">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#F0B54A">
+<!-- Apercus de partage (LinkedIn, X, messageries) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nox">
 <meta property="og:url" content="https://get-nox.github.io/">
-<link rel="icon" href="assets/icon.png">
+<meta property="og:title" content="Nox — your ADHD brain isn't lazy">
+<meta property="og:description" content="A tiny desktop buddy that talks to you first, breaks tasks into tiny steps and gently brings you back. Free for Windows.">
+<meta property="og:image" content="https://get-nox.github.io/linkedin/en/slide-1.png">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="1350">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nox — your ADHD brain isn't lazy">
+<meta name="twitter:description" content="A tiny desktop buddy that talks to you first and helps you start, stay focused and pick up where you left off.">
+<meta name="twitter:image" content="https://get-nox.github.io/linkedin/en/slide-1.png">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
 <link rel="stylesheet" href="assets/design-tokens.css">
+<!-- Donnees structurees pour les moteurs de recherche -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Nox",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Windows 10, Windows 11",
+  "description": "A desktop companion for ADHD brains: it talks to you first, breaks tasks into tiny steps, starts a visible timer and gently brings you back when you drift.",
+  "url": "https://get-nox.github.io/",
+  "downloadUrl": "https://github.com/adebayo-moutalabi/nox/releases/latest",
+  "softwareVersion": "1.2.0",
+  "inLanguage": ["en", "fr"],
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "image": "https://get-nox.github.io/linkedin/en/slide-1.png",
+  "author": {
+    "@type": "Person",
+    "name": "Adebayo MOUTALABI",
+    "url": "https://adebayo-moutalabi.github.io/",
+    "sameAs": ["https://www.linkedin.com/in/adebayo-moutalabi/", "https://github.com/adebayo-moutalabi"]
+  }
+}
+</script>
 <style>
   * { box-sizing:border-box; margin:0; padding:0; }
   [hidden] { display:none !important; }
@@ -23,7 +64,7 @@
   h2 { font-size:clamp(30px, 4.4vw, 48px); margin-bottom:14px; }
   h3 { font-size:20px; font-weight:800; letter-spacing:0; margin-bottom:6px; }
   .kicker { font-family:var(--font-title); font-weight:800; font-size:14px; letter-spacing:.12em; text-transform:uppercase; color:var(--step-ink); margin-bottom:12px; }
-  .lead { font-size:clamp(17px, 2vw, 20px); color:var(--ink-soft); max-width:60ch; }
+  .lead { font-size:clamp(17px, 2vw, 20px); color:var(--ink-soft); max-width:62ch; }
   .hl { background:linear-gradient(transparent 62%, rgba(240,181,74,.55) 62%); padding:0 3px; }
   section { padding:88px 0; }
   .muted { color:var(--ink-soft); }
@@ -35,7 +76,11 @@
   .brand img { width:32px; height:32px; border-radius:9px; }
   nav ul { display:flex; gap:22px; list-style:none; font-weight:600; font-size:15px; }
   nav ul a { text-decoration:none; color:var(--ink-soft); } nav ul a:hover { color:var(--ink); }
-  @media (max-width:760px) { nav ul { display:none; } }
+  .nav-right { display:flex; align-items:center; gap:10px; }
+  .lang { display:flex; border:1.5px solid var(--line); border-radius:999px; overflow:hidden; }
+  .lang button { border:0; background:transparent; color:var(--ink-soft); font-weight:800; font-family:var(--font-title); font-size:13px; padding:6px 10px; cursor:pointer; }
+  .lang button[aria-pressed="true"] { background:var(--ink); color:var(--page); }
+  @media (max-width:860px) { nav ul { display:none; } }
 
   /* Boutons */
   .btn { display:inline-flex; align-items:center; gap:10px; border-radius:16px; padding:15px 22px; font-family:var(--font-title); font-weight:800; font-size:17px;
@@ -47,19 +92,22 @@
   .btn.ghost:hover { border-color:var(--chart-bar); }
   .btn.small { padding:9px 14px; font-size:15px; border-radius:12px; }
   .btn svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+  @media (max-width:480px) { nav .btn.small span { display:none; } }
 
   /* Accroche */
   .hero { padding:72px 0 40px; background:radial-gradient(900px 600px at 85% 0%, rgba(240,181,74,.30), transparent 60%), radial-gradient(700px 500px at 0% 100%, rgba(74,156,240,.14), transparent 60%); }
   .hero .wrap { display:grid; grid-template-columns:1.25fr .9fr; gap:40px; align-items:center; }
-  .hero h1 { font-size:clamp(40px, 6.4vw, 76px); margin-bottom:20px; }
+  .hero h1 { font-size:clamp(40px, 6.6vw, 80px); margin-bottom:20px; }
   .hero .ctas { display:flex; flex-wrap:wrap; gap:12px; margin:30px 0 14px; }
-  .hero small { color:var(--ink-soft); font-size:14px; }
+  .hero small { color:var(--ink-soft); font-size:14px; display:block; max-width:52ch; }
+  .badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .badges span { font-size:13px; font-weight:700; background:var(--surface-solid); border:1px solid var(--line); border-radius:999px; padding:5px 11px; }
   .mascot-wrap { position:relative; display:grid; place-items:center; }
   .mascot-wrap svg { width:min(380px, 80vw); height:auto; overflow:visible; }
   .bubble { position:absolute; top:4%; left:50%; transform:translateX(-58%); background:var(--surface-solid); border:1px solid var(--line); border-radius:18px;
     padding:12px 16px; box-shadow:var(--shadow-soft); font-size:15px; max-width:250px; }
   .bubble b { display:block; color:var(--step-ink); font-size:14px; margin-top:4px; }
-  @media (max-width:860px) { .hero .wrap { grid-template-columns:1fr; } .mascot-wrap { order:-1; } .mascot-wrap svg { width:240px; } .bubble { position:static; transform:none; margin-bottom:8px; } }
+  @media (max-width:860px) { .hero .wrap { grid-template-columns:1fr; } .mascot-wrap { order:-1; } .mascot-wrap svg { width:220px; } .bubble { position:static; transform:none; margin-bottom:8px; } }
 
   /* Mascotte (meme dessin que l'appli) */
   .m .eye { fill:var(--glow-focus); } .m .eye-line { fill:none; stroke:var(--glow-focus); stroke-width:2.6; stroke-linecap:round; } .m .eye-line.thin { stroke-width:1.8; }
@@ -70,6 +118,12 @@
   @keyframes bob { 50% { transform:translateY(-3px); } } @keyframes pulse { 50% { opacity:.5; } }
   @keyframes blink { 0%, 93%, 100% { transform:none; } 95% { transform:scaleY(.1); } }
 
+  /* Scene (le probleme raconte) */
+  .scene { display:grid; gap:12px; margin-top:30px; max-width:640px; }
+  .scene p { display:flex; gap:16px; align-items:baseline; font-size:clamp(18px, 2.2vw, 22px); }
+  .scene time { font-family:var(--font-title); font-weight:900; color:var(--step-ink); min-width:88px; font-variant-numeric:tabular-nums; }
+  .punch { font-family:var(--font-title); font-weight:900; font-size:clamp(24px, 3.4vw, 34px); margin-top:34px; max-width:28ch; line-height:1.2; }
+
   /* Video */
   .video { aspect-ratio:16/9; border-radius:28px; overflow:hidden; background:var(--surface-solid); border:1px solid var(--line); box-shadow:var(--shadow-soft); display:grid; place-items:center; margin-top:28px; }
   .video video { width:100%; height:100%; display:block; background:#000; }
@@ -79,19 +133,31 @@
 
   /* Cartes */
   .grid { display:grid; gap:16px; margin-top:34px; }
-  .g3 { grid-template-columns:repeat(3, 1fr); } .g2 { grid-template-columns:repeat(2, 1fr); } .g4 { grid-template-columns:repeat(4, 1fr); }
-  @media (max-width:900px) { .g3, .g4 { grid-template-columns:repeat(2, 1fr); } }
-  @media (max-width:600px) { .g3, .g2, .g4 { grid-template-columns:1fr; } }
+  .g3 { grid-template-columns:repeat(3, 1fr); }
+  @media (max-width:900px) { .g3 { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:600px) { .g3 { grid-template-columns:1fr; } }
   .card { background:var(--surface-solid); border:1px solid var(--line); border-radius:24px; padding:26px; box-shadow:0 6px 20px rgba(42,33,24,.07); }
   .card .ico { width:52px; height:52px; border-radius:16px; background:color-mix(in srgb, var(--nox-yellow) 30%, var(--surface-solid)); display:grid; place-items:center; font-size:26px; margin-bottom:14px; }
   .card p { color:var(--ink-soft); font-size:16px; }
   .alt { background:var(--surface-2); }
+
+  /* Comment ca marche */
+  .how { counter-reset:h; }
+  .how .card { position:relative; padding-top:62px; }
+  .how .card::before { counter-increment:h; content:counter(h); position:absolute; top:22px; left:26px; width:30px; height:30px; border-radius:10px; background:var(--nox-yellow);
+    color:var(--on-accent); display:grid; place-items:center; font-family:var(--font-title); font-weight:900; }
+  .quote { font-family:var(--font-title); font-weight:800; color:var(--ink); }
 
   /* Captures */
   .shots { display:grid; grid-template-columns:1fr 1.6fr; gap:24px; align-items:center; margin-top:36px; }
   .shots img { width:100%; height:auto; border-radius:22px; box-shadow:var(--shadow-soft); display:block; }
   .shots .tr { background:none; box-shadow:none; }
   @media (max-width:820px) { .shots { grid-template-columns:1fr; } }
+
+  /* Methodes */
+  .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
+  .chip { background:var(--surface-solid); border:1px solid var(--line); border-radius:999px; padding:10px 16px; font-weight:600; }
+  .chip small { color:var(--ink-soft); font-weight:500; }
 
   /* Etapes d'installation */
   .steps { counter-reset:s; display:grid; gap:14px; margin-top:30px; }
@@ -103,10 +169,14 @@
   pre { background:#211B15; color:#F5ECDF; border-radius:16px; padding:18px 20px; overflow-x:auto; font-size:14px; margin-top:12px; }
   pre code { background:none; border:0; padding:0; color:inherit; }
 
-  /* Methodes */
-  .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
-  .chip { background:var(--surface-solid); border:1px solid var(--line); border-radius:999px; padding:10px 16px; font-weight:600; }
-  .chip small { color:var(--ink-soft); font-weight:500; }
+  /* FAQ */
+  .faq { display:grid; gap:10px; margin-top:30px; max-width:820px; }
+  .faq details { background:var(--surface-solid); border:1px solid var(--line); border-radius:18px; padding:4px 22px; }
+  .faq summary { cursor:pointer; list-style:none; font-family:var(--font-title); font-weight:800; font-size:18px; padding:16px 30px 16px 0; position:relative; }
+  .faq summary::-webkit-details-marker { display:none; }
+  .faq summary::after { content:'+'; position:absolute; right:0; top:12px; font-size:26px; color:var(--step-ink); transition:transform var(--dur-base) var(--ease-spring); }
+  .faq details[open] summary::after { transform:rotate(45deg); }
+  .faq details p { color:var(--ink-soft); padding:0 0 18px; }
 
   /* Tests */
   .tests { list-style:none; columns:2; column-gap:28px; margin-top:24px; }
@@ -118,216 +188,263 @@
   .cta-band { text-align:center; background:radial-gradient(700px 400px at 50% 0%, rgba(240,181,74,.35), transparent 70%), var(--surface-2); }
   .cta-band .lead { margin:0 auto 28px; }
   footer { padding:40px 0 56px; color:var(--ink-soft); font-size:14px; border-top:1px solid var(--line); }
-  footer .wrap { display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; }
+  footer .wrap { display:flex; flex-wrap:wrap; justify-content:space-between; gap:16px; align-items:center; }
+  .author { display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+  .author b { color:var(--ink); font-family:var(--font-title); font-weight:900; }
+  .author a { font-weight:700; }
   @media (prefers-reduced-motion: reduce) { .m * { animation:none !important; } html { scroll-behavior:auto; } }
 </style>
 </head>
 <body>
 
-<nav aria-label="Navigation principale">
+<nav aria-label="Main navigation">
   <div class="wrap">
-    <a class="brand" href="#"><img src="assets/icon.png" alt="">Nox</a>
+    <a class="brand" href="#"><img src="assets/icon.png" alt="" width="32" height="32">Nox</a>
     <ul>
-      <li><a href="#video">Vidéo</a></li>
-      <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-      <li><a href="#methodes">Méthodes</a></li>
-      <li><a href="#installer">Installer</a></li>
-      <li><a href="#tests">Tests</a></li>
+      <li><a href="#how" data-t="nav.how">How it works</a></li>
+      <li><a href="#features" data-t="nav.features">Features</a></li>
+      <li><a href="#methods" data-t="nav.methods">Methods</a></li>
+      <li><a href="#install" data-t="nav.install">Install</a></li>
+      <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a class="btn primary small dl" href="#installer">Télécharger</a>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <a class="btn primary small" href="https://github.com/adebayo-moutalabi/nox/releases/latest"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span data-t="cta.short">Download</span></a>
+    </div>
   </div>
 </nav>
 
 <header class="hero">
   <div class="wrap">
     <div>
-      <p class="kicker">Gratuit · Windows · Open source</p>
-      <h1>Ton cerveau TDAH n'est pas <span class="hl">paresseux</span>.</h1>
-      <p class="lead">Il lui manque juste un démarreur. Nox est un petit compagnon qui vit sur ton bureau : il te parle en premier, découpe ta tâche en micro-étapes et t'aide à démarrer, rester concentré·e et reprendre.</p>
+      <p class="kicker" data-t="hero.kicker">Free · Windows · English &amp; French</p>
+      <h1 data-t="hero.title">Your ADHD brain isn't <span class="hl">lazy</span>.</h1>
+      <p class="lead" data-t="hero.lead">It just never got a starter. Nox is a tiny desktop buddy that talks to you first, breaks your task into tiny steps, and gently brings you back when you drift.</p>
       <div class="ctas">
-        <a class="btn primary dl" href="#installer"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Télécharger pour Windows</a>
-        <a class="btn ghost repo" href="#"><svg viewBox="0 0 24 24"><path d="M9 19c-4 1.5-4-2-6-2.5M15 22v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.7 4.7 0 0 0-1.3-3.2 4.4 4.4 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.4 4.4 0 0 0-.1 3.2A4.7 4.7 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V22"/></svg>Voir le code</a>
+        <a class="btn primary" href="https://github.com/adebayo-moutalabi/nox/releases/latest"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span data-t="cta.download">Download for Windows</span></a>
+        <a class="btn ghost" href="#how"><span data-t="cta.how">See how it works</span></a>
       </div>
-      <small>Pensé d'abord pour le TDAH. Utile à tous ceux qui commencent mille choses sans les finir.</small>
+      <small data-t="hero.small">Built for ADHD first. Works for anyone who starts everything and finishes nothing.</small>
+      <div class="badges"><span data-t="badge.free">✅ Free</span><span data-t="badge.minute">⚡ Ready in 1 minute</span><span data-t="badge.local">🔐 Your data stays on your PC</span></div>
     </div>
     <div class="mascot-wrap" aria-hidden="true">
-      <div class="bubble">On découpe ça. Première étape :<b>→ Ouvre le document</b></div>
+      <div class="bubble"><span data-t="bubble.text">Let's break it down. First step:</span><b data-t="bubble.step">→ Open the document</b></div>
       <svg class="m" viewBox="0 0 100 100" id="mascot"></svg>
     </div>
   </div>
 </header>
 
-<section id="video">
+<section>
   <div class="wrap">
-    <p class="kicker">En 2 minutes</p>
-    <h2>Nox en action</h2>
-    <p class="lead">Démarrer une tâche à la voix, décrocher sur YouTube, revenir après une pause : les trois moments où Nox change tout.</p>
+    <p class="kicker" data-t="scene.kicker">Sound familiar?</p>
+    <div class="scene">
+      <p><time data-t="scene.t1">2:00 pm</time><span data-t="scene.1">You open the doc to "just start."</span></p>
+      <p><time data-t="scene.t2">2:03 pm</time><span data-t="scene.2">One notification.</span></p>
+      <p><time data-t="scene.t3">2:41 pm</time><span data-t="scene.3">You're deep in YouTube. The doc is still blank.</span></p>
+    </div>
+    <p class="punch" data-t="scene.punch">You know exactly what to do. You just can't make yourself start. And every app waits for you to make the first move.</p>
+    <p class="lead" style="margin-top:14px" data-t="scene.answer">Nox makes the first move for you.</p>
+  </div>
+</section>
+
+<section id="video" class="alt">
+  <div class="wrap">
+    <p class="kicker" data-t="video.kicker">In 2 minutes</p>
+    <h2 data-t="video.title">See Nox in action</h2>
+    <p class="lead" data-t="video.lead">Starting a task out loud, drifting to YouTube, coming back after a break: the three moments where Nox changes everything.</p>
     <div class="video">
-      <!-- Depose la video dans docs/video/nox-demo.mp4 : elle s'affiche automatiquement -->
-      <video controls preload="metadata" poster="linkedin/slide-1.png" hidden id="demoVideo"></video>
+      <video controls preload="metadata" poster="linkedin/en/slide-1.png" hidden id="demoVideo"></video>
       <div class="soon" id="videoSoon">
         <div class="play"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></div>
-        <h3>La vidéo arrive très bientôt</h3>
-        <p class="muted">En attendant, télécharge Nox et essaie-le en mode démo, sans clé.</p>
+        <h3 data-t="video.soon">The video is coming very soon</h3>
+        <p class="muted" data-t="video.soonText">Meanwhile, download Nox and try it in demo mode, no key needed.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="alt">
+<section id="how">
   <div class="wrap">
-    <p class="kicker">Le problème</p>
-    <h2>Le TDAH n'est pas un problème de <span class="hl">savoir</span>.<br>C'est un problème de <span class="hl">faire</span>.</h2>
-    <div class="grid g3">
-      <div class="card"><div class="ico">🚪</div><h3>Démarrer</h3><p>La page blanche. Les onglets ouverts puis refermés. Tu sais quoi faire, mais rien ne part.</p></div>
-      <div class="card"><div class="ico">🌀</div><h3>Rester</h3><p>Une notification, un collègue, un bruit… et 40 minutes disparaissent.</p></div>
-      <div class="card"><div class="ico">🧭</div><h3>Reprendre</h3><p>Après une pause : « j'en étais où, déjà ? ». Et il faut tout recommencer.</p></div>
+    <p class="kicker" data-t="how.kicker">How it works</p>
+    <h2 data-t="how.title">Three steps. No setup marathon.</h2>
+    <div class="grid g3 how">
+      <div class="card"><h3 data-t="how.1.t">Say what you need to do</h3><p data-t="how.1.p">Out loud or typed, the way it comes to you: <span class="quote">"I need to write my report."</span></p></div>
+      <div class="card"><h3 data-t="how.2.t">Nox breaks it down</h3><p data-t="how.2.p">Into tiny steps of 2 to 10 minutes. You only see the next one, and a timer ring starts around Nox.</p></div>
+      <div class="card"><h3 data-t="how.3.t">You just do the next step</h3><p data-t="how.3.p">Nox stays with you, celebrates each step, and gives you the next one. No guilt, no streak to lose.</p></div>
     </div>
   </div>
 </section>
 
-<section id="fonctionnalites">
+<section id="features" class="alt">
   <div class="wrap">
-    <p class="kicker">Fonctionnalités</p>
-    <h2>Quelqu'un à côté de toi, qui ne juge jamais.</h2>
-    <p class="lead">Nox ne t'envoie pas une liste de tâches de plus. Il agit au moment où tu bloques.</p>
+    <p class="kicker" data-t="feat.kicker">Features</p>
+    <h2 data-t="feat.title">Like a friend sitting next to you. One who never judges.</h2>
     <div class="grid g3">
-      <div class="card"><div class="ico">🎙</div><h3>Il te parle en premier</h3><p>Voix temps réel : tu lui parles comme à un ami, tu peux lui couper la parole. Ou tu écris, si tu préfères.</p></div>
-      <div class="card"><div class="ico">🪜</div><h3>Une micro-étape à la fois</h3><p>Chaque tâche découpée en étapes de 2 à 10 minutes. Tu ne vois que la prochaine.</p></div>
-      <div class="card"><div class="ico">⏱️</div><h3>Le temps devient visible</h3><p>Un anneau de minuteur autour de Nox, à la durée qui te convient.</p></div>
-      <div class="card"><div class="ico">🫶</div><h3>Il te ramène doucement</h3><p>YouTube, réseaux… si tu décroches, il te le dit gentiment. Seulement si tu l'as autorisé.</p></div>
-      <div class="card"><div class="ico">🔖</div><h3>« Tu en étais à… »</h3><p>Tu t'absentes ? Il garde ta place et te la rend à ton retour, en 5 secondes.</p></div>
-      <div class="card"><div class="ico">☕</div><h3>Il protège tes pauses</h3><p>Hyperfocus depuis trop longtemps ? Il te propose une pause, et garde ta place.</p></div>
-      <div class="card"><div class="ico">🧠</div><h3>Il se souvient de toi</h3><p>Ce qui te freine, ton moment d'énergie, ce qui t'aide. Tout reste sur ton PC, effaçable d'un clic.</p></div>
-      <div class="card"><div class="ico">🏆</div><h3>Mode jeu</h3><p>De l'XP à chaque étape, 8 grades, 8 compétences à débloquer. Jamais de série perdue.</p></div>
-      <div class="card"><div class="ico">📊</div><h3>Tableau de bord</h3><p>Étapes cochées, minutes de focus sur 7 jours, historique de tes tâches.</p></div>
+      <div class="card"><div class="ico">🎙</div><h3 data-t="feat.1.t">It talks to you first</h3><p data-t="feat.1.p">Real-time voice: talk to it like a friend, and interrupt it anytime. Or type, if you prefer.</p></div>
+      <div class="card"><div class="ico">🫶</div><h3 data-t="feat.2.t">It brings you back, gently</h3><p data-t="feat.2.p">Drifting to YouTube or social media? A kind nudge, only if you allowed it.</p></div>
+      <div class="card"><div class="ico">🔖</div><h3 data-t="feat.3.t">"You were at…"</h3><p data-t="feat.3.p">Step away for a while: Nox saves your spot and hands it back when you return, in 5 seconds.</p></div>
+      <div class="card"><div class="ico">☕</div><h3 data-t="feat.4.t">It protects your breaks</h3><p data-t="feat.4.p">Hyperfocused for too long? Nox suggests a break, and keeps your place.</p></div>
+      <div class="card"><div class="ico">🧠</div><h3 data-t="feat.5.t">It remembers you</h3><p data-t="feat.5.p">What blocks you, when your energy peaks, what helps. Everything stays on your PC, deletable in one click.</p></div>
+      <div class="card"><div class="ico">🏆</div><h3 data-t="feat.6.t">Game mode</h3><p data-t="feat.6.p">XP for every step, 8 ranks, 8 skills to unlock. Progress you can see, never a streak you can lose.</p></div>
+      <div class="card"><div class="ico">📊</div><h3 data-t="feat.7.t">A clear dashboard</h3><p data-t="feat.7.p">Your current step, checked-off steps, focus minutes over 7 days, and your task history.</p></div>
+      <div class="card"><div class="ico">🤏</div><h3 data-t="feat.8.t">As big or as discreet as you like</h3><p data-t="feat.8.p">Small, medium or large. Hide it next to the clock, bring it back with Ctrl+Alt+N.</p></div>
+      <div class="card"><div class="ico">🌍</div><h3 data-t="feat.9.t">English or French</h3><p data-t="feat.9.p">Nox follows your Windows language, and you can switch anytime. It talks and listens in your language.</p></div>
     </div>
     <div class="shots">
-      <img class="tr" src="linkedin/onboarding.png" alt="Onboarding de Nox : une question à la fois, avec de grosses pastilles" loading="lazy">
-      <img src="linkedin/dashboard.png" alt="Tableau de bord de Nox : étape en cours, minutes de focus, progression" loading="lazy">
+      <img class="tr" data-img="onboarding.png" src="linkedin/en/onboarding.png" alt="Nox onboarding: one question at a time with big answer buttons" width="900" height="1296" loading="lazy">
+      <img data-img="dashboard.png" src="linkedin/en/dashboard.png" alt="Nox dashboard: current step, focus minutes, progress and calendar" width="2080" height="1440" loading="lazy">
     </div>
   </div>
 </section>
 
-<section class="alt">
+<section>
   <div class="wrap">
-    <p class="kicker">Connexions</p>
-    <h2>Il veille aussi sur ta journée.</h2>
+    <p class="kicker" data-t="conn.kicker">Connections</p>
+    <h2 data-t="conn.title">It looks after your whole day.</h2>
     <div class="grid g3">
-      <div class="card"><div class="ico">📅</div><h3>Google Agenda</h3><p>Nox te prévient 60 et 30 minutes avant un rendez-vous, te propose de le préparer, et passe ta journée en revue le matin.</p></div>
-      <div class="card"><div class="ico">📬</div><h3>Gmail</h3><p>Il repère les mails importants et te propose de te les lire. Dis-lui « préviens-moi si la CAF m'écrit » : il guette.</p></div>
-      <div class="card"><div class="ico">📱</div><h3>Telegram</h3><p>Scanne un QR code : quand tu n'es pas devant ton PC, Nox te prévient sur ton téléphone. Tu peux lui écrire aussi.</p></div>
+      <div class="card"><div class="ico">📅</div><h3>Google Calendar</h3><p data-t="conn.1">A heads-up 60 and 30 minutes before a meeting, an offer to get ready, and a quick review of your day every morning.</p></div>
+      <div class="card"><div class="ico">📬</div><h3>Gmail</h3><p data-t="conn.2">Nox spots important emails and offers to read them to you. Tell it "let me know if the tax office writes": it watches for it.</p></div>
+      <div class="card"><div class="ico">📱</div><h3>Telegram</h3><p data-t="conn.3">Scan a QR code: when you're away from your PC, Nox pings you on your phone. You can write to it too.</p></div>
     </div>
   </div>
 </section>
 
-<section id="methodes">
+<section id="methods" class="alt">
   <div class="wrap">
-    <p class="kicker">Fondé sur la recherche</p>
-    <h2>5 questions. Moins d'une minute. Puis la bonne méthode.</h2>
-    <p class="lead">L'onboarding te demande ce qui te freine, ton moment d'énergie et ta durée de concentration. Nox choisit ensuite la méthode qui te correspond. Tu peux en changer quand tu veux.</p>
+    <p class="kicker" data-t="meth.kicker">Grounded in research</p>
+    <h2 data-t="meth.title">5 questions. Under a minute. Then the right method for you.</h2>
+    <p class="lead" data-t="meth.lead">The onboarding asks what blocks you, when you have energy and how long you can focus. Nox then picks the method that fits you. Change it anytime.</p>
     <div class="chips">
-      <span class="chip">⏱️ Règle des 5 minutes <small>· pour démarrer</small></span>
+      <span class="chip" data-t="chip.1">⏱️ 5-minute rule <small>· to get started</small></span>
       <span class="chip">🍅 Pomodoro <small>· 25/5</small></span>
-      <span class="chip">👥 Body doubling <small>· Nox reste avec toi</small></span>
-      <span class="chip">🔀 Si… alors… <small>· pour reprendre</small></span>
-      <span class="chip">📦 Time-boxing <small>· contre l'hyperfocus</small></span>
-      <span class="chip">🐸 Manger la grenouille <small>· le matin</small></span>
-      <span class="chip">⚡ Règle des 2 minutes</span>
+      <span class="chip" data-t="chip.3">👥 Body doubling <small>· Nox stays with you</small></span>
+      <span class="chip" data-t="chip.4">🔀 If… then… <small>· to get back on track</small></span>
+      <span class="chip" data-t="chip.5">📦 Time-boxing <small>· against hyperfocus</small></span>
+      <span class="chip" data-t="chip.6">🐸 Eat the frog <small>· in the morning</small></span>
+      <span class="chip" data-t="chip.7">⚡ 2-minute rule</span>
     </div>
     <div class="grid g3">
-      <div class="card"><h3>Aider au moment d'agir</h3><p>Le modèle de Russell Barkley : le TDAH est un trouble de la performance, pas du savoir. Nox est donc là où tu travailles, et rend le temps visible.</p></div>
-      <div class="card"><h3>Découper les tâches</h3><p>Le cœur de la thérapie cognitivo-comportementale de Safren pour l'adulte TDAH, évaluée par essai randomisé.</p></div>
-      <div class="card"><h3>Plans « si… alors… »</h3><p>Les implementation intentions de Gollwitzer : un effet net sur l'atteinte des objectifs dans une méta-analyse de 94 tests.</p></div>
+      <div class="card"><h3 data-t="res.1.t">Help at the moment of action</h3><p data-t="res.1.p">Russell Barkley's model: ADHD is a problem of doing, not knowing. So Nox lives where you work, and makes time visible.</p></div>
+      <div class="card"><h3 data-t="res.2.t">Break tasks down</h3><p data-t="res.2.p">The core of Safren's cognitive behavioral therapy for adult ADHD, tested in a randomized controlled trial.</p></div>
+      <div class="card"><h3 data-t="res.3.t">"If… then…" plans</h3><p data-t="res.3.p">Gollwitzer's implementation intentions: a clear effect on reaching goals in a meta-analysis of 94 tests.</p></div>
     </div>
-    <p class="muted" style="margin-top:18px">Détails et sources : <a class="repo-file" data-path="docs/RECHERCHE-TDAH.md" href="RECHERCHE-TDAH.md">la synthèse de recherche</a>.</p>
+    <p class="muted" style="margin-top:18px"><span data-t="res.more">Details and sources:</span> <a href="https://github.com/adebayo-moutalabi/nox/blob/main/docs/RECHERCHE-TDAH.md" data-t="res.link">the research summary</a>.</p>
   </div>
 </section>
 
-<section id="installer" class="alt">
+<section id="install">
   <div class="wrap">
-    <p class="kicker">Installation</p>
-    <h2>Installé en un double-clic.</h2>
+    <p class="kicker" data-t="inst.kicker">Install</p>
+    <h2 data-t="inst.title">Installed in one double-click.</h2>
     <div class="steps">
-      <div class="step"><div><h3>Télécharge l'installeur</h3><p>Le fichier <code>Nox.Setup.1.2.0.exe</code> (environ 80 Mo) se trouve sur la page des versions.</p>
-        <p style="margin-top:12px"><a class="btn primary small dl" href="#">Télécharger la dernière version</a></p></div></div>
-      <div class="step"><div><h3>Double-clique dessus</h3><p>Nox s'installe tout seul, se lance, et démarrera ensuite avec Windows. Si Windows affiche « Windows a protégé votre ordinateur », clique sur <b>Informations complémentaires</b> puis <b>Exécuter quand même</b> : l'installeur n'est simplement pas signé.</p></div></div>
-      <div class="step"><div><h3>Réponds à Nox</h3><p>Il atterrit en bas à droite de ton écran et se présente. Colle ta clé OpenAI pour sa vraie voix (elle reste chiffrée sur ton PC), ou choisis <b>Essayer sans clé</b> pour le mode démo. Puis 5 petites questions, et c'est parti.</p></div></div>
-      <div class="step"><div><h3>Relie tes outils (facultatif)</h3><p>Dans le tableau de bord, carte <b>Connexions</b> : ton Google Agenda (adresse secrète iCal), Gmail (mot de passe d'application) et Telegram (QR code).</p></div></div>
+      <div class="step"><div><h3 data-t="inst.1.t">Download the installer</h3><p data-t="inst.1.p">The file <code>Nox.Setup.1.2.0.exe</code> (about 80 MB) is on the releases page.</p>
+        <p style="margin-top:12px"><a class="btn primary small" href="https://github.com/adebayo-moutalabi/nox/releases/latest"><span data-t="inst.1.btn">Download the latest version</span></a></p></div></div>
+      <div class="step"><div><h3 data-t="inst.2.t">Double-click it</h3><p data-t="inst.2.p">Nox installs itself, launches, and will start with Windows. If Windows says "Windows protected your PC", click <b>More info</b> then <b>Run anyway</b>: the installer simply isn't signed yet.</p></div></div>
+      <div class="step"><div><h3 data-t="inst.3.t">Answer Nox</h3><p data-t="inst.3.p">It lands at the bottom right of your screen and introduces itself. Pick your language, paste your OpenAI key for its real voice (encrypted on your PC) or choose <b>Try without a key</b>, then 5 quick questions.</p></div></div>
+      <div class="step"><div><h3 data-t="inst.4.t">Connect your tools (optional)</h3><p data-t="inst.4.p">In the dashboard, <b>Connections</b> card: your Google Calendar (secret iCal address), Gmail (app password) and Telegram (QR code).</p></div></div>
     </div>
     <details style="margin-top:22px">
-      <summary style="cursor:pointer; font-weight:700">Pour les développeurs : lancer depuis le code</summary>
+      <summary style="cursor:pointer; font-weight:700" data-t="inst.dev">For developers: run from source</summary>
 <pre><code>git clone https://github.com/adebayo-moutalabi/nox.git
 cd nox
 npm install
-npm start            # NOX_FAKE_AI=1 pour le cerveau de test, sans clé
-npm test             # tout le parcours sur la vraie appli
-npm run dist         # construit l'installeur dans dist/</code></pre>
+npm start            # NOX_FAKE_AI=1 for the demo brain, no key
+npm test             # the whole journey on the real app
+npm run dist         # builds the installer in dist/</code></pre>
     </details>
+  </div>
+</section>
+
+<section id="faq" class="alt">
+  <div class="wrap">
+    <p class="kicker">FAQ</p>
+    <h2 data-t="faq.title">Your questions, answered.</h2>
+    <div class="faq">
+      <details><summary data-t="faq.1.q">Is Nox really free?</summary><p data-t="faq.1.a">Yes. Nox is free and open source. Its real-time voice uses your own OpenAI key, so you pay OpenAI directly for what you use. Demo mode works without any key, for free.</p></details>
+      <details><summary data-t="faq.2.q">Do I need an OpenAI key?</summary><p data-t="faq.2.a">Not to try it: choose "Try without a key". For the natural real-time voice, create a key on platform.openai.com (API keys page) and paste it during onboarding or in the dashboard. It stays encrypted on your PC.</p></details>
+      <details><summary data-t="faq.3.q">Where does my data go?</summary><p data-t="faq.3.a">Your profile, memories, tasks and stats stay in a file on your PC. Your keys and passwords are encrypted by Windows. What you say to Nox is sent to OpenAI to generate its replies. Nox only looks at the active window title if you say yes.</p></details>
+      <details><summary data-t="faq.4.q">I don't have ADHD. Is it for me?</summary><p data-t="faq.4.a">Yes. Nox was designed for ADHD first, but it helps anyone who struggles to start, gets interrupted all the time, or loses the thread after a break.</p></details>
+      <details><summary data-t="faq.5.q">Does Nox replace treatment or a professional?</summary><p data-t="faq.5.a">No. Nox is a productivity tool, not a medical device. If ADHD affects your daily life, talk to a doctor or a specialist.</p></details>
+      <details><summary data-t="faq.6.q">Why does Windows say the app isn't signed?</summary><p data-t="faq.6.a">Signing an installer requires a paid certificate, which this first version doesn't have yet. Click "More info" then "Run anyway". The code is open source, so anyone can check what it does.</p></details>
+      <details><summary data-t="faq.7.q">Does it work on Mac or Linux?</summary><p data-t="faq.7.a">Not yet: Nox is Windows-only for now (Windows 10 and 11, 64-bit). A Mac version and a web version are on the roadmap.</p></details>
+      <details><summary data-t="faq.8.q">How do I hide Nox or change its size?</summary><p data-t="faq.8.a">Press Ctrl+Alt+N, or click the Nox icon next to the clock. Size (small, medium, large) is in Settings or in the icon's right-click menu.</p></details>
+      <details><summary data-t="faq.9.q">How do I update Nox?</summary><p data-t="faq.9.a">Download the latest installer and run it. Your profile, memories and history are kept.</p></details>
+    </div>
   </div>
 </section>
 
 <section id="tests">
   <div class="wrap">
-    <p class="kicker">Qualité</p>
-    <h2>Testé de bout en bout, sur la vraie appli.</h2>
-    <p class="lead">Un test automatique lance Nox dans un dossier vierge, joue tout le parcours comme un utilisateur, puis le relance pour vérifier qu'il se souvient. Sans consommer de crédits OpenAI.</p>
-    <div style="display:flex; align-items:baseline; gap:14px; margin-top:26px"><span class="big-num">26</span><span class="muted">vérifications, toutes au vert</span></div>
+    <p class="kicker" data-t="test.kicker">Quality</p>
+    <h2 data-t="test.title">Tested end to end, on the real app.</h2>
+    <p class="lead" data-t="test.lead">Automated tests launch Nox in a fresh folder, go through the whole journey like a real user, in English and in French, then relaunch it to check it remembers.</p>
+    <div style="display:flex; align-items:baseline; gap:14px; margin-top:26px"><span class="big-num">42</span><span class="muted" data-t="test.count">checks, all green</span></div>
     <ul class="tests">
-      <li>L'onboarding s'affiche au premier lancement</li>
-      <li>Le profil est enregistré, la méthode suggérée selon le frein</li>
-      <li>Une tâche annoncée est découpée, la première étape affichée</li>
-      <li>Le minuteur se lance à la durée de la méthode</li>
-      <li>L'accès à la fenêtre est demandé au bon moment, un refus est respecté</li>
-      <li>Un souvenir appris en parlant est enregistré et visible</li>
-      <li>Cocher une étape depuis le tableau, Nox félicite</li>
-      <li>Changer de méthode, terminer une tâche, l'historique se met à jour</li>
-      <li>Mode jeu : XP, grade, compétence débloquée et fêtée</li>
-      <li>Agenda : lecture d'un fichier iCal, adresse invalide refusée</li>
-      <li>Mails : un mail attendu est reconnu, un mail urgent repéré</li>
-      <li>Après relance : pas de nouvel onboarding, souvenirs conservés</li>
+      <li data-t="test.1">Onboarding, language choice and saved profile</li>
+      <li data-t="test.2">A task is broken down, the timer starts</li>
+      <li data-t="test.3">Permission asked at the right moment, a "no" is respected</li>
+      <li data-t="test.4">Memories saved and shown in the dashboard</li>
+      <li data-t="test.5">Methods: Nox announces them and offers the timer</li>
+      <li data-t="test.6">Game mode: XP, rank, unlocked skill</li>
+      <li data-t="test.7">Calendar and email logic</li>
+      <li data-t="test.8">Window always fully visible, size and discreet mode</li>
+      <li data-t="test.9">English ↔ French switch, live</li>
+      <li data-t="test.10">After a relaunch: no new onboarding, memories kept</li>
     </ul>
   </div>
 </section>
 
 <section class="alt">
   <div class="wrap">
-    <p class="kicker">Vie privée</p>
-    <h2>Rien n'est observé sans ton accord.</h2>
+    <p class="kicker" data-t="priv.kicker">Privacy</p>
+    <h2 data-t="priv.title">Nothing is watched without your consent.</h2>
     <div class="grid g3">
-      <div class="card"><div class="ico">🔐</div><h3>Tes données restent chez toi</h3><p>Profil, souvenirs et historique sont dans un fichier sur ton PC. Tes clés et mots de passe sont chiffrés par Windows.</p></div>
-      <div class="card"><div class="ico">👀</div><h3>Permission explicite</h3><p>Nox ne regarde l'appli ouverte que si tu dis oui, et seulement son titre.</p></div>
-      <div class="card"><div class="ico">🌙</div><h3>Mode repos</h3><p>Un clic, et Nox dort et se tait.</p></div>
+      <div class="card"><div class="ico">🔐</div><h3 data-t="priv.1.t">Your data stays with you</h3><p data-t="priv.1.p">Profile, memories and history live in a file on your PC. Keys and passwords are encrypted by Windows.</p></div>
+      <div class="card"><div class="ico">👀</div><h3 data-t="priv.2.t">Explicit permission</h3><p data-t="priv.2.p">Nox only looks at the open app if you say yes, and only at its title.</p></div>
+      <div class="card"><div class="ico">🌙</div><h3 data-t="priv.3.t">Rest mode</h3><p data-t="priv.3.p">One click, and Nox sleeps and stays quiet.</p></div>
     </div>
   </div>
 </section>
 
 <section class="cta-band">
   <div class="wrap">
-    <h2>Prêt à finir ce que tu commences ?</h2>
-    <p class="lead">Gratuit, open source, et prêt en une minute.</p>
-    <a class="btn primary dl" href="#installer"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Télécharger Nox</a>
+    <h2 data-t="final.title">Ready to finally start?</h2>
+    <p class="lead" data-t="final.lead">Free, open source, and ready in one minute.</p>
+    <a class="btn primary" href="https://github.com/adebayo-moutalabi/nox/releases/latest"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span data-t="final.btn">Download Nox</span></a>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <span>Nox · créé par Habib Moutalabi pour l'OpenAI DevDay Community Hackathon Paris 2026</span>
-    <span>Propulsé par l'API Realtime d'OpenAI · Polices Nunito et Inter (OFL)</span>
+    <div class="author">
+      <span><span data-t="foot.by">Created by</span> <b>Adebayo MOUTALABI</b></span>
+      <a href="https://adebayo-moutalabi.github.io/" data-t="foot.portfolio">Portfolio</a>
+      <a href="https://www.linkedin.com/in/adebayo-moutalabi/">LinkedIn</a>
+      <a href="https://github.com/adebayo-moutalabi/nox" data-t="foot.code">Source code</a>
+    </div>
+    <span data-t="foot.made">Made for the OpenAI DevDay Community Hackathon, Paris 2026 · Powered by the OpenAI Realtime API</span>
   </div>
 </footer>
 
 <script src="assets/mascot.js"></script>
+<script src="assets/site-i18n.js"></script>
 <script>
   document.getElementById('mascot').innerHTML = buildMascot();
 
-  // Liens vers le depot du projet (le site, lui, est publie sur get-nox.github.io)
-  const REPO = 'https://github.com/adebayo-moutalabi/nox';
-  for (const a of document.querySelectorAll('a.dl')) a.href = `${REPO}/releases/latest`;
-  for (const a of document.querySelectorAll('a.repo')) a.href = REPO;
-  for (const a of document.querySelectorAll('a.repo-file')) a.href = `${REPO}/blob/main/${a.dataset.path}`;
+  // Liens externes : toujours dans un nouvel onglet
+  for (const a of document.querySelectorAll('a[href^="http"]')) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
 
-  // Video : affichee des que docs/video/nox-demo.mp4 existe
+  // Langue : choisie par l'utilisateur, sinon celle du navigateur (francais -> FR, sinon EN)
+  const saved = (() => { try { return localStorage.getItem('nox-lang'); } catch { return null; } })();
+  const browserFr = (navigator.languages || [navigator.language || '']).some((l) => String(l).toLowerCase().startsWith('fr'));
+  setSiteLang(saved === 'fr' || saved === 'en' ? saved : browserFr ? 'fr' : 'en');
+  for (const b of document.querySelectorAll('.lang button')) {
+    b.onclick = () => { setSiteLang(b.dataset.lang); try { localStorage.setItem('nox-lang', b.dataset.lang); } catch {} };
+  }
+
+  // Video : affichee des que video/nox-demo.mp4 existe
   const video = document.getElementById('demoVideo');
   fetch('video/nox-demo.mp4', { method: 'HEAD' }).then((r) => {
     if (r.ok) { video.src = 'video/nox-demo.mp4'; video.hidden = false; document.getElementById('videoSoon').hidden = true; }
