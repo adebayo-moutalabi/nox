@@ -1,0 +1,18 @@
+{
+  "v": 4,
+  "createdOnFiles": { "v": 1, "at": "2026-10-25T16:05:00+02:00" },
+  "lists": "css",
+  "title": "Nox — Finale pitch",
+  "order": ["cover", "problem", "idea", "how", "demo", "research", "built", "tech", "vision", "next", "close"],
+  "sections": {
+    "why": { "description": "The problem: starting is the hardest part, and every app waits for you.", "start": "cover" },
+    "product": { "description": "What Nox does, and the live demo.", "start": "how" },
+    "proof": { "description": "Why it works, what we built this weekend, and how.", "start": "research" },
+    "future": { "description": "The vision: everyone the computer leaves behind.", "start": "vision" }
+  },
+  "faces": {
+    "nunito": { "family": "Nunito", "href": "https://fonts.googleapis.com/css2?family=Nunito:wght@600..900&display=swap" },
+    "inter": { "family": "Inter", "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" }
+  },
+  "designSystems": []
+}
