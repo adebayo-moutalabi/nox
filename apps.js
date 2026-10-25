@@ -9,11 +9,15 @@ const APPS = {
   vscode: { name: 'VS Code', exe: 'code', web: 'https://vscode.dev' },
   github: { name: 'GitHub', web: 'https://github.com' },
   notion: { name: 'Notion', exe: 'notion', web: 'https://www.notion.so' },
-  gmail: { name: 'Gmail', web: 'https://mail.google.com' }
+  gmail: { name: 'Gmail', web: 'https://mail.google.com' },
+  gdocs: { name: 'Google Docs', web: 'https://docs.google.com/document/create', hl: true },
+  gslides: { name: 'Google Slides', web: 'https://docs.google.com/presentation/create', hl: true },
+  gsheets: { name: 'Google Sheets', web: 'https://docs.google.com/spreadsheets/create', hl: true }
 };
 
 // D'abord les noms d'outils cites explicitement, puis les mots qui evoquent un type de travail
 const EXPLICIT = [
+  ['gdocs', /\bgoogle ?docs?\b/i], ['gslides', /\bgoogle ?slides?\b/i], ['gsheets', /\bgoogle ?sheets?\b/i],
   ['github', /\bgit ?hub\b/i], ['notion', /\bnotion\b/i], ['gmail', /\bgmail\b/i],
   ['powerpoint', /\b(power ?point|ppt)\b/i], ['excel', /\bexcel\b/i], ['word', /\bword\b/i],
   ['vscode', /\b(vs ?code|visual studio code)\b/i]
@@ -46,14 +50,19 @@ async function installed(exe) {
 }
 
 // Ouvre l'appli installee, sinon sa version web. Renvoie comment elle a ete ouverte.
-async function openApp(id, shell) {
+async function openApp(id, shell, lang) {
   const app = APPS[id];
   if (!app) return { ok: false, how: 'none' };
   if (app.exe && await installed(app.exe)) {
     const ok = await run('cmd.exe', ['/c', 'start', '""', app.exe]);
     if (ok) return { ok: true, how: 'app', name: app.name };
   }
-  if (app.web) { await shell.openExternal(app.web); return { ok: true, how: 'web', name: app.name }; }
+  // Appli 100 % web (Google Docs…) : rien a signaler ; sinon on precise que c'est la version web.
+  // Les outils Google s'ouvrent dans la langue de Nox.
+  if (app.web) {
+    await shell.openExternal(app.hl && lang ? `${app.web}?hl=${lang}` : app.web);
+    return { ok: true, how: app.exe ? 'web' : 'app', name: app.name };
+  }
   return { ok: false, how: 'none', name: app.name };
 }
 

@@ -15,8 +15,8 @@ const tr = (key, vars) => i18n.t(state.lang, key, vars);
 
 const MODEL = process.env.OPENAI_MODEL || 'gpt-6.1-sol';
 const STT_MODEL = process.env.OPENAI_STT_MODEL || 'whisper-1';
-const TTS_MODEL = process.env.OPENAI_TTS_MODEL || 'tts-1';
-const TTS_VOICE = process.env.OPENAI_TTS_VOICE || 'alloy';
+const TTS_MODEL = process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts';
+const TTS_VOICE = process.env.OPENAI_TTS_VOICE || 'marin'; // meme voix que le mode temps reel
 const NAME = process.env.MASCOT_NAME || 'Nox';
 // NOX_FAKE_AI=1 : cerveau de test local, aucun appel a OpenAI (tests, demos)
 const FAKE_AI = process.env.NOX_FAKE_AI === '1';
@@ -298,7 +298,7 @@ async function doThink(userText) {
   }
   state.history.push({ role: 'assistant', content: out.reply || '' });
   if (out.task && Array.isArray(out.task.steps) && out.task.steps.length && out.task.title !== state.task?.title) {
-    startTask(out.task.title, out.task.steps);
+    startTask(out.task.title, out.task.steps, fromUser ? userText : '');
     out.newTask = true;
   }
   if (out.action?.type === 'done_step' && state.task) {
@@ -315,11 +315,12 @@ async function doThink(userText) {
   return out;
 }
 
-function startTask(title, steps) {
+// userText : la phrase de l'utilisateur ("... dans Google Docs"), prioritaire sur le titre resume par le modele
+function startTask(title, steps, userText = '') {
   memory.startTask(state, title, steps);
   focusMs = 0; hyperfocusNotified = false; lastCheckIn = Date.now();
   // Appli utile pour cette tache (Word, VS Code, GitHub…) : Nox propose de l'ouvrir
-  const appId = apps.detectApp(title);
+  const appId = apps.detectApp(userText) || apps.detectApp(title);
   if (appId) { state.task.app = appId; send('nox:suggestApp', { id: appId, name: apps.APPS[appId].name }); }
   // Permission de voir la fenetre active : demandee la premiere fois qu'elle devient utile
   if (!state.watchAsked) send('nox:askWatch');
@@ -427,7 +428,7 @@ function saveContext() {
 function runTool(name, args, userText) {
   if (name === 'set_task') {
     if (!Array.isArray(args.steps) || !args.steps.length) return { ok: false, error: 'steps vide' };
-    startTask(args.title, args.steps);
+    startTask(args.title, args.steps, userText || '');
     saveState();
     return { ok: true, etape_courante: state.task.steps[0], minuteur_par_defaut: memory.timerMinutes(state) };
   }
@@ -786,7 +787,7 @@ ipcMain.on('nox:openDashboard', () => openDashboard());
 ipcMain.on('nox:hide', () => toggleNox(false));
 // Mode test uniquement : simuler le titre de la fenetre active (demo automatique du decrochage)
 if (FAKE_AI) ipcMain.on('nox:test:window', (_e, title) => { currentTitle = String(title || ''); });
-ipcMain.handle('nox:openApp', (_e, id) => apps.openApp(id, shell));
+ipcMain.handle('nox:openApp', (_e, id) => apps.openApp(id, shell, state.lang));
 ipcMain.on('nox:show', () => toggleNox(true));
 // Salutation au lancement : Nox parle en premier
 ipcMain.handle('nox:greet', () => {

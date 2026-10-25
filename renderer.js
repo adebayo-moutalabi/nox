@@ -53,17 +53,27 @@ function audioGraph() {
   if (actx.state === 'suspended') actx.resume();
 }
 function stopSpeaking() { if (audio) { audio.pause(); audio = null; } if (act === 'speaking') setAct(''); }
+// Phrases en cours (synthese demandee ou audio en lecture) : les cartes attendent qu'il ait fini
+let speechPending = 0;
 async function talk(text) {
   if (!voiceOn || !text) return;
+  speechPending++;
+  let done = false;
+  const release = () => { if (!done) { done = true; speechPending--; } };
   const b64 = await window.nox.speak(text);
-  if (!b64) return;
+  if (!b64) { release(); return; }
   stopSpeaking();
   const a = new Audio('data:audio/mp3;base64,' + b64);
   audio = a;
   try { audioGraph(); actx.createMediaElementSource(a).connect(analyser); } catch {}
   a.onplay = () => setAct('speaking');
-  a.onended = a.onpause = () => { if (audio === a && act === 'speaking') setAct(''); };
-  a.play().catch(() => {});
+  a.onended = a.onpause = () => { release(); if (audio === a && act === 'speaking') setAct(''); };
+  a.play().catch(release);
+}
+// Attend que Nox ait fini sa phrase (au plus `max` ms), pour ne pas lui couper la parole
+async function quiet(max = 20000) {
+  const end = Date.now() + max;
+  while (Date.now() < end && (speechPending > 0 || act === 'speaking')) await new Promise((r) => setTimeout(r, 200));
 }
 // Volume instantane de la voix (0 a 1) : flux temps reel s'il est ouvert, sinon synthese classique
 let rtAnalyser = null;
@@ -361,7 +371,7 @@ let lastMove = '';
 let card = null, pendingAnswer = null, cardDismiss = null, methods = {}, currentMethod = null;
 // Une seule carte a la fois : les suivantes (mail, recompense) attendent leur tour
 let cardQueue = Promise.resolve();
-function showCardQueued(opts) { const p = cardQueue.then(() => showCard(opts)); cardQueue = p.catch(() => {}); return p; }
+function showCardQueued(opts) { const p = cardQueue.then(() => quiet()).then(() => showCard(opts)); cardQueue = p.catch(() => {}); return p; }
 // capture : la carte attend une reponse libre (onboarding). Sinon (appli, pause, mail, recompense),
 // elle s'efface des que l'utilisateur parle ou ecrit a Nox, et son message passe normalement.
 function showCard({ text, options = [], input = false, secret = false, error = '', step = 0, total = 0, skip = T('card.skip'), capture = false }) {

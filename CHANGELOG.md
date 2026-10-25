@@ -16,12 +16,16 @@ Each section is ready to paste into the matching GitHub Release description.
 - **Nox knows where you are**: ask "which tab am I on?" and it tells you the active app or page (only if you allowed it in Settings → "See the active app / tab"; otherwise it tells you how).
 - **Full control of the timer**: say "start a 25-minute timer" or "stop the timer", click the time under Nox, or use the **■ Stop** button in the dashboard, which now shows the time left. After a focus session, Nox offers a break.
 - **"What can you do?"**: a short, clear answer instead of a long list.
+- **Google Docs, Slides and Sheets**: say "…in Google Docs" and Nox offers to open a new document, in your language.
+- **A warmer voice**: Nox now speaks with the same natural voice in text mode as in live voice mode.
 
 **Fixed**
 - Emotions no longer get stuck: blushing, hearts or tiredness last a few seconds, then Nox goes back to normal, and its voice matches its mood.
 - Pomodoro now uses real 25-minute sessions and 5-minute breaks.
 - Question cards (e.g. "Open Word?") no longer swallow your next message: if you talk about something else, the card simply goes away.
 - Thin, discreet scrollbars in the bubble and the dashboard.
+- Nox finishes its sentence before showing a question card (it used to cut itself off).
+- The tool you name ("in Google Docs") wins over the one guessed from the task.
 
 **Install**
 1. Download **Nox.Setup.1.4.0.exe** below.
@@ -38,12 +42,16 @@ Updating from an older version: just install this one, your profile, notes and h
 - **Nox sait où tu es** : demande « je suis sur quel onglet ? » et il te dit l'appli ou la page active (seulement si tu l'as autorisé dans Réglages → « Voir l'appli / l'onglet actif » ; sinon il t'explique comment).
 - **Le minuteur entièrement pilotable** : dis « lance un minuteur de 25 minutes » ou « arrête le minuteur », clique sur le temps sous Nox, ou utilise le bouton **■ Arrêter** du tableau de bord, qui affiche maintenant le temps restant. Après une séance de concentration, Nox propose une pause.
 - **« Tu sais faire quoi ? »** : une réponse courte et claire au lieu d'une longue liste.
+- **Google Docs, Slides et Sheets** : dis « …dans Google Docs » et Nox propose d'ouvrir un nouveau document, dans ta langue.
+- **Une voix plus chaleureuse** : en mode texte, Nox parle avec la même voix naturelle qu'en mode vocal temps réel.
 
 **Corrigé**
 - Les émotions ne restent plus bloquées : joues roses, cœurs ou fatigue durent quelques secondes, puis Nox redevient normal, et sa voix suit son humeur.
 - Le Pomodoro utilise de vraies séances de 25 min et des pauses de 5 min.
 - Les cartes de question (ex. « J'ouvre Word ? ») n'avalent plus ton message suivant : si tu parles d'autre chose, la carte disparaît simplement.
 - Barres de défilement fines et discrètes dans la bulle et le tableau de bord.
+- Nox finit sa phrase avant d'afficher une carte de question (il se coupait lui-même).
+- L'outil que tu cites (« dans Google Docs ») passe avant celui deviné d'après la tâche.
 
 **Installer**
 1. Télécharge **Nox.Setup.1.4.0.exe** ci-dessous.
