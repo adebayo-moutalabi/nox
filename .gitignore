@@ -3,4 +3,4 @@ dist/
 .env
 
 # Video de demo (lourde) et ses sources de montage
-video/
+/video/

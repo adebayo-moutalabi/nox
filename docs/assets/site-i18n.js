@@ -2,7 +2,7 @@
 // referencement) ; setSiteLang('fr') remplace chaque element [data-t], le titre, la description
 // et les captures, setSiteLang('en') remet le texte d'origine.
 const SITE_FR = {
-  'nav.how': 'Comment ça marche', 'nav.features': 'Fonctionnalités', 'nav.methods': 'Méthodes', 'nav.install': 'Installer',
+  'nav.how': 'Comment ça marche', 'nav.vision': 'Vision', 'nav.features': 'Fonctionnalités', 'nav.methods': 'Méthodes', 'nav.install': 'Installer',
   'cta.short': 'Télécharger', 'cta.download': 'Télécharger pour Windows', 'cta.how': 'Voir comment ça marche',
   'hero.kicker': 'Gratuit · Windows · Français et anglais',
   'hero.title': 'Ton cerveau TDAH n\'est pas <span class="hl">paresseux</span>.',
@@ -15,7 +15,7 @@ const SITE_FR = {
   'scene.punch': 'Tu sais exactement quoi faire. Tu n\'arrives juste pas à t\'y mettre. Et toutes les applis attendent que tu fasses le premier pas.',
   'scene.answer': 'Nox fait le premier pas pour toi.',
   'video.kicker': 'En 2 minutes', 'video.title': 'Nox en action',
-  'video.lead': 'Démarrer une tâche à la voix, décrocher sur YouTube, revenir après une pause : les trois moments où Nox change tout.',
+  'video.lead': 'Filmé pour de vrai, sans trucage : l’onboarding, une tâche lancée dans Google Docs, un détour par YouTube que Nox remarque, et l’étape qui fait monter de niveau.',
   'video.soon': 'La vidéo arrive très bientôt', 'video.soonText': 'En attendant, télécharge Nox et essaie-le en mode démo, sans clé.',
   'how.kicker': 'Comment ça marche', 'how.title': 'Trois étapes. Pas de paramétrage interminable.',
   'how.1.t': 'Dis ce que tu dois faire', 'how.1.p': 'À voix haute ou par écrit, comme ça te vient : <span class="quote">« Je dois rédiger mon rapport. »</span>',
@@ -32,7 +32,7 @@ const SITE_FR = {
   'feat.8.t': 'Aussi grand ou discret que tu veux', 'feat.8.p': 'Petit, moyen ou grand. Cache-le près de l\'horloge, rappelle-le avec Ctrl+Alt+N.',
   'feat.9.t': 'Français ou anglais', 'feat.9.p': 'Nox suit la langue de Windows, et tu peux changer à tout moment. Il parle et t\'écoute dans ta langue.',
   'feat.10.t': 'Notes express', 'feat.10.p': '« Nox, note que je dois rappeler Sam. » Tes notes arrivent sur des post-it dans le tableau de bord, et Nox te les relit quand tu veux.',
-  'feat.11.t': 'La bonne appli, au bon moment', 'feat.11.p': "Un rapport ? Nox propose d'ouvrir Word. Du code ? VS Code. Une présentation ? PowerPoint. Pas installé ? Il ouvre la version web.",
+  'feat.11.t': 'La bonne appli, au bon moment', 'feat.11.p': "Un rapport ? Nox propose d'ouvrir Word, ou Google Docs si tu le dis. Du code ? VS Code. Une présentation ? PowerPoint ou Google Slides. Pas installé ? Il ouvre la version web.",
   'feat.12.t': 'Il a des émotions', 'feat.12.p': "Dis-lui qu'il est mignon, il rougit. Dis merci, ses yeux deviennent des cœurs. Dis que tu es épuisé, il comprend et propose une pause.",
   'conn.kicker': 'Connexions', 'conn.title': 'Il veille sur toute ta journée.',
   'conn.1': 'Un rappel 60 et 30 minutes avant un rendez-vous, une proposition pour le préparer, et une revue de ta journée chaque matin.',
@@ -75,6 +75,14 @@ const SITE_FR = {
   'priv.1.t': 'Tes données restent chez toi', 'priv.1.p': 'Profil, souvenirs et historique sont dans un fichier sur ton PC. Clés et mots de passe sont chiffrés par Windows.',
   'priv.2.t': 'Permission explicite', 'priv.2.p': 'Nox ne regarde l\'appli ouverte que si tu dis oui, et seulement son titre.',
   'priv.3.t': 'Mode repos', 'priv.3.p': 'Un clic, et Nox dort et se tait.',
+  'vis.kicker': 'Vision · Ce n’est que le début', 'vis.title': 'Aujourd’hui, le TDAH. Demain, tous ceux que l’ordinateur laisse de côté.',
+  'vis.lead': 'Nox fait le premier pas pour toi. C’est ce dont ont besoin les personnes TDAH, et c’est aussi ce dont tout le monde a besoin face à un long formulaire, un écran qu’on voit mal, ou un ordinateur qu’on n’a jamais appris à utiliser.',
+  'vis.1.t': 'La paperasse, sans galère', 'vis.1.p': '« Aide-moi à remplir ça. » Nox explique chaque champ avec des mots simples et remplit le formulaire avec toi. Tu relis, et c’est toi qui envoies, jamais Nox.',
+  'vis.2.t': 'Pour les personnes malvoyantes', 'vis.2.p': 'Tout à la voix. Nox lit et décrit l’écran, avec de très gros textes et un fort contraste si besoin.',
+  'vis.3.t': 'Pour les personnes âgées', 'vis.3.p': 'Un mode simple, une étape à la fois (« le bouton bleu, en haut à droite »), une patience infinie, et une alerte quand un mail ressemble à une arnaque.',
+  'vis.4.t': 'Partout où tu es', 'vis.4.p': 'Sur ton téléphone, dans Chrome, sur Mac. Relié à ton agenda et à tes outils via MCP.',
+  'vis.5.t': 'Zéro réglage', 'vis.5.p': 'Plus de clé à coller : un téléchargement, et Nox est prêt, pour tout le monde.',
+  'vis.6.t': 'C’est toujours toi qui décides', 'vis.6.p': 'Nox prépare, explique et guide. Rien de définitif (envoi, paiement, signature) ne se fait sans ton oui.',
   'final.title': 'Prêt à enfin t\'y mettre ?', 'final.lead': 'Gratuit, open source, et prêt en une minute.', 'final.btn': 'Télécharger Nox',
   'foot.by': 'Créé par', 'foot.portfolio': 'Portfolio', 'foot.code': 'Code source',
   'foot.made': 'Réalisé pour l\'OpenAI DevDay Community Hackathon, Paris 2026 · Propulsé par l\'API Realtime d\'OpenAI'

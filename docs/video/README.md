@@ -1,3 +1,6 @@
 # Vidéo de présentation
 
-Dépose ici la vidéo finale sous le nom `nox-demo.mp4` (MP4 H.264, idéalement moins de 50 Mo). La page `docs/index.html` l’affichera automatiquement.
+- `nox-demo.mp4` : version web (≈14 Mo) de la vidéo v1 du 25 octobre 2026, affichée par le site.
+- `poster.jpg` : image d'attente.
+
+La version haute qualité et les sources du montage sont dans le dossier `video/` du dépôt (non publié). Pour changer de vidéo : remplacer ces deux fichiers, garder l'ancienne sous `video/Nox-demo-vN.mp4`.

@@ -10,7 +10,7 @@ Projet réalisé pour l'**OpenAI DevDay Community Hackathon Paris** (piste Impac
   <img src="docs/linkedin/slide-5.png" width="32%" alt="Tableau de bord">
 </p>
 
-**Français / English** · **Site de présentation : [get-nox.github.io](https://get-nox.github.io)** · **Télécharger : [dernière version](https://github.com/adebayo-moutalabi/nox/releases/latest)**
+**Français / English** · **Site de présentation : [get-nox.github.io](https://get-nox.github.io)** · **Vidéo de 2 min : [sur le site](https://get-nox.github.io/#video)** · **Télécharger : [dernière version](https://github.com/adebayo-moutalabi/nox/releases/latest)**
 
 ## Télécharger (Windows)
 
@@ -70,6 +70,6 @@ Sans clé : `set NOX_FAKE_AI=1 && npm start` (cerveau de test local, aucun appel
 - Telegram : chaque utilisateur crée son propre bot ; le PC doit être allumé.
 - La clé OpenAI est fournie par l'utilisateur. Un serveur qui la détient est prévu.
 
-## Suite
+## Suite : ce n'est que le début
 
-Assistant pour les démarches administratives (guidage pas à pas, recherche web), Notion et Slack via MCP, version téléphone, extension Chrome, apprentissage des schémas de procrastination.
+Nox fait le premier pas face à l'ordinateur. Après les personnes TDAH, il vise tous ceux que l'ordinateur laisse de côté : **démarches administratives** (formulaires expliqués et remplis avec la personne, qui envoie elle-même), **personnes malvoyantes** (tout à la voix, lecture de l'écran), **personnes âgées** (mode simple, pas à pas, alerte anti-arnaque), et **partout** (téléphone, Chrome, Mac, outils via MCP). Détails : [docs/VISION.md](docs/VISION.md). Liste des tâches : [docs/BACKLOG.md](docs/BACKLOG.md).

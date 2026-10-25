@@ -77,8 +77,14 @@ Petite fenêtre propre, design moderne (pas une page web séparée) :
 - Repli si Realtime échoue : transcription + chat + synthèse vocale (déjà codé).
 - État persistant : JSON dans `%APPDATA%`.
 
-## 7. Hors périmètre du hackathon (à mentionner dans la vidéo comme suite)
-Serveur qui détient la clé, version téléphone (bot Telegram puis appli), extension Chrome (remplissage de formulaires), connexion à l'agenda et aux outils via MCP, apprentissage des schémas de procrastination.
+## 7. Vision élargie et suite (détail dans `docs/VISION.md`)
+Nox fait le premier pas face à l'ordinateur. Après les personnes TDAH, il vise **tous ceux que l'ordinateur laisse de côté** :
+- **Démarches administratives** : expliquer chaque champ d'un formulaire, le remplir avec la personne (extension Chrome), lister les pièces, rappeler les échéances. **La personne relit et envoie elle-même.**
+- **Personnes malvoyantes** : tout à la voix, lecture et description de l'écran, gros textes, fort contraste.
+- **Personnes âgées ou peu à l'aise** : mode simple, pas à pas, patience, alerte anti-arnaque, aide d'un proche avec accord.
+- **Partout** : téléphone (Telegram puis appli), Mac, outils via MCP, serveur qui détient la clé, apprentissage des schémas.
+
+Règle ajoutée aux principes : **rien de définitif (envoi, paiement, signature) sans accord explicite de la personne.**
 
 ## 8. Règles pour l'agent de code
 - Travailler par petites étapes testables. Après chaque tâche : `npm.cmd start` doit fonctionner.

@@ -1,113 +1,75 @@
 # Nox — tout ce qu'il reste à faire
 
-Mis à jour le 25 octobre 2026. Priorités : 🔴 maintenant · 🟠 avant le rendu du hackathon · 🟢 ensuite.
+Mis à jour le 25 octobre 2026 (après la vidéo v1). Priorités : 🔴 aujourd'hui, avant le rendu · 🟠 juste après · 🟢 la suite (voir [VISION.md](VISION.md)).
 Cocher `[x]` quand c'est fait **et testé**.
 
 ---
 
-## 1. Publication 🔴
+## 1. Rendu du hackathon 🔴 (avant 22 h)
 
-- [ ] **Release v1.4.0** (conversation naturelle, minuteur pilotable, émotions passagères) sur GitHub, avec `dist/Nox Setup 1.4.0.exe` et la section v1.4.0 de CHANGELOG.md. Sans elle, le bouton « Télécharger » donne l'ancienne version, uniquement en français.
-- [x] **Post LinkedIn en anglais** (publié, voir linkedin/PUBLISHED.md ; mettre à jour le texte avec la v3) : texte `docs/linkedin/en/POST-FINAL-EN.txt` + `docs/linkedin/en/nox-carousel-en.pdf`, puis premier commentaire avec les liens.
-- [ ] Régénérer le **PDF français** (`node tools/linkedin.js`, PDF fermé dans la visionneuse).
-- [ ] Second post LinkedIn plus tard (vidéo, ou version française).
+- [ ] **Release v1.4.0 sur GitHub** (toi) : tag `v1.4.0`, titre `Nox 1.4.0`, fichier `dist/Nox Setup 1.4.0.exe`, description = section v1.4.0 de CHANGELOG.md. La v1.3.0 n'a jamais été publiée : inutile, la 1.4.0 contient tout.
+- [ ] **Soumission** (formulaire, e-mail, Luma) avec la vidéo, le site et le code.
+- [ ] **Textes de soumission en anglais** (description courte, problème, solution, technologies OpenAI, suite).
+- [x] Vidéo de 2 min v1 (anglais, sous-titres, narration OpenAI, vraie démo) : `video/Nox-demo-v1.mp4` + `.srt`.
+- [x] Vidéo intégrée au site (`docs/video/nox-demo.mp4`, version web).
+- [x] Section **Vision** sur le site (TDAH → paperasse, malvoyants, seniors, partout).
 
-## 2. Bugs et ergonomie de l'appli 🟠
+## 2. Vidéo : prochaine version 🟠
 
-- [x] **Barre de saisie coupée** : quand on clique sur ✎, le champ est en partie caché (débordement dans la fenêtre de 300 px). Agrandir la barre ou faire passer le champ au-dessus des boutons.
-- [x] **Méthodes sans effet visible** : cliquer sur Pomodoro, Body doubling, Règle des 5 minutes… change bien la méthode, mais rien ne le montre. À faire : Nox annonce la méthode à voix haute, explique en une phrase, propose de lancer le minuteur ; animation sur la carte choisie.
-- [x] **Taille de Nox fixe** : pouvoir l'agrandir ou le réduire (petit / moyen / grand dans les réglages, ou molette sur la mascotte).
-- [x] **Mode discret** : réduire Nox en petite bulle, ou le cacher dans la zone de notification de Windows (icône près de l'horloge), avec un raccourci pour le rappeler.
-- [x] **Nox parfois à moitié caché au lancement** : toujours le placer entièrement dans la zone visible, au premier plan.
-- [ ] **Responsive** : la fenêtre de Nox ne s'agrandit pas ; vérifier aussi le tableau de bord à toutes les tailles (petit écran, plein écran).
-- [ ] **Tableau de bord plus simple** : hiérarchie plus claire, actions plus visibles, retours visuels à chaque clic.
+Tes retours d'abord (ce que tu veux ajouter, améliorer, mettre en avant). Pistes déjà notées :
+- [ ] Montrer la **voix temps réel** (parler à Nox, l'interrompre) : le cœur du produit, absent de la v1.
+- [ ] Montrer le **retour après une pause** (« Tu en étais à… ») et la **note express**.
+- [ ] Un plan sur la **vision** (formulaire, malvoyant, senior) à la fin.
+- [ ] Éviter la pub YouTube à l'écran ; finir la phrase coupée « Let's start small… ».
+- [ ] À chaque nouvelle version : garder l'ancienne (`video/Nox-demo-vN.mp4`) et mettre à jour `docs/video/nox-demo.mp4` + le dépôt du site.
 
-## 3. Nouvelles fonctionnalités
+## 3. Corrections et finitions de l'appli 🟠
 
-### 🟠 Rapides et impressionnantes
-- [x] **Notes (façon Google Keep)** : « Nox, note que je dois rappeler Marie » → la note est enregistrée, visible et effaçable dans le tableau de bord, relue à la demande.
-- [x] **Réactions émotionnelles** : « t'es mignon », « merci », « je suis fatigué »… → Nox rougit, sourit timidement, fait un câlin virtuel, s'inquiète. Nouvelles expressions (gêné, ému, fatigué) dans `mascot.js`.
-- [x] **Ouvrir la bonne appli selon la tâche** : « je dois travailler sur mon Word » → propose d'ouvrir Word ; « développer l'appli » → VS Code ; « mon rapport sur GitHub » → GitHub. Liste d'applis étendue + proposition au lancement de la tâche.
+- [ ] **Raccourci pour parler** `Ctrl+Alt+K`, sans cliquer (spécification 4.2).
+- [ ] **Rouvrir l'appli au retour** d'une absence (scénario S3).
+- [ ] **Horaires actifs** : Nox dort en dehors des heures choisies (S5).
+- [ ] **Panneau au double-clic** sur la mascotte (4.3).
+- [ ] **Tableau de bord plus simple** : hiérarchie plus claire, retours visuels à chaque clic ; vérifier toutes les tailles d'écran.
+- [ ] **Carte « compétence débloquée »** : elle reste parfois affichée après le clic (vu pendant le tournage).
+- [ ] **Préfixe d'étape trop répétitif** : Nox redit souvent la même étape mot pour mot (vu pendant le tournage).
+- [ ] **Bulle de sous-titre** : sur les longues réponses, n'afficher que la phrase en cours.
 
-### 🟠 Prévus par la spécification (AGENTS.md), pas encore faits
-- [ ] **Raccourci pour parler** : `Ctrl+Alt+K` pour que Nox écoute, sans cliquer (AGENTS 4.2).
-- [ ] **Rouvrir l'appli au retour** : après une absence, Nox propose de rouvrir l'appli de la tâche (scénario S3).
-- [ ] **Horaires actifs** : Nox dort en dehors des heures choisies (scénario S5, AGENTS 4.3).
-- [ ] **Panneau au double-clic** sur la mascotte (AGENTS 4.3).
+## 4. À vérifier en vrai 🟠
 
-### 🟠 À vérifier en vrai (non testable automatiquement)
-- [ ] **Voix temps réel avec ta clé** : parler, couper la parole, délai de réponse, en français et en anglais (T1, T2).
-- [ ] **Ouverture réelle** de Word, VS Code… depuis la carte « Tu veux que je l'ouvre ? ».
-- [ ] **Connexions réelles** : Google Agenda (rappel 30 min avant), Gmail (mail important), Telegram (QR code).
-- [ ] **Installeur** sur un autre PC, ou une session Windows vierge.
+- [ ] Voix temps réel avec ta clé : parler, couper la parole, délai, en français et en anglais.
+- [x] Ouverture réelle de Google Docs depuis la carte « Tu veux que je l'ouvre ? » (vidéo).
+- [x] Détection réelle de YouTube et relance (vidéo).
+- [ ] Connexions réelles : Google Agenda, Gmail, Telegram.
+- [ ] Installeur sur un autre PC ou une session Windows vierge.
 
-### 🟢 Plus longues
-- [ ] **Suivi de l'appli de travail** : vérifier, avec permission, que la personne est bien sur l'appli prévue (VS Code, Word…) et la ramener doucement sinon.
-- [ ] **Version web** de Nox (dans le navigateur) et **extension Chrome**, pour communiquer avec les pages ouvertes.
-- [ ] **Assistant démarches administratives** : guidage pas à pas, liste des pièces à fournir, recherche web.
-- [ ] **Notion, Slack** et autres outils via MCP.
-- [ ] **Telegram public** : un serveur pour que chacun relie son téléphone sans créer de bot.
-- [ ] **Serveur qui détient la clé OpenAI** : plus aucune clé à saisir pour l'utilisateur.
-- [ ] Apprentissage des schémas de procrastination.
+## 5. Vision : la suite 🟢 (détail dans [VISION.md](VISION.md))
 
-## 4. Site get-nox.github.io 🟠
+### Démarches administratives
+- [ ] **Extension Chrome** qui laisse Nox lire la page ouverte, avec permission.
+- [ ] **« Aide-moi à remplir ce formulaire »** : explication de chaque champ en mots simples, remplissage avec la personne ; **elle relit et envoie elle-même**.
+- [ ] **Dossiers** : pièces à fournir, échéances, courriers préparés, suivi des réponses.
+- [ ] **Lire le contenu à la demande** : « Résume cette page », « Qu'est-ce que dit ce mail ? ».
 
-- [x] Tous les liens externes dans un nouvel onglet.
-- [x] SEO complet : titre et description, aperçus LinkedIn et X, adresse canonique, données structurées, sitemap, robots.txt, textes alternatifs.
-- [x] Auteur affiché « Adebayo MOUTALABI », avec liens vers le portfolio (https://adebayo-moutalabi.github.io/) et LinkedIn (https://www.linkedin.com/in/adebayo-moutalabi/).
-- [x] Français et anglais selon la langue du navigateur, avec un bouton pour changer.
-- [x] Captures en anglais pour la version anglaise.
-- [x] **Copywriting retravaillé** (récit 14 h / 14 h 41, bénéfices, 3 étapes).
-- [x] **FAQ** (9 questions) : « C'est gratuit ? », « Il me faut une clé OpenAI ? », « Mes données vont où ? », « Ça marche sur Mac ? », « Pourquoi Windows dit que l'appli n'est pas signée ? », « Je n'ai pas de TDAH, c'est pour moi ? »…
-- [ ] Intégrer la vidéo quand elle sera prête (`video/nox-demo.mp4`).
+### Accessibilité
+- [ ] **Mode malvoyant** : tout à la voix, description de l'écran (vision), très gros textes, fort contraste, sans souris.
+- [ ] **Mode simple seniors** : interface minimale, pas à pas (« le bouton bleu en haut à droite »), patience, **alerte anti-arnaque**.
+- [ ] **Aide d'un proche**, avec accord : résumé ou guidage à distance.
 
-## 5. Vidéo de 2 minutes 🟠
+### Partout et sans réglage
+- [ ] **Serveur qui détient la clé** : plus aucune clé à saisir.
+- [ ] **Téléphone** (Telegram public, puis appli), **Mac**.
+- [ ] **Outils via MCP** : Notion, Slack, agenda…
+- [ ] **Apprentissage des schémas** de procrastination.
+- [ ] **Signature de l'installeur** (plus d'alerte SmartScreen).
 
-Voir le plan détaillé dans la section 7.
+## 6. Communication 🟢
 
-## 6. Hackathon 🟠
-
-- [ ] Soumission (formulaire, e-mail et Luma) avant minuit, avec la vidéo, le site et le code.
-- [ ] Textes de soumission en anglais.
+- [ ] Second post LinkedIn avec la vidéo (anglais), puis version française.
+- [ ] Mettre à jour le texte du premier post avec la v3.
+- [ ] Régénérer le PDF français du carrousel (`node tools/linkedin.js`).
 
 ---
 
-## 7. Plan de la vidéo (motion design, faite par Claude)
+## Fait (historique)
 
-**Principe** : je fabrique la vidéo entièrement par programme, sans prendre le contrôle de ta souris :
-- les scènes animées (titres, mascotte, textes qui apparaissent) sont des pages HTML animées ;
-- les démos sont filmées **automatiquement** dans la vraie appli, pilotée par le même outil que les tests, en mode démo, donc sans consommer de tokens ;
-- tout est assemblé en MP4 avec FFmpeg.
-
-**Ce qu'il te faut installer** : seulement FFmpeg (`winget install Gyan.FFmpeg`).
-
-**Voix** : au choix :
-- (a) sans voix, avec des sous-titres animés, la version la plus sûre ;
-- (b) la voix de Nox générée par OpenAI, quelques centimes avec ta clé ;
-- (c) ta propre voix, enregistrée à part.
-
-**Storyboard (≈ 2 min, en anglais, sous-titres) :**
-
-| Temps | Scène | Contenu |
-|---|---|---|
-| 0:00–0:12 | Accroche | Écran noir, texte qui tape : « 2:00 pm. You open your doc to "just start". » → « 2:40 pm. You're on YouTube. » → « Your ADHD brain isn't lazy. » |
-| 0:12–0:20 | Arrivée de Nox | La mascotte atterrit sur un bureau, cligne des yeux, sourit : « Hi, I'm Nox. » |
-| 0:20–0:40 | Onboarding | Les 5 questions défilent vite, réponses cliquées, méthode choisie. Texte : « 5 questions. Under a minute. » |
-| 0:40–1:05 | S1 — Démarrer | « I need to write my report » → découpage en micro-étapes, minuteur qui démarre, Word qui s'ouvre. |
-| 1:05–1:20 | S2 — Décrochage | Une fenêtre YouTube apparaît → Nox devient inquiet : « Let's save that for your break. » |
-| 1:20–1:35 | S3 — Reprise | Écran qui s'éteint (absence) → retour : « Welcome back! You were at: write the intro. » |
-| 1:35–1:50 | Tableau de bord + mode jeu | Étape cochée, XP qui monte, compétence débloquée 🎉, souvenirs, connexions Agenda / Gmail / Telegram. |
-| 1:50–2:00 | Fin | « Free · Windows · English & French » + **get-nox.github.io** + « by Adebayo MOUTALABI · Built with the OpenAI Realtime API ». |
-
-## 8. Démos courtes et impressionnantes (tests, vidéo, réseaux)
-
-1. **« Démarrer en 10 secondes »** : dire une tâche floue (« I have to deal with my taxes ») → 4 micro-étapes concrètes, la première affichée, minuteur lancé.
-2. **Lui couper la parole** : Nox explique, on l'interrompt, il s'arrête net et répond.
-3. **Le retour après pause** : partir 60 s, revenir → « You were at… ».
-4. **Le décrochage** : ouvrir YouTube pendant une tâche → relance douce au bout de 20 s.
-5. **La mémoire** : « I work better with music » → relancer l'appli → Nox s'en souvient.
-6. **Changer de langue en direct** : passer de l'anglais au français, et Nox continue la conversation dans l'autre langue.
-7. **Le mode jeu** : finir une tâche → niveau gagné, compétence débloquée, fête animée.
-8. **L'agenda** : un rendez-vous dans 30 min → Nox prévient et propose de préparer.
-9. *(après développement)* **La note express** : « Note that I need to call Marie » → note visible dans le tableau de bord.
-10. *(après développement)* **Le compliment** : « You're cute » → Nox rougit et remercie.
+Notes façon Keep, émotions, bonne appli selon la tâche (Word, VS Code, Google Docs…), méthodes animées, taille de Nox, mode discret, placement visible, conversation naturelle (gpt-6.1-sol), onglet actif, minuteur pilotable (voix, clic, tableau), pauses Pomodoro, cartes qui n'avalent plus les messages ni ne coupent Nox, barres de défilement discrètes, site bilingue avec FAQ et SEO, scénario de démo automatique (`npm run demo`, 11/11), vidéo v1.
