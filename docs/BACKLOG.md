@@ -7,18 +7,18 @@ Cocher `[x]` quand c'est fait **et testé**.
 
 ## 1. Publication 🔴
 
-- [ ] **Release v1.1.0** (appli bilingue) sur GitHub, avec `dist/Nox Setup 1.1.0.exe`. Sans elle, le bouton « Télécharger » donne l'ancienne version, uniquement en français.
-- [ ] **Post LinkedIn en anglais** : texte `docs/linkedin/en/POST-FINAL-EN.txt` + `docs/linkedin/en/nox-carousel-en.pdf`, puis premier commentaire avec les liens.
+- [ ] **Release v1.2.0** (appli bilingue + corrections) sur GitHub, avec `dist/Nox Setup 1.2.0.exe`. Sans elle, le bouton « Télécharger » donne l'ancienne version, uniquement en français.
+- [x] **Post LinkedIn en anglais** (publié, voir linkedin/PUBLISHED.md ; mettre à jour le texte avec la v3) : texte `docs/linkedin/en/POST-FINAL-EN.txt` + `docs/linkedin/en/nox-carousel-en.pdf`, puis premier commentaire avec les liens.
 - [ ] Régénérer le **PDF français** (`node tools/linkedin.js`, PDF fermé dans la visionneuse).
 - [ ] Second post LinkedIn plus tard (vidéo, ou version française).
 
 ## 2. Bugs et ergonomie de l'appli 🟠
 
-- [ ] **Barre de saisie coupée** : quand on clique sur ✎, le champ est en partie caché (débordement dans la fenêtre de 300 px). Agrandir la barre ou faire passer le champ au-dessus des boutons.
-- [ ] **Méthodes sans effet visible** : cliquer sur Pomodoro, Body doubling, Règle des 5 minutes… change bien la méthode, mais rien ne le montre. À faire : Nox annonce la méthode à voix haute, explique en une phrase, propose de lancer le minuteur ; animation sur la carte choisie.
-- [ ] **Taille de Nox fixe** : pouvoir l'agrandir ou le réduire (petit / moyen / grand dans les réglages, ou molette sur la mascotte).
-- [ ] **Mode discret** : réduire Nox en petite bulle, ou le cacher dans la zone de notification de Windows (icône près de l'horloge), avec un raccourci pour le rappeler.
-- [ ] **Nox parfois à moitié caché au lancement** : toujours le placer entièrement dans la zone visible, au premier plan.
+- [x] **Barre de saisie coupée** : quand on clique sur ✎, le champ est en partie caché (débordement dans la fenêtre de 300 px). Agrandir la barre ou faire passer le champ au-dessus des boutons.
+- [x] **Méthodes sans effet visible** : cliquer sur Pomodoro, Body doubling, Règle des 5 minutes… change bien la méthode, mais rien ne le montre. À faire : Nox annonce la méthode à voix haute, explique en une phrase, propose de lancer le minuteur ; animation sur la carte choisie.
+- [x] **Taille de Nox fixe** : pouvoir l'agrandir ou le réduire (petit / moyen / grand dans les réglages, ou molette sur la mascotte).
+- [x] **Mode discret** : réduire Nox en petite bulle, ou le cacher dans la zone de notification de Windows (icône près de l'horloge), avec un raccourci pour le rappeler.
+- [x] **Nox parfois à moitié caché au lancement** : toujours le placer entièrement dans la zone visible, au premier plan.
 - [ ] **Responsive** : la fenêtre de Nox ne s'agrandit pas ; vérifier aussi le tableau de bord à toutes les tailles (petit écran, plein écran).
 - [ ] **Tableau de bord plus simple** : hiérarchie plus claire, actions plus visibles, retours visuels à chaque clic.
 

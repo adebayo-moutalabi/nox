@@ -14,7 +14,7 @@ Projet réalisé pour l'**OpenAI DevDay Community Hackathon Paris** (piste Impac
 
 ## Télécharger (Windows)
 
-1. Va dans **[Releases](../../releases)** et télécharge `Nox.Setup.1.1.0.exe`.
+1. Va dans **[Releases](../../releases)** et télécharge `Nox.Setup.1.2.0.exe`.
 2. Double-clique : Nox s'installe en un clic, se lance, puis démarre avec Windows.
 3. L'onboarding te demande ta **clé OpenAI** (elle reste chiffrée sur ton PC) ou te laisse **essayer sans clé** (mode démo, cerveau local).
 
