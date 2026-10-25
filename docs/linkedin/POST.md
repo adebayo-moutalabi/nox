@@ -1,6 +1,6 @@
-# Post LinkedIn — v4 (à copier-coller)
+# Post LinkedIn — v8 (à copier-coller)
 
-**Accroche retenue : A.** Le carrousel (`nox-carrousel.pdf`, `slide-1.png`) utilise A. Les variantes B et C restent ci-dessous pour mémoire.
+**Accroche retenue : A.** (v8 : carrousel signé « par Adebayo MOUTALABI » avec get-nox.github.io, appel au téléchargement.) Le carrousel (`nox-carrousel.pdf`, `slide-1.png`) utilise A. Les variantes B et C restent ci-dessous pour mémoire.
 
 Versions précédentes : `versions/v1` (TDAH, sobre) et `versions/v2` (« Finis enfin… », écartée).
 Choisis **une** accroche (A, B ou C) : elle va avec l'image `accroches/slide-1-X.png`, qui remplace alors la slide 1 du carrousel.
@@ -47,8 +47,9 @@ Je l'ai pensé d'abord pour le TDAH. Mais si une notification, un collègue ou u
 
 Construit pour l'OpenAI DevDay Community Hackathon à Paris, avec l'API Realtime d'OpenAI pour une conversation vocale fluide.
 
-Tu veux le tester en avant-première ?
-💬 Commente « NOX » et je t'envoie la version de test.
+Nox est gratuit, pour Windows, et prêt en une minute.
+👉 Télécharge-le : get-nox.github.io (lien aussi en commentaire)
+💬 Dis-moi en commentaire la première tâche que tu vas lui confier.
 🔁 Tu connais quelqu'un qui commence tout et ne finit rien ? Envoie-lui ce post.
 
 #parisdevdayhack #OpenAI #TDAH #ADHD #Neurodiversité #Productivité #Accessibilité
@@ -61,6 +62,6 @@ Le code est open source 👉 https://github.com/adebayo-moutalabi/nox
 Mentions : @borvibe @OpenAI
 
 **Conseils de publication** (pratiques largement rapportées, pas des règles officielles de LinkedIn) :
-- le lien GitHub en premier commentaire plutôt que dans le post ;
+- le lien en premier commentaire en plus du texte (le site est écrit sans « https:// » dans le post pour rester lisible) ;
 - un carrousel PDF retient plus longtemps l'attention qu'un texte seul ;
 - réponds aux premiers commentaires rapidement : les commentaires pèsent plus que les « j'aime ».

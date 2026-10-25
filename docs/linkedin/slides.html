@@ -22,6 +22,10 @@
   .hl { background:linear-gradient(transparent 62%, rgba(240,181,74,.55) 62%); padding:0 4px; }
   .foot { position:absolute; left:88px; right:88px; bottom:64px; display:flex; justify-content:space-between; align-items:center; font-size:24px; color:var(--ink-soft); }
   .foot b { font-family:var(--font-title); font-weight:900; color:var(--ink); font-size:30px; }
+  .sig { display:flex; align-items:baseline; gap:14px; } .sig span { font-size:22px; }
+  .cta { margin-top:40px; display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+  .cta span { font-size:26px; color:var(--ink-soft); }
+  .cta b { font-family:var(--font-title); font-weight:900; font-size:52px; background:#F0B54A; color:#2A2118; padding:14px 30px; border-radius:24px; box-shadow:0 14px 40px rgba(240,181,74,.4); }
   .dots { display:flex; gap:8px; } .dots i { width:28px; height:8px; border-radius:4px; background:var(--line); } .dots i.on { background:#2F7FD6; }
   .shot { border-radius:36px; box-shadow:0 30px 80px rgba(42,33,24,.22), 0 2px 8px rgba(42,33,24,.12); background:#fff; }
   .center { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding-bottom:70px; }
@@ -47,7 +51,7 @@
   <h1 id="hookTitle">Un compagnon de bureau pour les <span class="hl">cerveaux TDAH</span>.</h1>
   <p class="lead" id="hookLead">Il te parle en premier, découpe ta tâche, et t'aide à démarrer, rester et reprendre.</p>
   <div class="center"><svg class="m mascot-big" viewBox="0 0 100 100" id="m1"></svg></div>
-  <div class="foot"><b>Nox</b><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>par Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
 </section>
 
 <!-- 2. Probleme -->
@@ -61,7 +65,7 @@
 
     <div class="item"><div class="n">3</div><div><b>Reprendre</b><span>Après une pause : « j'en étais où, déjà ? »</span></div></div>
   </div>
-  <div class="foot"><b>Nox</b><div class="dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>par Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
 </section>
 
 <!-- 3. Solution -->
@@ -70,7 +74,7 @@
   <h2>Une seule <span class="hl">micro-étape</span> à la fois. À voix haute.</h2>
   <p class="lead">Tu dis ce que tu dois faire. Nox découpe, lance le minuteur et te ramène doucement si tu décroches.</p>
   <div class="center"><img class="shot" src="mascot.png" alt="La mascotte Nox affiche la première étape" style="width:600px; background:transparent; box-shadow:none"></div>
-  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>par Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div></div>
 </section>
 
 <!-- 4. Onboarding -->
@@ -81,7 +85,7 @@
     <span class="pill">Barkley : aider au moment d'agir</span><span class="pill">Safren : découper les tâches</span><span class="pill">Gollwitzer : plans « si… alors… »</span>
   </div>
   <div class="center"><img class="shot" src="onboarding.png" alt="Question d'onboarding avec pastilles" style="width:560px; background:transparent; box-shadow:none"></div>
-  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></div></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>par Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></div></div>
 </section>
 
 <!-- 5. Tableau de bord -->
@@ -90,7 +94,7 @@
   <h2>Il se souvient de toi. Et tu vois tes progrès.</h2>
   <p class="lead">Étapes cochées, minutes de focus, 7 méthodes (Pomodoro, body doubling…). Tout reste sur ton PC, effaçable d'un clic.</p>
   <div class="center"><img class="shot" src="dashboard.png" alt="Tableau de bord de Nox" style="width:940px"></div>
-  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></div></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>par Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></div></div>
 </section>
 
 <!-- 6. Tech + appel -->
@@ -102,8 +106,8 @@
     <div class="item"><div class="n">📅</div><div><b>Agenda, Gmail, Telegram</b><span>Il te prévient avant un rendez-vous, te lit un mail important, et te suit sur ton téléphone.</span></div></div>
     <div class="item"><div class="n">🏆</div><div><b>Mode jeu</b><span>XP, grades, compétences à débloquer. Jamais de série perdue.</span></div></div>
   </div>
-  <p class="lead" style="margin-top:44px; max-width:none">Installeur Windows + code open source · lien en commentaire</p>
-  <div class="foot"><b>Nox</b><div class="dots"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></div></div>
+  <div class="cta"><span>Gratuit pour Windows · open source</span><b>get-nox.github.io</b></div>
+  <div class="foot"><span class="sig"><b>Nox</b><span>par Adebayo MOUTALABI · get-nox.github.io</span></span><div class="dots"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></div></div>
 </section>
 
 <script src="../../mascot.js"></script>
