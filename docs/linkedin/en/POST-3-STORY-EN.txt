@@ -1,0 +1,25 @@
+Lea has ADHD. Her report has been “almost started” for three days. 📄
+Her grandma Rose has a 12-page tax form she doesn't understand. 🧾
+
+Different people. Same problem: 𝘁𝗵𝗲 𝗳𝗶𝗿𝘀𝘁 𝗺𝗼𝘃𝗲.
+
+Every app waits for you to open it. Nox doesn't wait. 🤖
+
+In this 90-second story, you'll see Nox:
+🗣 talk to Lea first
+🪜 turn a big report into one tiny 5-minute step
+📺 notice the cat video… and bring her back, kindly
+🎉 celebrate the step she finally finished
+
+And what's coming next: Nox helping Grandma Rose with her form, box by box, in simple words. She checks it. She sends it. 💛
+
+Nox is free for Windows today (English & French), built in one weekend at the OpenAI DevDay Community Hackathon in Paris.
+
+Who in your life needs a Nox? Tag them 👇
+
+#ADHD #Accessibility #AgeTech #OpenAI #Hackathon #BuildInPublic
+
+---
+First comment:
+🌐 Try Nox (free, Windows): https://get-nox.github.io
+💻 Code: https://github.com/adebayo-moutalabi/nox
