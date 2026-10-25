@@ -648,9 +648,15 @@ ipcMain.handle('nox:setTelegram', async (_e, token) => {
 });
 ipcMain.handle('nox:telegramQr', async () => (state.telegram.botName && state.telegram.pairCode ? integ.pairingQr(state.telegram.botName, state.telegram.pairCode) : null));
 ipcMain.handle('nox:setSettings', (_e, s) => {
+  const before = state.method;
   for (const k of SETTINGS_KEYS) if (k in s) state[k] = s[k];
   if (s.method !== undefined && !memory.METHODS[state.method]) state.method = null;
   saveState(); syncWindowWatcher();
+  // Nouvelle methode choisie : Nox l'annonce et propose le minuteur adapte
+  if (s.method && s.method !== before && state.profile.onboardedAt) {
+    const m = catalog().methods[s.method];
+    proactive(`L'utilisateur vient de choisir la methode "${m.name}" (${m.short}). Dis en une phrase comment tu vas l'aider avec, et propose de lancer un minuteur de ${memory.timerMinutes(state)} min.`, 'happy');
+  }
   return publicState();
 });
 // Fin de l'onboarding : profil + methode suggeree

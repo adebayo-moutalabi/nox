@@ -83,9 +83,15 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     check('Cocher une etape depuis le tableau', (await dash.locator('#sSteps').innerText()) === '1');
     await mascot.waitForFunction(() => document.querySelector('#bubble').innerText.includes('Bravo'), null, { timeout: 5000 });
     check('Nox felicite quand on coche dans le tableau', true);
+    await mascot.waitForSelector('#bubble.card >> text=Compétence débloquée', { timeout: 9000 });
+    check('Nox fete la competence', true);
+    await mascot.click('#bubble .pill:has-text("Trop bien")');
     await dash.click('.method[data-method="pomodoro"]');
     await dash.waitForFunction(() => document.querySelector('#methodChip').innerText.includes('Pomodoro'));
     check('Changer de methode', (await state(mascot)).method === 'pomodoro');
+    const announced = await mascot.waitForFunction(() => document.querySelector('#bubble').innerText.includes('Pomodoro'), null, { timeout: 5000 }).then(() => true, () => false);
+    check('Nox annonce la methode choisie', announced, announced ? '' : await bubbleText(mascot));
+    check('Bouton minuteur sur la methode active', (await dash.locator('.method.on .start').count()) === 1);
     await dash.click('#doneBtn');
     await dash.waitForFunction(() => document.querySelector('#stepNow')?.innerText === 'Rédige la première partie');
     await dash.click('#doneBtn');
@@ -100,9 +106,6 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     check('Mode jeu : competence debloquee', Boolean(st.game.skills.first_step));
     await dash.waitForFunction(() => document.querySelector('#lvGrade').innerText === 'Démarreur');
     check('Tableau : progression affichee', (await dash.locator('.skill.on').count()) >= 1);
-    await mascot.waitForSelector('#bubble.card >> text=Compétence débloquée', { timeout: 9000 });
-    check('Nox fete la competence', true);
-    await mascot.click('#bubble .pill:has-text("Trop bien")');
 
     // 5c) Agenda : un evenement dans 55 min -> rappel "60 min avant"
     const start = new Date(Date.now() + 55 * 60000);

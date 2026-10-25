@@ -112,16 +112,26 @@ function renderMemory(st) {
   }
 }
 
+// Methodes : un clic active la methode, Nox l'annonce, et la carte active propose le minuteur
+let justChosen = null;
 function renderMethods(st) {
   const box = $('methods');
   box.innerHTML = '';
   for (const [id, m] of Object.entries(methods)) {
-    const b = el('button', { className: 'method' + (st.method === id ? ' on' : ''), ariaPressed: String(st.method === id) },
+    const active = st.method === id;
+    const card = el('div', { className: 'method' + (active ? ' on' : '') + (active && justChosen === id ? ' pop' : ''), role: 'button', tabIndex: 0, ariaPressed: String(active) },
       el('span', { className: 'e', textContent: m.emoji }), el('b', { textContent: m.name }), el('small', { textContent: m.short }),
-      el('span', { className: 'tag', textContent: st.method === id ? T('dash.active') : m.focusMin ? `${m.focusMin} min` : '' }));
-    b.dataset.method = id;
-    b.onclick = () => window.nox.setSettings({ method: id });
-    box.append(b);
+      el('span', { className: 'tag', textContent: active ? T('dash.active') : m.focusMin ? `${m.focusMin} min` : '' }));
+    card.dataset.method = id;
+    const choose = () => { if (active) return; justChosen = id; card.classList.add('on', 'pop'); window.nox.setSettings({ method: id }); };
+    card.onclick = choose;
+    card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); } };
+    if (active) {
+      const start = el('button', { className: 'start', textContent: T('dash.timer', { min: st.timerMin }) });
+      start.onclick = (e) => { e.stopPropagation(); window.nox.startTimer(st.timerMin); start.textContent = '✓'; };
+      card.append(start);
+    }
+    box.append(card);
   }
 }
 

@@ -84,6 +84,13 @@
   .method b { display:block; font-family:var(--font-title); font-weight:800; margin:6px 0 2px; }
   .method small { color:var(--ink-soft); font-size:var(--text-sm); line-height:1.35; display:block; }
   .method .tag { display:inline-block; margin-top:8px; font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); }
+  .method { cursor:pointer; transition:transform var(--dur-fast) var(--ease-spring), border-color var(--dur-fast), background var(--dur-fast); }
+  .method:active { transform:scale(var(--press-scale)); }
+  .method.pop { animation:pick var(--dur-slow) var(--ease-spring); }
+  @keyframes pick { 0% { transform:scale(.94); } 60% { transform:scale(1.04); } 100% { transform:none; } }
+  .method .start { display:block; width:100%; margin-top:10px; border:0; border-radius:10px; padding:8px; font-family:var(--font-title); font-weight:800;
+    background:var(--nox-yellow); color:var(--on-accent); }
+  .method .start:hover { background:var(--nox-yellow-strong); }
 
   /* Memoire */
   .profile { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }

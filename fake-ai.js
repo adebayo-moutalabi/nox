@@ -10,6 +10,7 @@ const R = {
     taskDone: 'Tâche terminée, bravo ! 🎉',
     stepDone: (step) => `Bravo ! Maintenant : ${step}.`,
     onboarding: (n) => `Parfait${n}, je retiens tout ça. Sur quoi tu bosses maintenant ?`,
+    method: (m, min) => `C'est parti pour ${m} ! Je t'accompagne étape par étape. On lance ${min} min ?`,
     here: 'Je suis là.',
     bravo: 'Bravo ! Étape suivante.',
     noted: 'Noté, je retiens.',
@@ -26,6 +27,7 @@ const R = {
     taskDone: 'Task complete, well done! 🎉',
     stepDone: (step) => `Nice! Next up: ${step}.`,
     onboarding: (n) => `Perfect${n}, got it all. What are you working on right now?`,
+    method: (m, min) => `${m} it is! I'll walk you through it step by step. Start ${min} min?`,
     here: "I'm here.",
     bravo: 'Nice! Next step.',
     noted: "Noted, I'll remember that.",
@@ -43,6 +45,8 @@ function fakeThink(state, text) {
 
   if (t.startsWith('[evenement systeme')) {
     if (t.includes('vient de se lancer')) return { reply: r.hello(name, step), mood: 'happy' };
+    // (avant "minuteur" : l'annonce d'une methode propose aussi un minuteur)
+    if (t.includes('choisir la methode')) { const m = text.match(/"([^"]+)"/); const min = (text.match(/(\d+) min/) || [])[1]; return { reply: r.method(m ? m[1] : '', min), mood: 'happy' }; }
     if (t.includes('minuteur')) return { reply: r.timer, mood: 'proud' };
     if (t.includes('revient')) return { reply: r.back(name, step), mood: 'happy' };
     if (t.includes('nouvelles')) return { reply: r.checkIn, mood: 'focus' };
