@@ -33,7 +33,10 @@ function demoState() {
       { id: 'j3', title: 'Réviser le chapitre 4', steps: [1, 2, 3, 4, 5], done: 5, startedAt: now - DAY, completedAt: now - DAY },
       { id: 'demo', title: task.title, steps: task.steps, done: 1, startedAt: task.startedAt, completedAt: null }
     ],
-    stats
+    stats,
+    // Une semaine de jeu : niveau 4 (Batisseur), 5 competences
+    game: { xp: 365, skills: { first_step: now - 6 * DAY, starter: now - 4 * DAY, finisher: now - 3 * DAY, early_bird: now - 2 * DAY, steady: now - 2 * DAY },
+      counters: { steps: 34, started: 6, done: 4, resumes: 2, early: 3 } }
   };
 }
 
