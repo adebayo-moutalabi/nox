@@ -91,6 +91,10 @@
   .method .start { display:block; width:100%; margin-top:10px; border:0; border-radius:10px; padding:8px; font-family:var(--font-title); font-weight:800;
     background:var(--nox-yellow); color:var(--on-accent); }
   .method .start:hover { background:var(--nox-yellow-strong); }
+  /* Minuteur en cours : temps restant + arreter */
+  button.running { background:var(--ink) !important; color:var(--page) !important; border-color:transparent !important; }
+  button.running .stop { opacity:.8; }
+  button.running[data-kind="break"] { background:#2E7D4F !important; color:#fff !important; }
 
   /* Memoire */
   .profile { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
@@ -159,6 +163,13 @@
 
   .foot { margin-top:24px; text-align:center; color:var(--ink-soft); font-size:var(--text-sm); }
   @media (prefers-reduced-motion: reduce) { .card { animation:none; } }
+
+  /* Barres de defilement fines et discretes (jamais de grosse barre grise) */
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(42,33,24,.22); border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover { background:rgba(42,33,24,.4); }
+  ::-webkit-scrollbar-button { display:none; }
 </style>
 </head>
 <body>

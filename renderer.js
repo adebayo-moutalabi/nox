@@ -13,11 +13,16 @@ let lang = 'fr';               // langue de l'interface et de la conversation (v
 const T = (key, vars) => t(lang, key, vars);
 
 // Humeur (visage, couleur) et activite (ecoute, reflexion, parole) sont independantes
+// Les emotions sont passageres : apres quelques secondes, Nox revient au calme
+const FLEETING = { shy: 7000, love: 7000, proud: 6000, happy: 9000, tired: 9000, worried: 12000 };
+let moodTimer = null;
 function setMood(m) {
   if (!MOODS.includes(m)) m = 'focus';
   MOODS.forEach((x) => appEl.classList.remove(x));
   appEl.classList.add(m);
   mood = m;
+  clearTimeout(moodTimer);
+  if (FLEETING[m]) moodTimer = setTimeout(() => { if (mood === m && act !== 'speaking') setMood('focus'); }, FLEETING[m]);
 }
 function setAct(a) { act = a || ''; appEl.dataset.act = act; }
 // Petite animation ponctuelle : ajoute une classe sur #app pendant `ms`
@@ -30,6 +35,7 @@ function say(text, step) {
   bubble.append(document.createTextNode(text));
   if (step) { const s = document.createElement('span'); s.className = 'step'; s.textContent = '→ ' + step; bubble.append(s); }
   bubble.classList.add('show');
+  bubble.scrollTop = bubble.scrollHeight; // sous-titres longs : on suit la fin de la phrase
   clearTimeout(hideTimer);
   hideTimer = setTimeout(() => bubble.classList.remove('show'), 25000);
 }
@@ -80,7 +86,7 @@ async function handle(out) {
   talk(out.reply);
   if (out.taskDone) { stopTimer(); flash('jump', 500); }
   if (out.action?.type === 'start_timer') startTimer(Number(out.action.value) || st.timerMin);
-  if (out.action?.type === 'pause') stopTimer();
+  if (out.action?.type === 'pause' || out.action?.type === 'stop_timer') stopTimer();
 }
 
 async function ask(text) {
@@ -94,9 +100,14 @@ async function ask(text) {
 }
 
 // ---------- Minuteur visible ----------
-function startTimer(min) {
+// kind : 'focus' (travail) ou 'break' (pause de la methode). Le processus principal connait
+// l'etat du minuteur, pour que Nox et le tableau de bord puissent l'arreter.
+function startTimer(min, kind = 'focus') {
   stopTimer();
+  min = Math.max(1, Math.min(180, Number(min) || 5));
   const total = min * 60; let left = total;
+  appEl.classList.toggle('on-break', kind === 'break');
+  window.nox.timerState({ min, kind, endsAt: Date.now() + total * 1000 });
   const ring = $('ringBar'), label = $('timerLabel');
   label.style.display = 'block';
   const draw = () => {
@@ -108,16 +119,30 @@ function startTimer(min) {
     left--; draw();
     if (left <= 0) {
       stopTimer();
+      if (kind === 'break') { setMood('happy'); systemEvent("La pause est terminee. Accueille-le en une phrase et rappelle l'etape en cours."); return; }
       setMood('proud');
       window.nox.timerDone();
       const m = methods[currentMethod];
-      const pause = m?.breakMin ? ` Methode ${m.name} : propose une vraie pause de ${m.breakMin} min.` : '';
-      systemEvent(`Le minuteur de ${min} min est termine. Demande gentiment si l'etape est faite et propose la suite.${pause}`);
+      systemEvent(`Le minuteur de ${min} min est termine. Demande gentiment si l'etape est faite.${m?.breakMin ? ` Methode ${m.name} : une pause de ${m.breakMin} min est prevue.` : ''}`);
+      if (m?.breakMin) offerBreak(m.breakMin);
     }
   }, 1000);
 }
 window.nox.onStartTimer((min) => startTimer(min));
-function stopTimer() { clearInterval(timer); timer = null; $('ringBar').style.strokeDashoffset = 377; $('timerLabel').style.display = 'none'; }
+window.nox.onStopTimer(() => stopTimer());
+// Pause de la methode (Pomodoro, time-boxing…) : proposee a la fin d'une seance
+async function offerBreak(min) {
+  await new Promise((r) => setTimeout(r, 2500));
+  const v = await showCardQueued({ text: T('timer.breakAsk', { min }), options: [['go', T('timer.breakGo', { min })], ['later', T('timer.breakLater')]], skip: null });
+  if (v === 'go') startTimer(min, 'break');
+}
+function stopTimer() {
+  const wasRunning = Boolean(timer);
+  clearInterval(timer); timer = null;
+  $('ringBar').style.strokeDashoffset = 377; $('timerLabel').style.display = 'none';
+  appEl.classList.remove('on-break');
+  if (wasRunning) window.nox.timerState(null);
+}
 
 // ---------- Texte ----------
 $('write').onclick = () => { bar.classList.toggle('typing'); if (bar.classList.contains('typing')) input.focus(); };
@@ -178,6 +203,7 @@ Realtime.on = {
   speakingStop() { if (act === 'speaking') setAct('listening'); },
   async tool(name, args, userText) {
     if (name === 'start_timer') { startTimer(Number(args.minutes) || 5); return { ok: true }; }
+    if (name === 'stop_timer') { const was = Boolean(timer); stopTimer(); return { ok: true, etait_en_cours: was }; }
     if (name === 'set_mood') { setMood(args.mood); return { ok: true }; }
     const r = await window.nox.tool(name, args, userText);
     await refreshStep();
@@ -226,7 +252,7 @@ $('voice').onclick = () => {
 let drag = null;
 stage.addEventListener('pointerdown', (e) => {
   if (e.button !== 0) return;
-  drag = { sx: e.screenX, sy: e.screenY, wx: window.screenX, wy: window.screenY, moved: false };
+  drag = { sx: e.screenX, sy: e.screenY, wx: window.screenX, wy: window.screenY, moved: false, onTimer: e.target.id === 'timerLabel' };
   stage.setPointerCapture(e.pointerId);
 });
 stage.addEventListener('pointermove', (e) => {
@@ -239,10 +265,11 @@ stage.addEventListener('pointermove', (e) => {
 });
 stage.addEventListener('pointerup', () => {
   if (!drag) return;
-  const wasClick = !drag.moved;
+  const wasClick = !drag.moved, onTimer = drag.onTimer;
   drag = null;
   appEl.classList.remove('drag');
-  if (wasClick) { flash('jump', 450); toggleVoice(); } // clic : petit saut, puis elle ecoute
+  if (wasClick && onTimer) { stopTimer(); say(T('timer.stopped')); } // clic sur le minuteur : on l'arrete
+  else if (wasClick) { flash('jump', 450); toggleVoice(); } // clic : petit saut, puis elle ecoute
   else flash('squash', 260);                      // lache : elle s'ecrase un peu en atterrissant
 });
 stage.addEventListener('pointerenter', () => appEl.classList.add('hover'));

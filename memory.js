@@ -195,10 +195,10 @@ function summary(state) {
   return lines.join('\n');
 }
 
+// Duree du minuteur : celle de la methode choisie (Pomodoro = 25 min), sinon la duree confortable du profil
 function timerMinutes(state) {
   const m = METHODS[state.method];
-  if (m && m.focusMin <= 5) return m.focusMin;
-  return Number(state.profile.focusMin) || m?.focusMin || 15;
+  return m?.focusMin || Number(state.profile.focusMin) || 15;
 }
 
 module.exports = { METHODS, ONBOARDING, LEVELS, SKILLS, XP, suggestMethod, ensure, dayKey, bump, addFact, removeFact, addNote, removeNote, startTask, completeStep, todayStats, summary, timerMinutes, levelOf, award };

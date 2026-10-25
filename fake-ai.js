@@ -20,7 +20,13 @@ const R = {
     tired: "Je te comprends… 🥱 Et si on faisait une vraie pause de 5 min ? Je garde ta place.",
     split: 'Ok, on découpe. Première étape, et je lance le minuteur.',
     steps: ['Ouvre le document', 'Écris le plan en 3 points', 'Rédige la première partie'],
-    more: "Dis-m'en un peu plus ?"
+    more: "Dis-m'en un peu plus ?",
+    noWatch: "Je ne vois pas tes fenêtres : tu ne m'as pas donné la permission. Tu peux l'activer dans Réglages → « Voir l'appli / l'onglet actif ».",
+    window: (w) => `Tu es sur « ${w} ». C'est bien là que tu voulais être ?`,
+    can: "Je découpe tes tâches en petites étapes, je lance ou j'arrête un minuteur, j'ouvre la bonne appli, je prends tes notes et je te ramène quand tu décroches. Je ne lis pas encore le contenu de tes pages.",
+    timerStopped: 'Minuteur arrêté. On reprend quand tu veux.',
+    timerStarted: (m) => `C'est parti pour ${m} minutes ⏱`,
+    chat: ["Je t'écoute 🙂 Tu bosses sur quoi en ce moment ?", "Ah, raconte ! Et côté travail, ça avance ?", "Je suis là. Si tu as une tâche qui traîne, dis-la moi, on la découpe ensemble."]
   },
   en: {
     hello: (n, step) => `Hi${n}! ${step ? `Shall we pick up: ${step}?` : 'What are you working on?'}`,
@@ -41,11 +47,17 @@ const R = {
     tired: "I get it… 🥱 How about a real 5-minute break? I'll save your spot.",
     split: "Ok, let's break it down. Here's step one, and I'm starting the timer.",
     steps: ['Open the document', 'Write a 3-point outline', 'Draft the first part'],
-    more: 'Tell me a bit more?'
+    more: 'Tell me a bit more?',
+    noWatch: "I can't see your windows: you haven't given me permission. You can turn it on in Settings → \"See the active app / tab\".",
+    window: (w) => `You're on "${w}". Is that where you meant to be?`,
+    can: "I break your tasks into tiny steps, start or stop a timer, open the right app, take your notes and bring you back when you drift. I can't read the content of your pages yet.",
+    timerStopped: 'Timer stopped. We can pick up whenever you like.',
+    timerStarted: (m) => `${m} minutes, here we go ⏱`,
+    chat: ["I'm listening 🙂 What are you working on right now?", 'Oh, tell me more! And how is work going?', "I'm here. Got a task that keeps slipping? Tell me and we'll break it down together."]
   }
 };
 
-function fakeThink(state, text) {
+function fakeThink(state, text, ctx = {}) {
   const r = R[state.lang] || R.fr;
   const t = text.toLowerCase();
   const name = state.profile?.name ? ` ${state.profile.name}` : '';
@@ -76,15 +88,25 @@ function fakeThink(state, text) {
   if (note) return { reply: r.noteSaved, mood: 'happy', action: { type: 'note', value: note[1].trim() } };
   const fact = text.match(/(je bosse mieux|je préfère|je prefere|j'aime|i work better|i prefer|i like)(.*)/i);
   if (fact) return { reply: r.noted, mood: 'happy', action: { type: 'remember', value: fact[0] } };
-  if (text.trim().length > 6) {
-    const title = text.replace(/^(je dois|il faut que je|faut que je|je vais|i need to|i have to|i must|i'm going to)\s*/i, '').trim();
+  // Questions : appli active, ce que Nox sait faire
+  if (/(quel onglet|quelle appli|quelle fen[eê]tre|sur quoi je suis|tu vois (quoi|mon [ée]cran)|which tab|what app|which app|what window|what am i (on|looking at))/i.test(t)) {
+    return { reply: ctx.windowTitle === null ? r.noWatch : r.window(ctx.windowTitle || '?'), mood: 'focus' };
+  }
+  if (/(qu'est-ce que tu (sais|peux) faire|tu sais faire quoi|tu peux faire quoi|what can you do|what do you do)/i.test(t)) return { reply: r.can, mood: 'happy' };
+  // Minuteur a la voix
+  if (/(arr[eê]te|stoppe|coupe|stop|cancel)\b.*(minuteur|timer|chrono)/i.test(t)) return { reply: r.timerStopped, mood: 'focus', action: { type: 'stop_timer' } };
+  const tm = t.match(/(lance|d[ée]marre|mets|start|set)\b.*?(\d+)\s*(min|minutes)/i);
+  if (tm) return { reply: r.timerStarted(tm[2]), mood: 'focus', action: { type: 'start_timer', value: tm[2] } };
+  // Une tache seulement quand la phrase en decrit une
+  if (/^(je dois|il faut|faut que|je vais|j'ai (un|une|des|mon|ma|mes)|aide-moi|i need to|i have to|i must|i'm going to|help me|i've got to)\b/i.test(text.trim())) {
+    const title = text.replace(/^(je dois|il faut que je|faut que je|je vais|i need to|i have to|i must|i'm going to|help me)\s*/i, '').trim();
     return {
       reply: r.split, mood: 'focus',
       task: { title: title.charAt(0).toUpperCase() + title.slice(1), steps: r.steps, current: 0 },
       action: { type: 'start_timer', value: '' }
     };
   }
-  return { reply: r.more, mood: 'focus' };
+  return { reply: r.chat[Math.floor(Math.random() * r.chat.length)], mood: 'happy' };
 }
 
 module.exports = { fakeThink };

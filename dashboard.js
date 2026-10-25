@@ -22,6 +22,30 @@ function renderHeader(st) {
   $('methodChip').textContent = m ? `${m.emoji}  ${m.name}` : T('dash.noMethod');
 }
 
+// Bouton minuteur : "Lancer X min", ou temps restant + "Arreter" quand un minuteur tourne
+const mmss = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+function timerButton(st, id, className) {
+  const t = st.timer;
+  const b = el('button', { className: className + (t ? ' running' : ''), id });
+  if (t) {
+    b.dataset.endsAt = t.endsAt;
+    b.dataset.kind = t.kind || 'focus';
+    b.onclick = (e) => { e.stopPropagation(); window.nox.stopTimer(); };
+    b.append(el('span', { className: 'left' }), el('span', { className: 'stop', textContent: T('dash.timerStop') }));
+  } else {
+    b.textContent = T('dash.timer', { min: st.timerMin });
+    b.onclick = (e) => { e.stopPropagation(); window.nox.startTimer(st.timerMin); };
+  }
+  return b;
+}
+// Le temps restant se met a jour chaque seconde, sans tout redessiner
+setInterval(() => {
+  for (const b of document.querySelectorAll('button.running')) {
+    const key = b.dataset.kind === 'break' ? 'dash.onBreak' : 'dash.timerRunning';
+    b.querySelector('.left').textContent = T(key, { left: mmss(Number(b.dataset.endsAt) - Date.now()) }) + '  ';
+  }
+}, 500);
+
 function renderNow(st) {
   const body = $('nowBody');
   // Un rafraichissement ne doit pas effacer ce qu'on est en train d'ecrire
@@ -37,9 +61,7 @@ function renderNow(st) {
     body.append(bar);
     const done = el('button', { className: 'btn primary', id: 'doneBtn', textContent: T('dash.done') });
     done.onclick = () => window.nox.completeStep();
-    const timer = el('button', { className: 'btn secondary', id: 'timerBtn', textContent: T('dash.timer', { min: st.timerMin }) });
-    timer.onclick = () => window.nox.startTimer(st.timerMin);
-    body.append(el('div', { className: 'actions' }, done, timer));
+    body.append(el('div', { className: 'actions' }, done, timerButton(st, 'timerBtn', 'btn secondary')));
   } else {
     body.append(el('p', { className: 'step-now', textContent: T('dash.empty.title') }));
     body.append(el('p', { className: 'empty-hint', textContent: T('dash.empty.hint') }));
@@ -147,9 +169,7 @@ function renderMethods(st) {
     card.onclick = choose;
     card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); } };
     if (active) {
-      const start = el('button', { className: 'start', textContent: T('dash.timer', { min: st.timerMin }) });
-      start.onclick = (e) => { e.stopPropagation(); window.nox.startTimer(st.timerMin); start.textContent = '✓'; };
-      card.append(start);
+      card.append(timerButton(st, 'methodTimer', 'start'));
     }
     box.append(card);
   }
