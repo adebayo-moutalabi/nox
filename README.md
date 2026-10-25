@@ -10,6 +10,8 @@ Projet réalisé pour l'**OpenAI DevDay Community Hackathon Paris** (piste Impac
   <img src="docs/linkedin/slide-5.png" width="32%" alt="Tableau de bord">
 </p>
 
+**Site de présentation** : `https://<ton-compte>.github.io/nox/` (dossier `docs/`, publié avec GitHub Pages).
+
 ## Télécharger (Windows)
 
 1. Va dans **[Releases](../../releases)** et télécharge `Nox Setup 1.0.0.exe`.

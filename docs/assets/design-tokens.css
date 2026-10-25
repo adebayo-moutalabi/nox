@@ -1,0 +1,92 @@
+/* design-tokens.css — charte de Nox (voir DESIGN.md, section 5)
+   Toute l'interface utilise ces variables : ne pas ecrire de couleur, police,
+   rayon ou duree en dur ailleurs. */
+
+/* Polices embarquees (Google Fonts, variables, sous-ensemble latin avec les accents
+   francais ; licence SIL OFL 1.1 dans assets/fonts). Repli : Segoe UI Variable. */
+@font-face { font-family: "Nunito"; font-weight: 600 900; font-display: swap;
+  src: url("fonts/Nunito.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400 700; font-display: swap;
+  src: url("fonts/Inter.woff2") format("woff2"); }
+
+:root {
+  /* Marque */
+  --nox-yellow: #F0B54A;        /* accent chaleureux (couleur de la mascotte) */
+  --nox-yellow-strong: #D99A2B; /* survol / appui sur fond jaune */
+  --nox-blue: #4A9CF0;          /* interaction : focus, minuteur, ecoute */
+  --nox-blue-strong: #2F7FD6;
+
+  /* Neutres chauds (mode clair) */
+  --ink: #2A2118;               /* texte principal, contraste AA sur --surface */
+  --ink-soft: #6B5D4F;          /* texte secondaire */
+  --on-accent: #2A2118;         /* texte sur fond jaune (contraste ~9:1) */
+  --step-ink: #8A5A0B;          /* micro-etape dans la bulle */
+  --surface: rgba(255, 250, 242, .94);  /* verre : bulle et panneaux */
+  --surface-solid: #FFFAF2;
+  --surface-2: #F5ECDF;         /* champs, zones secondaires */
+  --line: rgba(42, 33, 24, .14);
+  --bar-bg: rgba(42, 33, 24, .92);
+  --bar-fg: #FFF8EE;
+  --bar-hover: rgba(255, 248, 238, .14);
+  --danger: #E5604F;            /* micro en enregistrement */
+  --danger-halo: rgba(229, 96, 79, .3);
+  --ground-shadow: #000;        /* ombre de la mascotte au sol */
+  --ring-track: rgba(42, 33, 24, .10);
+  --zz: #7B6F9E;
+  --chart-bar: #2F7FD6;         /* barres du tableau (validees : contraste >= 3:1 sur la surface) */
+  --page: #F6EFE5;              /* fond du tableau de bord (sous les cartes) */
+
+  /* Lueur de la mascotte selon l'humeur */
+  --glow-focus: #4A9CF0;
+  --glow-happy: #6FE3A1;
+  --glow-proud: #F0B54A;
+  --glow-worried: #FF9A6B;
+  --glow-idle: #8C9BC4;
+
+  /* Typographie */
+  --font-title: "Nunito", "Fredoka", "Segoe UI Variable Display", "Segoe UI", sans-serif;
+  --font-text: "Inter", "Segoe UI Variable Text", "Segoe UI", sans-serif;
+  --text-xs: 11px;
+  --text-sm: 12.5px;
+  --text-md: 13.5px;
+  --text-lg: 16px;
+
+  /* Formes */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 8px 24px rgba(42, 33, 24, .18), 0 1px 3px rgba(42, 33, 24, .12);
+  --blur: 18px;
+  --focus-ring: 0 0 0 3px rgba(74, 156, 240, .55);
+
+  /* Mouvement : 150 a 400 ms, ressorts plutot que lineaire */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --press-scale: .96;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #F5ECDF;
+    --ink-soft: #BFB2A3;
+    --step-ink: #F0B54A;
+    --surface: rgba(34, 29, 24, .92);
+    --surface-solid: #221D18;
+    --surface-2: #2E2721;
+    --line: rgba(255, 248, 238, .14);
+    --bar-bg: rgba(20, 17, 14, .92);
+    --ring-track: rgba(255, 248, 238, .14);
+    --zz: #B3A8D6;
+    --chart-bar: #3B8EE8;
+    --page: #17130F;
+    --shadow-soft: 0 8px 24px rgba(0, 0, 0, .45), 0 1px 3px rgba(0, 0, 0, .3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; --press-scale: 1; }
+}
