@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld('nox', {
   onboardingDone: () => ipcRenderer.invoke('nox:onboardingDone'),
   resetOnboarding: () => ipcRenderer.invoke('nox:resetOnboarding'),
   forgetFact: (id) => ipcRenderer.invoke('nox:forgetFact', id),
+  addNote: (text) => ipcRenderer.invoke('nox:addNote', text),
+  removeNote: (id) => ipcRenderer.invoke('nox:removeNote', id),
   completeStep: () => ipcRenderer.invoke('nox:completeStep'),
   newTask: (text) => ipcRenderer.invoke('nox:newTask', text),
   startTimer: (min) => ipcRenderer.send('nox:startTimer', min),

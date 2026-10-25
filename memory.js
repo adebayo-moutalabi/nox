@@ -103,6 +103,7 @@ function mergeRewards(a, b) {
 function ensure(state) {
   state.profile = state.profile || {};
   state.facts = Array.isArray(state.facts) ? state.facts : [];
+  state.notes = Array.isArray(state.notes) ? state.notes : [];
   state.journal = Array.isArray(state.journal) ? state.journal : [];
   state.stats = state.stats || {};
   state.game = state.game || {};
@@ -132,6 +133,17 @@ function addFact(state, text) {
   return fact;
 }
 function removeFact(state, id) { state.facts = state.facts.filter((f) => f.id !== id); }
+
+// Notes facon Keep : ce que l'utilisateur dicte ("note que je dois rappeler Marie")
+function addNote(state, text) {
+  const t = String(text || '').trim().slice(0, 300);
+  if (!t) return null;
+  const note = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), text: t, at: Date.now() };
+  state.notes.push(note);
+  state.notes = state.notes.slice(-100);
+  return note;
+}
+function removeNote(state, id) { state.notes = state.notes.filter((n) => n.id !== id); }
 
 function startTask(state, title, steps) {
   const id = Date.now().toString(36);
@@ -173,6 +185,7 @@ function summary(state) {
   if (p.focusMin) lines.push(`Concentration confortable : ${p.focusMin} min (duree par defaut du minuteur).`);
   if (m) lines.push(`Methode choisie : ${m.name}. ${m.prompt}`);
   if (state.facts.length) lines.push(`Ce que tu sais de lui : ${state.facts.slice(-12).map((f) => f.text).join(' ; ')}.`);
+  if (state.notes.length) lines.push(`Ses notes (les plus recentes, a relire s'il le demande) : ${state.notes.slice(-8).map((n) => `"${n.text}"`).join(' ; ')}.`);
   const recent = state.journal.slice(-5).map((j) => `"${j.title}" (${j.completedAt ? 'terminee' : `${j.done}/${j.steps.length} etapes`})`);
   if (recent.length) lines.push(`Taches recentes : ${recent.join(', ')}.`);
   const t = todayStats(state);
@@ -188,4 +201,4 @@ function timerMinutes(state) {
   return Number(state.profile.focusMin) || m?.focusMin || 15;
 }
 
-module.exports = { METHODS, ONBOARDING, LEVELS, SKILLS, XP, suggestMethod, ensure, dayKey, bump, addFact, removeFact, startTask, completeStep, todayStats, summary, timerMinutes, levelOf, award };
+module.exports = { METHODS, ONBOARDING, LEVELS, SKILLS, XP, suggestMethod, ensure, dayKey, bump, addFact, removeFact, addNote, removeNote, startTask, completeStep, todayStats, summary, timerMinutes, levelOf, award };

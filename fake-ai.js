@@ -14,6 +14,7 @@ const R = {
     here: 'Je suis là.',
     bravo: 'Bravo ! Étape suivante.',
     noted: 'Noté, je retiens.',
+    noteSaved: "C'est noté 📝",
     split: 'Ok, on découpe. Première étape, et je lance le minuteur.',
     steps: ['Ouvre le document', 'Écris le plan en 3 points', 'Rédige la première partie'],
     more: "Dis-m'en un peu plus ?"
@@ -31,6 +32,7 @@ const R = {
     here: "I'm here.",
     bravo: 'Nice! Next step.',
     noted: "Noted, I'll remember that.",
+    noteSaved: 'Got it, noted 📝',
     split: "Ok, let's break it down. Here's step one, and I'm starting the timer.",
     steps: ['Open the document', 'Write a 3-point outline', 'Draft the first part'],
     more: 'Tell me a bit more?'
@@ -59,6 +61,9 @@ function fakeThink(state, text) {
   if (state.task && /(c'est fait|fini|termin|c'est bon|done|finished)/.test(t)) {
     return { reply: r.bravo, mood: 'proud', action: { type: 'done_step' } };
   }
+  // Note dictee : "note que…", "rappelle-moi de…", "note that…", "remind me to…"
+  const note = text.match(/^\s*(?:nox,?\s*)?(?:note que|note :|prends note que|rappelle-moi de|note that|take a note:?|remind me to)\s*(.+)/i);
+  if (note) return { reply: r.noteSaved, mood: 'happy', action: { type: 'note', value: note[1].trim() } };
   const fact = text.match(/(je bosse mieux|je préfère|je prefere|j'aime|i work better|i prefer|i like)(.*)/i);
   if (fact) return { reply: r.noted, mood: 'happy', action: { type: 'remember', value: fact[0] } };
   if (text.trim().length > 6) {

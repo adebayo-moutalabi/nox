@@ -112,6 +112,26 @@ function renderMemory(st) {
   }
 }
 
+// Notes facon Keep : les plus recentes d'abord, supprimables d'un clic
+function renderNotes(st) {
+  const box = $('notes');
+  box.innerHTML = '';
+  if (!st.notes?.length) { box.append(el('p', { className: 'muted', textContent: T('dash.notes.empty') })); return; }
+  for (const n of [...st.notes].reverse()) {
+    const x = el('button', { textContent: '×', title: T('dash.forget'), ariaLabel: `${T('dash.forget')} : ${n.text}` });
+    x.onclick = () => window.nox.removeNote(n.id);
+    const when = new Date(n.at).toLocaleString(locale(), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    box.append(el('div', { className: 'note' }, el('p', { textContent: n.text }), el('time', { textContent: when }), x));
+  }
+}
+$('noteForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const v = $('noteInput').value.trim();
+  if (!v) return;
+  $('noteInput').value = '';
+  await window.nox.addNote(v);
+};
+
 // Methodes : un clic active la methode, Nox l'annonce, et la carte active propose le minuteur
 let justChosen = null;
 function renderMethods(st) {
@@ -229,7 +249,7 @@ async function setLang(l) {
 }
 async function render(st) {
   if (st.lang && st.lang !== lang) await setLang(st.lang);
-  renderHeader(st); renderNow(st); renderToday(st); renderGame(st); renderAgenda(st); renderSteps(st); renderMemory(st); renderMethods(st); renderConnections(st); renderHistory(st);
+  renderHeader(st); renderNow(st); renderToday(st); renderGame(st); renderAgenda(st); renderSteps(st); renderMemory(st); renderNotes(st); renderMethods(st); renderConnections(st); renderHistory(st);
 }
 
 (async () => {

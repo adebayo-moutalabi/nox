@@ -72,11 +72,26 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     await mascot.waitForFunction(async () => (await window.nox.getState()).facts.length === 1, null, { timeout: 5000 });
     check('Souvenir enregistre', true);
 
+    // 4b) Note facon Keep, dictee a Nox
+    await mascot.click('#write');
+    await mascot.fill('#input', 'note que je dois rappeler Marie demain');
+    await mascot.press('#input', 'Enter');
+    await mascot.waitForFunction(async () => (await window.nox.getState()).notes.length === 1, null, { timeout: 5000 });
+    check('Note dictee enregistree', (await state(mascot)).notes[0].text === 'je dois rappeler Marie demain');
+
     // 5) Tableau de bord
     const [dash] = await Promise.all([app.waitForEvent('window'), mascot.click('#dashboard')]);
     await dash.waitForSelector('#stepNow');
     check('Tableau : etape courante', (await dash.locator('#stepNow').innerText()) === 'Ouvre le document');
     check('Tableau : souvenir visible', (await dash.locator('#facts').innerText()).includes('musique'));
+    check('Tableau : note visible', (await dash.locator('#notes').innerText()).includes('rappeler Marie'));
+    await dash.fill('#noteInput', 'Acheter du café');
+    await dash.press('#noteInput', 'Enter');
+    await dash.waitForFunction(() => document.querySelectorAll('#notes .note').length === 2, null, { timeout: 5000 });
+    check('Tableau : ajouter une note', true);
+    await dash.click('#notes .note button');
+    await dash.waitForFunction(() => document.querySelectorAll('#notes .note').length === 1, null, { timeout: 5000 });
+    check('Tableau : supprimer une note', true);
     await dash.screenshot({ path: path.join(SHOTS, '04-tableau-de-bord.png') });
     await dash.click('#doneBtn');
     await dash.waitForFunction(() => document.querySelector('#stepNow')?.innerText === 'Écris le plan en 3 points', null, { timeout: 5000 });
