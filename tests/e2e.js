@@ -94,6 +94,29 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     st = await state(mascot);
     check('Stats du jour', st.today.steps === 3 && st.today.tasksDone === 1, JSON.stringify(st.today));
 
+    // 5b) Mode jeu : 5 (tache lancee) + 3 x 10 (etapes) + 50 (tache finie) = 85 XP -> niveau 2
+    check('Mode jeu : XP et grade', st.game.xp === 85 && st.level.level === 2 && st.level.grade === 'Démarreur', `${st.game.xp} XP, ${st.level.grade}`);
+    check('Mode jeu : competence debloquee', Boolean(st.game.skills.first_step));
+    await dash.waitForFunction(() => document.querySelector('#lvGrade').innerText === 'Démarreur');
+    check('Tableau : progression affichee', (await dash.locator('.skill.on').count()) >= 1);
+    await mascot.waitForSelector('#bubble.card >> text=Compétence débloquée', { timeout: 9000 });
+    check('Nox fete la competence', true);
+    await mascot.click('#bubble .pill:has-text("Trop bien")');
+
+    // 5c) Agenda : un evenement dans 55 min -> rappel "60 min avant"
+    const start = new Date(Date.now() + 55 * 60000);
+    const ics = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    // (l'appli n'accepte que des adresses https : on teste l'analyse du fichier directement)
+    const { parseIcs, upcoming, matchWatch, looksImportant } = require('../integrations');
+    const evs = upcoming(parseIcs(`BEGIN:VEVENT\r\nUID:a\r\nDTSTART:${ics(start)}\r\nSUMMARY:Point avec Marie\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20200101\r\nSUMMARY:Ancien\r\nEND:VEVENT`));
+    check('Agenda : lecture iCal (evenement a venir seulement)', evs.length === 1 && evs[0].title === 'Point avec Marie', JSON.stringify(evs.map((e) => e.title)));
+    check('Agenda : adresse invalide refusee', (await dash.evaluate(() => window.nox.setCalendar('pas une url'))).ok === false);
+
+    // 5d) Mails : attente d'un mail precis + tri sans IA
+    check('Mail attendu reconnu', matchWatch({ query: 'mail de la CAF' }, { from: 'CAF <noreply@caf.fr>', subject: 'Votre attestation' }));
+    check('Mail sans rapport ignore', !matchWatch({ query: 'Marie Dupont' }, { from: 'Newsletter <news@x.fr>', subject: 'Promo' }));
+    check('Mail urgent repere', looksImportant({ subject: 'Rappel : facture à régler', text: '' }) && !looksImportant({ subject: 'Les nouveautés de la semaine', text: '' }));
+
     // 6) Relance : Nox se souvient
     await app.close();
     ({ app, mascot } = await launch());

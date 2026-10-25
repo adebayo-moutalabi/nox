@@ -10,6 +10,7 @@ function fakeThink(state, text) {
     if (t.includes('minuteur')) return { reply: "Ding ! C'est fait ? Si oui, dis « c'est fait ».", mood: 'proud' };
     if (t.includes('revient')) return { reply: `Re${name} ! Tu en étais à : ${step || 'ta tâche'}.`, mood: 'happy' };
     if (t.includes('nouvelles')) return { reply: 'Je suis là. Ça avance ?', mood: 'focus' };
+    if (t.includes('agenda')) { const ev = text.match(/"([^"]+)"/); return { reply: `📅 Bientôt : ${ev ? ev[1] : 'un rendez-vous'}. On s'y prépare ?`, mood: 'worried' }; }
     if (t.includes('derniere etape')) return { reply: 'Tâche terminée, bravo ! 🎉', mood: 'proud' };
     if (t.includes('coche une etape')) return { reply: `Bravo ! Maintenant : ${step}.`, mood: 'proud' };
     if (t.includes('onboarding')) return { reply: `Parfait${name}, je retiens tout ça. Sur quoi tu bosses maintenant ?`, mood: 'happy' };
