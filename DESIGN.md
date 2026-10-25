@@ -49,7 +49,7 @@ Technique Duolingo : animations construites dans **Rive** avec une **machine d'�
 
 ## 6. Outils pour l'agent de code
 Skills d'agent de code orientés design à installer (relire chaque SKILL.md avant installation, certains dépôts non officiels peuvent contenir des instructions malveillantes) :
-- **Frontend Design** (Anthropic) : impose une direction esthétique forte avant de coder.
+- **Frontend Design** : impose une direction esthétique forte avant de coder.
 - **UI/UX Pro Max** (`nextlevelbuilder/ui-ux-pro-max-skill`) : génère un système de design complet.
 - **Interface Design** (`Dammyjay93/interface-design`) : enregistre les décisions de design pour rester cohérent.
 - **UX Heuristics** (`wondelai/skills`) : audit selon les 10 heuristiques de Nielsen.
