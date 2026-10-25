@@ -7,7 +7,7 @@ Cocher `[x]` quand c'est fait **et testé**.
 
 ## 1. Publication 🔴
 
-- [ ] **Release v1.3.0** (notes, émotions, bonne appli) sur GitHub, avec `dist/Nox Setup 1.3.0.exe` et la section v1.3.0 de CHANGELOG.md. Sans elle, le bouton « Télécharger » donne l'ancienne version, uniquement en français.
+- [ ] **Release v1.4.0** (conversation naturelle, minuteur pilotable, émotions passagères) sur GitHub, avec `dist/Nox Setup 1.4.0.exe` et la section v1.4.0 de CHANGELOG.md. Sans elle, le bouton « Télécharger » donne l'ancienne version, uniquement en français.
 - [x] **Post LinkedIn en anglais** (publié, voir linkedin/PUBLISHED.md ; mettre à jour le texte avec la v3) : texte `docs/linkedin/en/POST-FINAL-EN.txt` + `docs/linkedin/en/nox-carousel-en.pdf`, puis premier commentaire avec les liens.
 - [ ] Régénérer le **PDF français** (`node tools/linkedin.js`, PDF fermé dans la visionneuse).
 - [ ] Second post LinkedIn plus tard (vidéo, ou version française).

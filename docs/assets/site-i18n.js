@@ -48,7 +48,7 @@ const SITE_FR = {
   'res.3.t': 'Plans « si… alors… »', 'res.3.p': 'Les implementation intentions de Gollwitzer : un effet net sur l\'atteinte des objectifs dans une méta-analyse de 94 tests.',
   'res.more': 'Détails et sources :', 'res.link': 'la synthèse de recherche',
   'inst.kicker': 'Installation', 'inst.title': 'Installé en un double-clic.',
-  'inst.1.t': 'Télécharge l\'installeur', 'inst.1.p': 'Le fichier <code>Nox.Setup.1.3.0.exe</code> (environ 80 Mo) se trouve sur la page des versions.', 'inst.1.btn': 'Télécharger la dernière version',
+  'inst.1.t': 'Télécharge l\'installeur', 'inst.1.p': 'Le fichier <code>Nox.Setup.1.4.0.exe</code> (environ 80 Mo) se trouve sur la page des versions.', 'inst.1.btn': 'Télécharger la dernière version',
   'inst.2.t': 'Double-clique dessus', 'inst.2.p': 'Nox s\'installe tout seul, se lance, et démarrera avec Windows. Si Windows affiche « Windows a protégé votre ordinateur », clique sur <b>Informations complémentaires</b> puis <b>Exécuter quand même</b> : l\'installeur n\'est simplement pas encore signé.',
   'inst.3.t': 'Réponds à Nox', 'inst.3.p': 'Il atterrit en bas à droite de ton écran et se présente. Choisis ta langue, colle ta clé OpenAI pour sa vraie voix (chiffrée sur ton PC) ou choisis <b>Essayer sans clé</b>, puis 5 petites questions.',
   'inst.4.t': 'Relie tes outils (facultatif)', 'inst.4.p': 'Dans le tableau de bord, carte <b>Connexions</b> : ton Google Agenda (adresse secrète iCal), Gmail (mot de passe d\'application) et Telegram (QR code).',

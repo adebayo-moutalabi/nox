@@ -5,6 +5,58 @@ Each section is ready to paste into the matching GitHub Release description.
 
 ---
 
+## v1.4.0
+
+🌐 **https://get-nox.github.io**
+
+### 🇬🇧 English
+
+**New**
+- **Nox talks naturally**: it answers what you actually say first, varies its phrasing, and only breaks things into tiny steps when you're working. No more "micro-step" in every sentence.
+- **Nox knows where you are**: ask "which tab am I on?" and it tells you the active app or page (only if you allowed it in Settings → "See the active app / tab"; otherwise it tells you how).
+- **Full control of the timer**: say "start a 25-minute timer" or "stop the timer", click the time under Nox, or use the **■ Stop** button in the dashboard, which now shows the time left. After a focus session, Nox offers a break.
+- **"What can you do?"**: a short, clear answer instead of a long list.
+
+**Fixed**
+- Emotions no longer get stuck: blushing, hearts or tiredness last a few seconds, then Nox goes back to normal, and its voice matches its mood.
+- Pomodoro now uses real 25-minute sessions and 5-minute breaks.
+- Question cards (e.g. "Open Word?") no longer swallow your next message: if you talk about something else, the card simply goes away.
+- Thin, discreet scrollbars in the bubble and the dashboard.
+
+**Install**
+1. Download **Nox.Setup.1.4.0.exe** below.
+2. Double-click it: Nox installs in one click and launches.
+3. If Windows shows "Windows protected your PC": click **More info** → **Run anyway** (the installer is not signed yet).
+4. Paste your OpenAI key (encrypted on your PC), or choose **Try without a key**.
+
+Updating from an older version: just install this one, your profile, notes and history are kept.
+
+### 🇫🇷 Français
+
+**Nouveau**
+- **Nox parle naturellement** : il répond d'abord à ce que tu dis vraiment, varie ses phrases, et ne découpe en petites étapes que quand tu travailles. Fini le « micro-étape » à chaque phrase.
+- **Nox sait où tu es** : demande « je suis sur quel onglet ? » et il te dit l'appli ou la page active (seulement si tu l'as autorisé dans Réglages → « Voir l'appli / l'onglet actif » ; sinon il t'explique comment).
+- **Le minuteur entièrement pilotable** : dis « lance un minuteur de 25 minutes » ou « arrête le minuteur », clique sur le temps sous Nox, ou utilise le bouton **■ Arrêter** du tableau de bord, qui affiche maintenant le temps restant. Après une séance de concentration, Nox propose une pause.
+- **« Tu sais faire quoi ? »** : une réponse courte et claire au lieu d'une longue liste.
+
+**Corrigé**
+- Les émotions ne restent plus bloquées : joues roses, cœurs ou fatigue durent quelques secondes, puis Nox redevient normal, et sa voix suit son humeur.
+- Le Pomodoro utilise de vraies séances de 25 min et des pauses de 5 min.
+- Les cartes de question (ex. « J'ouvre Word ? ») n'avalent plus ton message suivant : si tu parles d'autre chose, la carte disparaît simplement.
+- Barres de défilement fines et discrètes dans la bulle et le tableau de bord.
+
+**Installer**
+1. Télécharge **Nox.Setup.1.4.0.exe** ci-dessous.
+2. Double-clique : Nox s'installe en un clic et se lance.
+3. Si Windows affiche « Windows a protégé votre ordinateur » : **Informations complémentaires** → **Exécuter quand même** (l'installeur n'est pas encore signé).
+4. Colle ta clé OpenAI (chiffrée sur ton PC), ou choisis **Essayer sans clé**.
+
+Mise à jour depuis une ancienne version : installe simplement celle-ci, ton profil, tes notes et ton historique sont conservés.
+
+Windows 10/11, 64-bit.
+
+---
+
 ## v1.3.0
 
 🌐 **https://get-nox.github.io**
