@@ -16,7 +16,7 @@ function check(name, ok, detail = '') { results.push({ name, ok }); console.log(
 async function launch() {
   const app = await electron.launch({
     args: ['.'], cwd: ROOT,
-    env: { ...process.env, NOX_FAKE_AI: '1', NOX_USER_DATA: DATA, REALTIME: 'off', IDLE_SECONDS: '100000' }
+    env: { ...process.env, NOX_FAKE_AI: '1', NOX_USER_DATA: DATA, NOX_LANG: process.env.NOX_LANG || 'fr', REALTIME: 'off', IDLE_SECONDS: '100000' }
   });
   const mascot = await app.firstWindow();
   await mascot.waitForLoadState('domcontentloaded');

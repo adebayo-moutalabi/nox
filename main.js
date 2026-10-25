@@ -8,6 +8,9 @@ const path = require('path');
 const memory = require('./memory');
 const integ = require('./integrations');
 const { fakeThink } = require('./fake-ai');
+const i18n = require('./i18n');
+// Texte d'interface dans la langue choisie
+const tr = (key, vars) => i18n.t(state.lang, key, vars);
 
 const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const STT_MODEL = process.env.OPENAI_STT_MODEL || 'whisper-1';
@@ -32,7 +35,7 @@ const APPS = { word: 'winword', excel: 'excel', bloc: 'notepad', notepad: 'notep
 // Sites de travail que Nox peut ouvrir sans que l'utilisateur ait cite le domaine
 const SAFE_SITES = ['docs.google.com', 'drive.google.com', 'notion.so', 'office.com', 'github.com', 'chatgpt.com'];
 // Reglages modifiables depuis l'interface (le reste de l'etat est gere ici)
-const SETTINGS_KEYS = ['mode', 'firmness', 'watchWindows', 'watchAsked', 'method'];
+const SETTINGS_KEYS = ['mode', 'firmness', 'watchWindows', 'watchAsked', 'method', 'lang'];
 
 // Dossier de donnees isole pour les tests (avant le verrou, qui en depend)
 if (process.env.NOX_USER_DATA) app.setPath('userData', process.env.NOX_USER_DATA);
@@ -55,6 +58,7 @@ let state = {
   profile: {},                // reponses de l'onboarding (voir memory.js)
   facts: [], journal: [], stats: {}, method: null,
   demoMode: false,            // essayer sans cle OpenAI (cerveau local)
+  lang: null,                 // fr | en : interface et conversation (par defaut, langue du systeme)
   secrets: {},                // cle OpenAI, mot de passe Gmail, jeton Telegram : chiffres (safeStorage)
   calendar: { url: '', notified: {}, lastReview: '' },
   mail: { user: '', lastUid: 0, watches: [], pending: [] },
@@ -96,6 +100,8 @@ function loadState() {
   for (const k of ['calendar', 'mail', 'telegram']) state[k] = { ...defaults[k], ...(state[k] || {}) };
   state.secrets = state.secrets || {};
   memory.ensure(state);
+  // Langue : celle choisie, sinon NOX_LANG (tests), sinon la langue de Windows
+  if (!i18n.LANGS[state.lang]) state.lang = i18n.LANGS[process.env.NOX_LANG] ? process.env.NOX_LANG : i18n.pickLang(app.getLocale());
   // Ancien prenom (avant le profil)
   if (state.userName && !state.profile.name) state.profile.name = state.userName;
   if (useLegacy) saveState(); // migration : on ecrit tout de suite dans nox-state.json
@@ -148,7 +154,7 @@ function openDashboard() {
 // ---------- Appels OpenAI ----------
 async function openai(endpoint, body, isJson = true) {
   const key = apiKey();
-  if (!key) throw new Error('Aucune cle OpenAI : ajoute-la dans le tableau de bord (Connexions)');
+  if (!key) throw new Error(tr('err.noKey'));
   const res = await fetch(`https://api.openai.com/v1/${endpoint}`, {
     method: 'POST',
     headers: isJson ? { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' } : { Authorization: `Bearer ${key}` },
@@ -162,7 +168,8 @@ async function openai(endpoint, body, isJson = true) {
 function rules() {
   return `Tu es ${NAME}, une petite mascotte de bureau bienveillante qui aide les personnes TDAH (et toute personne qui procrastine) a demarrer, rester concentrees et reprendre apres une interruption.
 Regles :
-- Phrases tres courtes (2 phrases max), chaleureuses, un peu droles, jamais culpabilisantes. Tutoiement. Francais.
+- Phrases tres courtes (2 phrases max), chaleureuses, un peu droles, jamais culpabilisantes.
+- LANGUE : reponds TOUJOURS en ${state.lang === 'en' ? 'ANGLAIS (English, casual and friendly)' : 'FRANCAIS, en tutoyant'}, y compris les etapes de taches et les souvenirs, quelle que soit la langue de ces consignes.
 - Une SEULE micro-etape a la fois, faisable en 2 a 10 minutes, concrete ("ecris le titre de la partie 2").
 - Fermete : ${state.firmness}. Mode : ${state.mode}.
 - Duree par defaut du minuteur : ${memory.timerMinutes(state)} min.
@@ -270,7 +277,7 @@ async function transcribe(arrayBuffer) {
   const form = new FormData();
   form.append('file', new Blob([arrayBuffer], { type: 'audio/webm' }), 'voice.webm');
   form.append('model', STT_MODEL);
-  form.append('language', 'fr');
+  form.append('language', state.lang);
   const res = await openai('audio/transcriptions', form, false);
   return (await res.json()).text;
 }
@@ -313,7 +320,7 @@ async function realtimeToken() {
       type: 'realtime', model: REALTIME_MODEL, instructions: realtimeInstructions(),
       tools: REALTIME_TOOLS, tool_choice: 'auto',
       audio: {
-        input: { transcription: { model: REALTIME_STT, language: 'fr' }, turn_detection: { type: 'semantic_vad' } },
+        input: { transcription: { model: REALTIME_STT, language: state.lang }, turn_detection: { type: 'semantic_vad' } },
         output: { voice: REALTIME_VOICE }
       }
     }
@@ -441,7 +448,7 @@ async function checkMail() {
       state.mail.pending = [item, ...state.mail.pending].slice(0, 10);
       if (watch) state.mail.watches = state.mail.watches.filter((w) => w !== watch); // une fois prevenu, c'est fini
       send('nox:mail', { id: item.id, from: item.from, subject: item.subject, summary: item.summary, watched: item.watched });
-      if (wasIdle) telegramSend(`📬 ${watch ? 'Le mail que tu attendais est arrivé' : 'Mail important'} : ${item.from}\n« ${item.subject} »\n${item.summary}`);
+      if (wasIdle) telegramSend(tr('tg.mail', { kind: tr(watch ? 'mail.watched' : 'mail.important'), from: item.from, subject: item.subject, summary: item.summary }));
     }
     saveState();
   } catch (e) { integrationErrors.gmail = e.message.slice(0, 160); }
@@ -473,7 +480,7 @@ async function telegramLoop() {
             state.telegram.chatId = msg.chat.id;
             state.telegram.pairCode = '';
             saveState();
-            await integ.tg(token, 'sendMessage', { chat_id: msg.chat.id, text: `Salut${state.profile.name ? ' ' + state.profile.name : ''} ! C'est ${NAME} 👋\nOn est reliés. Quand tu n'es pas devant ton PC, je te préviens ici (agenda, mails importants, reprise de tâche). Tu peux aussi m'écrire : « où j'en étais ? », « je dois faire X ».` });
+            await integ.tg(token, 'sendMessage', { chat_id: msg.chat.id, text: tr('tg.welcome', { name: state.profile.name ? ' ' + state.profile.name : '', nox: NAME }) });
           }
           continue;
         }
@@ -574,15 +581,24 @@ ipcMain.handle('nox:transcribe', async (_e, buf) => { try { return await transcr
 ipcMain.handle('nox:getState', () => publicState());
 // (les competences contiennent leur test : on n'envoie que nom, emoji et description)
 const SKILLS_PUBLIC = Object.fromEntries(Object.entries(memory.SKILLS).map(([id, { test, ...s }]) => [id, s]));
-ipcMain.handle('nox:getCatalog', () => ({ methods: memory.METHODS, onboarding: memory.ONBOARDING, levels: memory.LEVELS, skills: SKILLS_PUBLIC, xp: memory.XP }));
+// Catalogue dans la langue de l'utilisateur (questions, methodes, competences, grades)
+function catalog() {
+  const c = i18n.CATALOG[state.lang] || i18n.CATALOG.fr;
+  const methods = Object.fromEntries(Object.entries(memory.METHODS).map(([id, m]) => [id, { ...m, name: c.methods[id][0], short: c.methods[id][1] }]));
+  const onboarding = memory.ONBOARDING.map((q) => ({ ...q, ask: c.onboarding[q.key].ask, options: q.options?.map(([v]) => [v, c.onboarding[q.key].options[v]]) }));
+  const skills = Object.fromEntries(Object.entries(SKILLS_PUBLIC).map(([id, s]) => [id, { ...s, name: c.skills[id][0], desc: c.skills[id][1] }]));
+  const levels = memory.LEVELS.map(([xp], i) => [xp, c.levels[i]]);
+  return { methods, onboarding, levels, skills, xp: memory.XP, langs: i18n.LANGS };
+}
+ipcMain.handle('nox:getCatalog', () => catalog());
 // ---------- Connexions : cle OpenAI et mode demo ----------
 ipcMain.handle('nox:setApiKey', async (_e, key) => {
   key = String(key || '').trim();
-  if (!/^sk-[\w-]{20,}$/.test(key)) return { ok: false, error: 'Ça ne ressemble pas à une clé OpenAI (elle commence par sk-).' };
+  if (!/^sk-[\w-]{20,}$/.test(key)) return { ok: false, error: tr('err.key.format') };
   try {
     const res = await fetch('https://api.openai.com/v1/models', { headers: { Authorization: `Bearer ${key}` } });
-    if (!res.ok) return { ok: false, error: res.status === 401 ? 'Clé refusée par OpenAI.' : `OpenAI répond ${res.status}.` };
-  } catch { return { ok: false, error: 'Pas de connexion à OpenAI.' }; }
+    if (!res.ok) return { ok: false, error: res.status === 401 ? tr('err.key.refused') : tr('err.key.status', { status: res.status }) };
+  } catch { return { ok: false, error: tr('err.key.network') }; }
   setSecret('openai', key);
   state.demoMode = false;
   saveState();
@@ -594,7 +610,7 @@ ipcMain.on('nox:timerDone', () => { celebrate(memory.award(state, 'timer_done'))
 // ---------- Connexions : agenda, Gmail, Telegram ----------
 ipcMain.handle('nox:setCalendar', async (_e, url) => {
   url = String(url || '').trim();
-  if (url && !/^(https|webcal):\/\/.+/i.test(url)) return { ok: false, error: 'Colle l’adresse qui commence par https:// (format iCal).' };
+  if (url && !/^(https|webcal):\/\/.+/i.test(url)) return { ok: false, error: tr('err.cal.url') };
   state.calendar.url = url;
   await checkCalendar();
   saveState();
@@ -603,7 +619,7 @@ ipcMain.handle('nox:setCalendar', async (_e, url) => {
 ipcMain.handle('nox:setGmail', async (_e, user, pass) => {
   user = String(user || '').trim(); pass = String(pass || '').replace(/\s+/g, '');
   if (!user) { state.mail.user = ''; setSecret('gmail', ''); saveState(); return { ok: true }; }
-  try { await integ.fetchNewMail({ user, pass, lastUid: 0 }); } catch (e) { return { ok: false, error: `Connexion refusée : ${e.message.slice(0, 120)}` }; }
+  try { await integ.fetchNewMail({ user, pass, lastUid: 0 }); } catch (e) { return { ok: false, error: tr('err.gmail', { msg: e.message.slice(0, 120) }) }; }
   state.mail.user = user; state.mail.lastUid = 0; setSecret('gmail', pass);
   await checkMail(); // memorise la position : seuls les nouveaux mails seront signales
   saveState();
