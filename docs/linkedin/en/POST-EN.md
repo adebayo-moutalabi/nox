@@ -1,8 +1,8 @@
 # LinkedIn post — English version (ready to paste)
 
 - **Text**: `POST-FINAL-EN.txt` (same structure as the French v8, written for an English-speaking audience).
+- The screenshots show the real app in English (it follows the Windows language, and can be switched in Settings).
 - **Attachment**: `nox-carousel-en.pdf` (LinkedIn "Document" button), or the 6 images `slide-1.png` to `slide-6.png`.
-- The app screenshots show the real interface, which is in French: slides 3 to 5 say so ("English version coming soon").
 
 ## First comment (right after posting)
 

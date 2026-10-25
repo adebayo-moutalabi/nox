@@ -21,7 +21,7 @@ Je l'ai pensé d'abord pour le TDAH. Mais si une notification, un collègue ou u
 
 Construit pour l'OpenAI DevDay Community Hackathon à Paris, avec l'API Realtime d'OpenAI pour une conversation vocale fluide.
 
-Nox est gratuit, pour Windows, et prêt en une minute.
+Nox est gratuit, pour Windows, en français ou en anglais, et prêt en une minute.
 👉 Télécharge-le : get-nox.github.io (lien aussi en commentaire)
 💬 Dis-moi en commentaire la première tâche que tu vas lui confier.
 🔁 Tu connais quelqu'un qui commence tout et ne finit rien ? Envoie-lui ce post.

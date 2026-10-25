@@ -21,7 +21,7 @@ I designed it for ADHD first. But if a notification, a coworker or a noise is en
 
 Built for the OpenAI DevDay Community Hackathon in Paris, with the OpenAI Realtime API for smooth, natural voice conversations.
 
-Nox is free, runs on Windows, and is ready in one minute.
+Nox is free, runs on Windows in English or French, and is ready in one minute.
 👉 Download it: get-nox.github.io (link in the comments too)
 💬 Tell me in the comments: what's the first task you'll give it?
 🔁 Know someone who starts everything and finishes nothing? Send them this post.

@@ -12,70 +12,86 @@ const OUT = path.join(ROOT, 'docs', 'linkedin');
 const DAY = 86400000;
 const key = (t) => { const d = new Date(t); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 
-// Donnees d'exemple (une semaine d'utilisation)
-function demoState() {
+// Donnees d'exemple (une semaine d'utilisation), ecrites dans chaque langue
+const DEMO = {
+  fr: {
+    name: 'Adebayo', task: 'Préparer la démo du hackathon',
+    steps: ['Lister les 3 scénarios à montrer', 'Écrire le texte de la vidéo', 'Enregistrer la démo', 'Publier sur LinkedIn'],
+    facts: ['bosse mieux avec de la musique lo-fi', 'préfère les tâches courtes le matin', 'pause café vers 16 h'],
+    history: ['Rédiger le rapport de stage', 'Répondre aux mails en retard', 'Réviser le chapitre 4'],
+    bubble: ['Super, étape 1 faite ! On enchaîne, je reste avec toi.', 'Écrire le texte de la vidéo'],
+    hello: 'Bonjour, Adebayo', langPill: 'Français', go: "C'est parti", blocker: "qu'est-ce qui te freine"
+  },
+  en: {
+    name: 'Adebayo', task: 'Prepare the hackathon demo',
+    steps: ['List the 3 scenarios to show', 'Write the video script', 'Record the demo', 'Post it on LinkedIn'],
+    facts: ['works better with lo-fi music', 'prefers short tasks in the morning', 'coffee break around 4 pm'],
+    history: ['Write the internship report', 'Answer overdue emails', 'Review chapter 4'],
+    bubble: ["Nice, step 1 done! Let's keep going, I'm right here with you.", 'Write the video script'],
+    hello: 'Hello, Adebayo', langPill: 'English', go: "Let's go", blocker: 'what holds you back'
+  }
+};
+
+function demoState(lang) {
+  const d = DEMO[lang];
   const now = Date.now();
   const mins = [35, 52, 18, 64, 41, 27, 46];
   const stats = {};
   mins.forEach((m, i) => { stats[key(now - (6 - i) * DAY)] = { steps: Math.round(m / 6), tasksDone: i % 2 ? 1 : 2, focusMs: m * 60000 }; });
-  const task = { id: 'demo', title: 'Préparer la démo du hackathon', steps: ['Lister les 3 scénarios à montrer', 'Écrire le texte de la vidéo', 'Enregistrer la démo', 'Publier sur LinkedIn'], current: 1, startedAt: now - 40 * 60000 };
+  const task = { id: 'demo', title: d.task, steps: d.steps, current: 1, startedAt: now - 40 * 60000 };
   return {
-    mode: 'travail', firmness: 'douce', watchWindows: true, watchAsked: true, method: 'body_doubling', task, history: [],
-    profile: { name: 'Habib', blocker: 'start', energy: 'morning', focusMin: 15, tone: 'douce', onboardedAt: now - 6 * DAY },
-    facts: [
-      { id: 'a', text: 'bosse mieux avec de la musique lo-fi', at: now - 5 * DAY },
-      { id: 'b', text: 'préfère les tâches courtes le matin', at: now - 3 * DAY },
-      { id: 'c', text: 'pause café vers 16 h', at: now - DAY }
-    ],
+    lang, mode: 'travail', firmness: 'douce', watchWindows: true, watchAsked: true, method: 'body_doubling', task, history: [],
+    profile: { name: d.name, blocker: 'start', energy: 'morning', focusMin: 15, tone: 'douce', onboardedAt: now - 6 * DAY },
+    facts: d.facts.map((text, i) => ({ id: 'f' + i, text, at: now - (5 - i * 2) * DAY })),
     journal: [
-      { id: 'j1', title: 'Rédiger le rapport de stage', steps: [1, 2, 3, 4], done: 4, startedAt: now - 5 * DAY, completedAt: now - 5 * DAY },
-      { id: 'j2', title: 'Répondre aux mails en retard', steps: [1, 2, 3], done: 3, startedAt: now - 3 * DAY, completedAt: now - 3 * DAY },
-      { id: 'j3', title: 'Réviser le chapitre 4', steps: [1, 2, 3, 4, 5], done: 5, startedAt: now - DAY, completedAt: now - DAY },
+      ...d.history.map((title, i) => ({ id: 'j' + i, title, steps: [1, 2, 3, 4], done: 4, startedAt: now - (5 - i * 2) * DAY, completedAt: now - (5 - i * 2) * DAY })),
       { id: 'demo', title: task.title, steps: task.steps, done: 1, startedAt: task.startedAt, completedAt: null }
     ],
     stats,
-    // Une semaine de jeu : niveau 4 (Batisseur), 5 competences
+    // Une semaine de jeu : niveau 4, 5 competences
     game: { xp: 365, skills: { first_step: now - 6 * DAY, starter: now - 4 * DAY, finisher: now - 3 * DAY, early_bird: now - 2 * DAY, steady: now - 2 * DAY },
       counters: { steps: 34, started: 6, done: 4, resumes: 2, early: 3 } }
   };
 }
 
-async function captures() {
+// Captures haute resolution de l'appli dans une langue (mascotte, tableau de bord, onboarding)
+async function captures(lang = 'fr', outDir = OUT) {
+  const d = DEMO[lang];
+  fs.mkdirSync(outDir, { recursive: true });
   const data = fs.mkdtempSync(path.join(os.tmpdir(), 'nox-demo-'));
-  fs.writeFileSync(path.join(data, 'nox-state.json'), JSON.stringify(demoState()));
-  const app = await electron.launch({ args: ['--force-device-scale-factor=2', '.'], cwd: ROOT,
-    env: { ...process.env, NOX_FAKE_AI: '1', NOX_USER_DATA: data, REALTIME: 'off', IDLE_SECONDS: '100000' } });
+  fs.writeFileSync(path.join(data, 'nox-state.json'), JSON.stringify(demoState(lang)));
+  const env = { ...process.env, NOX_FAKE_AI: '1', NOX_USER_DATA: data, NOX_LANG: lang, REALTIME: 'off', IDLE_SECONDS: '100000' };
+  const app = await electron.launch({ args: ['--force-device-scale-factor=2', '.'], cwd: ROOT, env });
   const mascot = await app.firstWindow();
-  await mascot.waitForFunction(() => document.querySelector('#bubble').innerText.includes('Habib'), null, { timeout: 8000 });
+  await mascot.waitForFunction((n) => document.querySelector('#bubble').innerText.includes(n), d.name, { timeout: 8000 });
   // Bulle de la demo : la phrase et l'etape en cours
-  await mascot.evaluate(() => { say('Super, étape 1 faite ! On enchaîne, je reste avec toi.', 'Écrire le texte de la vidéo'); startTimer(15); setMood('happy'); });
+  await mascot.evaluate(([text, step]) => { say(text, step); startTimer(15); setMood('happy'); }, d.bubble);
   await mascot.waitForTimeout(1500);
-  await mascot.screenshot({ path: path.join(OUT, 'mascot.png'), omitBackground: true });
+  await mascot.screenshot({ path: path.join(outDir, 'mascot.png'), omitBackground: true });
   const [dash] = await Promise.all([app.waitForEvent('window'), mascot.click('#dashboard')]);
   await dash.waitForSelector('#stepNow');
   // Capture de demo : salutation de journee et pas de barre de defilement
-  await dash.evaluate(() => {
+  await dash.evaluate((hello) => {
     window.scrollTo(0, 0);
-    document.getElementById('hello').textContent = 'Bonjour, Habib';
+    document.getElementById('hello').textContent = hello;
     document.head.insertAdjacentHTML('beforeend', '<style>::-webkit-scrollbar{display:none}</style>');
-  });
+  }, d.hello);
   await dash.waitForTimeout(800);
-  await dash.screenshot({ path: path.join(OUT, 'dashboard.png') });
+  await dash.screenshot({ path: path.join(outDir, 'dashboard.png') });
   // Onboarding (nouvelle installation)
   await app.close();
   const fresh = fs.mkdtempSync(path.join(os.tmpdir(), 'nox-demo-'));
-  const app2 = await electron.launch({ args: ['--force-device-scale-factor=2', '.'], cwd: ROOT,
-    env: { ...process.env, NOX_FAKE_AI: '1', NOX_USER_DATA: fresh, REALTIME: 'off' } });
+  const app2 = await electron.launch({ args: ['--force-device-scale-factor=2', '.'], cwd: ROOT, env: { ...env, NOX_USER_DATA: fresh } });
   const m2 = await app2.firstWindow();
-  await m2.waitForSelector('text=C\'est parti');
-  await m2.click('text=C\'est parti');
-  await m2.fill('#bubble .answer input', 'Habib');
+  await m2.click(`#bubble .pill:has-text("${d.langPill}")`, { timeout: 10000 });
+  await m2.click(`text=${d.go}`);
+  await m2.fill('#bubble .answer input', d.name);
   await m2.click('#bubble .answer button');
-  await m2.waitForSelector('text=qu\'est-ce qui te freine');
+  await m2.waitForSelector(`text=${d.blocker}`);
   await m2.waitForTimeout(700);
-  await m2.screenshot({ path: path.join(OUT, 'onboarding.png'), omitBackground: true });
+  await m2.screenshot({ path: path.join(outDir, 'onboarding.png'), omitBackground: true });
   await app2.close();
-  for (const d of [data, fresh]) fs.rmSync(d, { recursive: true, force: true });
+  for (const dir of [data, fresh]) fs.rmSync(dir, { recursive: true, force: true });
 }
 
 // Une langue = un fichier de slides, un dossier de sortie et un nom de PDF
@@ -169,7 +185,8 @@ async function slides({ html = 'slides.html', outDir = OUT, pdfName = 'nox-carro
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
-  await captures();
+  if (process.argv[2] !== 'en') await captures('fr', OUT);
+  await captures('en', path.join(OUT, 'en'));
   // `node tools/linkedin.js en` : seulement la version anglaise
   if (process.argv[2] !== 'en') {
     const pngs = await slides();
