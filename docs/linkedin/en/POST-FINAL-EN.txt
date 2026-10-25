@@ -1,29 +1,48 @@
-Your ADHD brain isn't lazy.
-It just needs a starter.
+𝗬𝗼𝘂𝗿 𝗔𝗗𝗛𝗗 𝗯𝗿𝗮𝗶𝗻 𝗶𝘀𝗻'𝘁 𝗹𝗮𝘇𝘆.
+It just never got a starter.
 
-People tell you "just get organized." So you tried to-do lists, planners, apps. They all wait for you to take the first step. And that first step is exactly where you get stuck.
+2:00 pm. You open the doc to "just start."
+2:03 pm. One notification.
+2:41 pm. You're deep in YouTube, and the doc is still blank.
 
-So I built Nox.
+Sound familiar? 👇
 
-Nox is a little companion that lives on your desktop. It doesn't hand you yet another to-do list. It does what a friend sitting next to you would do:
+You know exactly what to do.
+You just can't make yourself start.
+And every app out there waits for you to make the first move.
 
-→ It talks to you first. You tell it what you need to do, out loud.
-→ It breaks everything into tiny steps of 2 to 10 minutes. You only see the next one.
-→ It starts a visible timer, so time feels real again.
-→ You drift off? It gently brings you back. No judgment.
-→ Interrupted? When you come back: "You were at…". Back on track in 5 seconds.
-→ Forgetting breaks? It suggests one, and saves your spot.
-→ It remembers you: what blocks you, when you have energy, what helps. Everything stays on your PC.
+That first move is the whole problem.
 
-Nothing here is random: the onboarding (5 questions, under a minute) and the 7 built-in methods (Pomodoro, body doubling, the 5-minute rule, "if… then…" plans) are grounded in ADHD and executive-function research.
+So I built the opposite: 𝗮 𝗯𝘂𝗱𝗱𝘆 𝘁𝗵𝗮𝘁 𝗺𝗮𝗸𝗲𝘀 𝘁𝗵𝗲 𝗳𝗶𝗿𝘀𝘁 𝗺𝗼𝘃𝗲 𝗳𝗼𝗿 𝘆𝗼𝘂.
 
-I designed it for ADHD first. But if a notification, a coworker or a noise is enough to make you lose the thread, it's for you too.
+Meet Nox 🤖
+A tiny robot that lives on your desktop and talks to you first.
 
-Built for the OpenAI DevDay Community Hackathon in Paris, with the OpenAI Realtime API for smooth, natural voice conversations.
+Here's what a day with Nox looks like:
 
-Nox is free, runs on Windows in English or French, and is ready in one minute.
-👉 Download it: get-nox.github.io (link in the comments too)
-💬 Tell me in the comments: what's the first task you'll give it?
-🔁 Know someone who starts everything and finishes nothing? Send them this post.
+🎙 You say: "I need to write my report."
+🪜 Nox breaks it into tiny steps. You only see the next one: "Open the doc."
+⏱ A timer ring starts. Time stops being invisible.
+📺 You drift to YouTube? A gentle nudge: "Let's keep that for your break."
+☕ You leave for 20 minutes? When you're back: "You were at: write the intro."
+🧠 It remembers you. What blocks you, when your energy peaks, what helps.
 
-#parisdevdayhack #OpenAI #ADHD #Neurodiversity #Productivity #Focus #Accessibility
+No guilt. No streaks to lose. 𝗝𝘂𝘀𝘁 𝘁𝗵𝗲 𝗻𝗲𝘅𝘁 𝘀𝗺𝗮𝗹𝗹 𝘀𝘁𝗲𝗽.
+
+Not magic: the onboarding and the 7 built-in methods (Pomodoro, body doubling, the 5-minute rule, "if… then…" plans) come straight from ADHD and executive-function research.
+
+Built for ADHD first.
+But if one notification can wipe out your afternoon, 𝗶𝘁'𝘀 𝗳𝗼𝗿 𝘆𝗼𝘂 𝘁𝗼𝗼.
+
+Made for the OpenAI DevDay Community Hackathon in Paris, with the OpenAI Realtime API for natural voice conversations.
+
+✅ Free
+✅ Windows, English or French
+✅ Ready in 1 minute
+
+👉 Download: get-nox.github.io
+
+💬 What's the first task you'd hand to Nox? Tell me below.
+🔁 Know someone who starts everything and finishes nothing? Tag them.
+
+#ADHD #Neurodiversity #Productivity #Focus #OpenAI #parisdevdayhack

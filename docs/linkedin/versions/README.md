@@ -9,3 +9,5 @@
 - **v6** : premier commentaire avec noxapp.github.io (adresse abandonnee, nom pris) avant passage a get-nox.github.io.
 - **v7** : carrousel accroche A + slide 6 Agenda/Gmail/Telegram/mode jeu, avant ajout de l URL du site et de la signature.
 - **en-v1** : carrousel anglais avec captures de l interface francaise (mention "App interface in French").
+- **en-v2** : post anglais publie le 25/10 (texte brut, sans gras).
+- **en-v3** : post anglais vivant (scene 2:00 pm / 2:41 pm, gras Unicode sur 5 passages, emojis-reperes). Source editable : en/POST-EN-v3.source.txt, puis `node tools/bold.js`.
