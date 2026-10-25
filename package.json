@@ -1,12 +1,13 @@
 {
   "name": "nox-desktop",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Mascotte de bureau anti-procrastination (TDAH et au-dela)",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder --win",
-    "test": "node tests/e2e.js"
+    "test": "node tests/e2e.js",
+    "icon": "node tools/icon.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
@@ -21,8 +22,40 @@
   "build": {
     "appId": "com.rekj.nox",
     "productName": "Nox",
+    "copyright": "Habib Moutalabi",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "**/*",
+      "!.env",
+      "!.env.*",
+      "!tests/**",
+      "!docs/**",
+      "!tools/**",
+      "!dist/**",
+      "!*.md",
+      "!.gitattributes"
+    ],
     "win": {
-      "target": "nsis"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Nox"
     }
   }
 }
