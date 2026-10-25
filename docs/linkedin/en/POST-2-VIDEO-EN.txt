@@ -1,0 +1,33 @@
+𝗪𝗲 𝗯𝘂𝗶𝗹𝘁 𝗡𝗼𝘅 𝗶𝗻 𝗼𝗻𝗲 𝘄𝗲𝗲𝗸𝗲𝗻𝗱. 𝗛𝗲𝗿𝗲 𝗶𝘁 𝗶𝘀, 𝗳𝗶𝗹𝗺𝗲𝗱 𝗳𝗼𝗿 𝗿𝗲𝗮𝗹. 🎬
+
+No staging, no mock-up: the video below is a real capture of the app, with the real OpenAI model.
+
+You'll see Nox:
+🗣 introduce itself out loud and get to know you in under a minute
+🪜 turn "I need to write my internship report" into one tiny first step
+📄 open Google Docs for you, and start the clock
+📺 notice, on its own, that you drifted to a cat video on YouTube… and gently bring you back
+⭐ celebrate when the step is done, and level you up
+
+Built this weekend for the OpenAI DevDay Community Hackathon in Paris:
+→ a working Windows app with real-time OpenAI voice
+→ 5 releases, a bilingual website (EN/FR), 52 automated tests
+
+𝗔𝗻𝗱 𝘁𝗵𝗶𝘀 𝗶𝘀 𝗷𝘂𝘀𝘁 𝘁𝗵𝗲 𝗯𝗲𝗴𝗶𝗻𝗻𝗶𝗻𝗴.
+Nox makes the first move in front of the computer. That's what ADHD brains need. It's also what anyone needs in front of a tax form, a screen they can barely read, or a computer they never learned to use.
+
+Next:
+📄 Paperwork: Nox explains each field of a form and fills it with you. You check it, you send it.
+👁 Low vision: everything by voice, Nox reads the screen aloud.
+🧓 Older people: step by step, endless patience, and a warning when an email looks like a scam.
+
+Try it (free, Windows): get-nox.github.io
+Links in the first comment 👇
+
+#ADHD #Accessibility #OpenAI #Hackathon #BuildInPublic #AI
+
+---
+First comment:
+🌐 Website + video: https://get-nox.github.io
+💻 Code: https://github.com/adebayo-moutalabi/nox
+⬇️ Download (Windows): https://github.com/adebayo-moutalabi/nox/releases/latest

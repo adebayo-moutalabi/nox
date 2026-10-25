@@ -5,6 +5,30 @@ Copy-paste ready. Pick the length each form field asks for.
 
 ---
 
+## Form: DevDay Exchange Community Paris — Project Submission
+
+| Field | Answer |
+|---|---|
+| Team or project name | **Nox** |
+| Your full name | **Adebayo Moutalabi** *(adjust if the organisers know you under another name)* |
+| Email addresses (one per line) | **moutalabihabib2002@gmail.com** |
+| Demo video link (2 min max) | **https://get-nox.github.io/video/nox-demo.mp4** (public, opens without access request). Optional: also upload it to YouTube as *Unlisted* and paste that link instead. |
+| Optional links | see block below |
+| Attend the Paris finale on Monday 26 October, 18:00–22:00? | Your choice. Recommended: **Yes — I/we will attend in person** (a live demo of Nox talking first is its strongest argument). |
+| May we use your submission video? | Recommended: **Yes** (free visibility). |
+| Socials to tag you | **LinkedIn: https://www.linkedin.com/in/adebayo-moutalabi/** · Portfolio: https://adebayo-moutalabi.github.io/ |
+
+**Optional links (paste as is):**
+```
+Website + demo video: https://get-nox.github.io
+Code (GitHub): https://github.com/adebayo-moutalabi/nox
+Download for Windows: https://github.com/adebayo-moutalabi/nox/releases/latest
+Vision and roadmap: https://github.com/adebayo-moutalabi/nox/blob/main/docs/VISION.md
+Build in public (LinkedIn): https://www.linkedin.com/in/adebayo-moutalabi/
+```
+
+---
+
 ## Project name
 **Nox**
 

@@ -8,7 +8,8 @@ Cocher `[x]` quand c'est fait **et testé**.
 ## 1. Rendu du hackathon 🔴 (avant 22 h)
 
 - [ ] **Release v1.4.0 sur GitHub** (toi) : tag `v1.4.0`, titre `Nox 1.4.0`, fichier `dist/Nox Setup 1.4.0.exe`, description = section v1.4.0 de CHANGELOG.md. La v1.3.0 n'a jamais été publiée : inutile, la 1.4.0 contient tout.
-- [ ] **Soumission** (formulaire, e-mail, Luma) avec la vidéo, le site et le code.
+- [ ] **Soumission** : réponses prêtes champ par champ en haut de [SUBMISSION.md](SUBMISSION.md) (lien vidéo public : https://get-nox.github.io/video/nox-demo.mp4).
+- [ ] Décider : présence à la finale (lundi 26, Hexa, 18 h–22 h) et accord pour l'usage de la vidéo.
 - [x] **Textes de soumission en anglais** : [SUBMISSION.md](SUBMISSION.md) (titre, accroche, descriptions courte et longue, piste, technologies OpenAI, liens, e-mail).
 - [x] Vidéo de 2 min v1 (anglais, sous-titres, narration OpenAI, vraie démo) : `video/Nox-demo-v1.mp4` + `.srt`.
 - [x] Vidéo intégrée au site (`docs/video/nox-demo.mp4`, version web).
@@ -65,7 +66,7 @@ Tes retours d'abord (ce que tu veux ajouter, améliorer, mettre en avant). Piste
 
 ## 6. Communication 🟢
 
-- [ ] Second post LinkedIn avec la vidéo (anglais), puis version française.
+- [ ] Second post LinkedIn avec la vidéo v2 : texte prêt dans `docs/linkedin/en/POST-2-VIDEO-EN.txt` (anglais), puis version française.
 - [ ] Mettre à jour le texte du premier post avec la v3.
 - [ ] Régénérer le PDF français du carrousel (`node tools/linkedin.js`).
 
