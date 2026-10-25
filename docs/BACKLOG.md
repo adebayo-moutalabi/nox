@@ -9,7 +9,7 @@ Cocher `[x]` quand c'est fait **et testé**.
 
 - [ ] **Release v1.4.0 sur GitHub** (toi) : tag `v1.4.0`, titre `Nox 1.4.0`, fichier `dist/Nox Setup 1.4.0.exe`, description = section v1.4.0 de CHANGELOG.md. La v1.3.0 n'a jamais été publiée : inutile, la 1.4.0 contient tout.
 - [ ] **Soumission** (formulaire, e-mail, Luma) avec la vidéo, le site et le code.
-- [ ] **Textes de soumission en anglais** (description courte, problème, solution, technologies OpenAI, suite).
+- [x] **Textes de soumission en anglais** : [SUBMISSION.md](SUBMISSION.md) (titre, accroche, descriptions courte et longue, piste, technologies OpenAI, liens, e-mail).
 - [x] Vidéo de 2 min v1 (anglais, sous-titres, narration OpenAI, vraie démo) : `video/Nox-demo-v1.mp4` + `.srt`.
 - [x] Vidéo intégrée au site (`docs/video/nox-demo.mp4`, version web).
 - [x] Section **Vision** sur le site (TDAH → paperasse, malvoyants, seniors, partout).
