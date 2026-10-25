@@ -1,7 +1,9 @@
 // Tableau de bord : suivi des taches, stats du jour, methodes et memoire.
 // Se met a jour tout seul a chaque sauvegarde de l'etat (evenement nox:state).
 const $ = (id) => document.getElementById(id);
-let methods = {}, onboarding = [];
+let methods = {}, onboarding = [], lang = 'fr';
+const T = (key, vars) => t(lang, key, vars);
+const locale = () => (lang === 'en' ? 'en-US' : 'fr-FR');
 
 function el(tag, props = {}, ...kids) {
   const e = document.createElement(tag);
@@ -13,11 +15,11 @@ const dayKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,
 
 function renderHeader(st) {
   const h = new Date().getHours();
-  const hi = h < 5 ? 'Bonne nuit' : h < 18 ? 'Bonjour' : 'Bonsoir';
+  const hi = T(h < 5 ? 'dash.hello.night' : h < 18 ? 'dash.hello.day' : 'dash.hello.evening');
   $('hello').textContent = st.profile?.name ? `${hi}, ${st.profile.name}` : hi;
-  $('date').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  $('date').textContent = new Date().toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long' });
   const m = methods[st.method];
-  $('methodChip').textContent = m ? `${m.emoji}  ${m.name}` : 'Aucune méthode choisie';
+  $('methodChip').textContent = m ? `${m.emoji}  ${m.name}` : T('dash.noMethod');
 }
 
 function renderNow(st) {
@@ -30,22 +32,22 @@ function renderNow(st) {
     const t = st.task;
     body.append(el('p', { className: 'task-title', textContent: t.title }));
     body.append(el('p', { className: 'step-now', id: 'stepNow', textContent: t.steps[t.current] }));
-    const bar = el('div', { className: 'progress', role: 'img', ariaLabel: `Étape ${t.current + 1} sur ${t.steps.length}` });
+    const bar = el('div', { className: 'progress', role: 'img', ariaLabel: T('dash.stepOf', { i: t.current + 1, n: t.steps.length }) });
     t.steps.forEach((_, i) => bar.append(el('i', { className: i < t.current ? 'done' : i === t.current ? 'cur' : '' })));
     body.append(bar);
-    const done = el('button', { className: 'btn primary', id: 'doneBtn', textContent: "✓  C'est fait" });
+    const done = el('button', { className: 'btn primary', id: 'doneBtn', textContent: T('dash.done') });
     done.onclick = () => window.nox.completeStep();
-    const timer = el('button', { className: 'btn secondary', id: 'timerBtn', textContent: `⏱  Lancer ${st.timerMin} min` });
+    const timer = el('button', { className: 'btn secondary', id: 'timerBtn', textContent: T('dash.timer', { min: st.timerMin }) });
     timer.onclick = () => window.nox.startTimer(st.timerMin);
     body.append(el('div', { className: 'actions' }, done, timer));
   } else {
-    body.append(el('p', { className: 'step-now', textContent: 'Sur quoi tu bosses ?' }));
-    body.append(el('p', { className: 'empty-hint', textContent: 'Écris ta tâche telle qu\'elle te vient. Nox la découpe en petites étapes et te donne la première.' }));
-    const input = el('input', { id: 'newTask', placeholder: 'Ex. rédiger mon rapport de stage', maxLength: 200 });
-    const go = el('button', { className: 'btn primary', id: 'newTaskBtn', textContent: 'Découper avec Nox' });
+    body.append(el('p', { className: 'step-now', textContent: T('dash.empty.title') }));
+    body.append(el('p', { className: 'empty-hint', textContent: T('dash.empty.hint') }));
+    const input = el('input', { id: 'newTask', placeholder: T('dash.empty.ph'), maxLength: 200 });
+    const go = el('button', { className: 'btn primary', id: 'newTaskBtn', textContent: T('dash.empty.btn') });
     const submit = async () => {
       const v = input.value.trim(); if (!v) return;
-      go.disabled = true; go.textContent = 'Nox réfléchit…';
+      go.disabled = true; go.textContent = T('dash.thinking');
       await window.nox.newTask(v);
     };
     go.onclick = submit;
@@ -67,13 +69,13 @@ function renderToday(st) {
   const bars = $('bars'), labels = $('barLabels'), table = $('chartTable');
   bars.innerHTML = ''; labels.innerHTML = ''; table.innerHTML = '<tr><th>Jour</th><th>Minutes</th></tr>';
   days.forEach((d, i) => {
-    const name = d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '');
+    const name = d.toLocaleDateString(locale(), { weekday: 'short' }).replace('.', '');
     const b = el('div', { className: 'bar' });
     b.append(el('span', { className: 'tip', textContent: `${name} : ${vals[i]} min` }));
     const fill = el('i'); fill.style.height = `${(vals[i] / max) * 100}%`;
     b.append(fill);
     bars.append(b);
-    labels.append(el('span', { textContent: i === 6 ? 'auj.' : name }));
+    labels.append(el('span', { textContent: i === 6 ? T('dash.today.short') : name }));
     table.insertAdjacentHTML('beforeend', `<tr><td>${name}</td><td>${vals[i]}</td></tr>`);
   });
 }
@@ -81,7 +83,7 @@ function renderToday(st) {
 function renderSteps(st) {
   const list = $('steps');
   list.innerHTML = '';
-  if (!st.task) { list.append(el('li', { className: 'muted', textContent: 'Pas de tâche en cours.' })); return; }
+  if (!st.task) { list.append(el('li', { className: 'muted', textContent: T('dash.noTask') })); return; }
   st.task.steps.forEach((s, i) => {
     const cls = i < st.task.current ? 'done' : i === st.task.current ? 'cur' : '';
     list.append(el('li', { className: cls }, el('span', { className: 'box', textContent: i < st.task.current ? '✓' : '' }), el('span', { textContent: s })));
@@ -96,15 +98,15 @@ function renderMemory(st) {
     const opt = q?.options?.find(([v]) => String(v) === String(p[key]));
     return opt ? opt[1] : p[key];
   };
-  const rows = [['Prénom', p.name], ['Frein', p.blocker && label('blocker')], ['Énergie', p.energy && label('energy')],
-    ['Focus confortable', p.focusMin && `${p.focusMin} min`], ['Ton', p.tone && label('tone')]];
+  const rows = [[T('prof.name'), p.name], [T('prof.blocker'), p.blocker && label('blocker')], [T('prof.energy'), p.energy && label('energy')],
+    [T('prof.focus'), p.focusMin && `${p.focusMin} min`], [T('prof.tone'), p.tone && label('tone')], [T('prof.lang'), (st.lang || '').toUpperCase()]];
   for (const [k, v] of rows) if (v) prof.append(el('span', {}, el('b', { textContent: `${k} : ` }), v));
-  if (!prof.children.length) prof.append(el('span', { className: 'muted', textContent: 'Fais l\'onboarding pour que Nox te connaisse.' }));
+  if (!prof.children.length) prof.append(el('span', { className: 'muted', textContent: T('dash.noProfile') }));
   const facts = $('facts');
   facts.innerHTML = '';
-  if (!st.facts.length) facts.append(el('li', { className: 'muted', textContent: 'Nox retiendra ici ce qu\'il apprend en parlant avec toi.' }));
+  if (!st.facts.length) facts.append(el('li', { className: 'muted', textContent: T('dash.noFacts') }));
   for (const f of [...st.facts].reverse()) {
-    const x = el('button', { textContent: '×', title: 'Oublier', ariaLabel: `Oublier : ${f.text}` });
+    const x = el('button', { textContent: '×', title: T('dash.forget'), ariaLabel: `${T('dash.forget')} : ${f.text}` });
     x.onclick = () => window.nox.forgetFact(f.id);
     facts.append(el('li', {}, el('span', { textContent: f.text }), x));
   }
@@ -116,7 +118,7 @@ function renderMethods(st) {
   for (const [id, m] of Object.entries(methods)) {
     const b = el('button', { className: 'method' + (st.method === id ? ' on' : ''), ariaPressed: String(st.method === id) },
       el('span', { className: 'e', textContent: m.emoji }), el('b', { textContent: m.name }), el('small', { textContent: m.short }),
-      el('span', { className: 'tag', textContent: st.method === id ? '● Active' : m.focusMin ? `${m.focusMin} min` : '' }));
+      el('span', { className: 'tag', textContent: st.method === id ? T('dash.active') : m.focusMin ? `${m.focusMin} min` : '' }));
     b.dataset.method = id;
     b.onclick = () => window.nox.setSettings({ method: id });
     box.append(b);
@@ -127,10 +129,10 @@ function renderHistory(st) {
   const list = $('history');
   list.innerHTML = '';
   const items = [...st.journal].reverse().slice(0, 8);
-  if (!items.length) { list.append(el('li', { className: 'muted', textContent: 'Tes tâches apparaîtront ici.' })); return; }
+  if (!items.length) { list.append(el('li', { className: 'muted', textContent: T('dash.noHistory') })); return; }
   for (const j of items) {
-    const when = new Date(j.startedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-    const s = j.completedAt ? el('span', { className: 'state ok', textContent: `terminée · ${when}` }) : el('span', { className: 'state', textContent: `${j.done}/${j.steps.length} étapes · ${when}` });
+    const when = new Date(j.startedAt).toLocaleDateString(locale(), { day: 'numeric', month: 'short' });
+    const s = j.completedAt ? el('span', { className: 'state ok', textContent: T('dash.histDone', { when }) }) : el('span', { className: 'state', textContent: T('dash.histSteps', { done: j.done, n: j.steps.length, when }) });
     list.append(el('li', {}, el('span', { textContent: j.title }), s));
   }
 }
@@ -138,11 +140,11 @@ function renderHistory(st) {
 function renderGame(st) {
   const lv = st.level, xp = st.game.xp;
   $('lvNum').textContent = lv.level;
-  $('lvGrade').textContent = lv.grade;
-  $('lvNext').textContent = lv.next ? `${xp} XP · encore ${lv.next - xp} XP pour « ${lv.nextGrade} »` : `${xp} XP · grade maximal`;
+  $('lvGrade').textContent = levels[lv.level - 1]?.[1] || lv.grade;
+  $('lvNext').textContent = lv.next ? T('dash.xpNext', { xp, left: lv.next - xp, grade: levels[lv.level]?.[1] || lv.nextGrade }) : T('dash.xpMax', { xp });
   const pct = lv.next ? ((xp - lv.floor) / (lv.next - lv.floor)) * 100 : 100;
   $('xpFill').style.width = `${Math.max(3, pct)}%`;
-  $('xpBar').ariaLabel = `${Math.round(pct)} % vers le niveau suivant`;
+  $('xpBar').ariaLabel = T('dash.xpAria', { pct: Math.round(pct) });
   const box = $('skills');
   box.innerHTML = '';
   for (const [id, s] of Object.entries(skills)) {
@@ -154,11 +156,11 @@ function renderGame(st) {
 function renderAgenda(st) {
   const list = $('agenda');
   list.innerHTML = '';
-  if (!st.connections.calendar) { list.append(el('li', { className: 'muted', textContent: 'Relie ton Google Agenda dans Connexions : Nox te prévient avant chaque rendez-vous.' })); return; }
-  if (!st.events.length) { list.append(el('li', { className: 'muted', textContent: 'Rien de prévu dans les prochaines 24 h.' })); return; }
+  if (!st.connections.calendar) { list.append(el('li', { className: 'muted', textContent: T('dash.agenda.none') })); return; }
+  if (!st.events.length) { list.append(el('li', { className: 'muted', textContent: T('dash.agenda.empty') })); return; }
   for (const e of st.events) {
-    const t = e.allDay ? 'jour' : new Date(e.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    list.append(el('li', {}, el('time', { textContent: t }), el('span', { textContent: e.title || '(sans titre)' })));
+    const t = e.allDay ? T('dash.allDay') : new Date(e.start).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' });
+    list.append(el('li', {}, el('time', { textContent: t }), el('span', { textContent: e.title || T('dash.untitled') })));
   }
 }
 
@@ -166,22 +168,22 @@ function renderAgenda(st) {
 function connState(id, ok, err, okText) {
   const s = $(id);
   s.className = 'state' + (err ? ' err' : ok ? ' ok' : '');
-  s.textContent = err ? err : ok ? okText : 'Non relié';
+  s.textContent = err ? err : ok ? okText : T('conn.none');
 }
 function renderConnections(st) {
-  connState('sOpenai', st.hasKey, '', 'Clé enregistrée');
-  if (!st.hasKey) $('sOpenai').textContent = st.demoMode || st.testMode ? 'Mode démo' : 'Non reliée';
-  connState('sAgenda', st.connections.calendar, st.errors.calendar, `Relié · ${st.events.length} à venir`);
-  connState('sGmail', st.connections.gmail, st.errors.gmail, `Relié · ${st.mail.user}`);
-  connState('sTelegram', st.telegram.chatId, st.errors.telegram, `Relié à @${st.telegram.botName}`);
-  if (st.connections.telegram && !st.telegram.chatId) { $('sTelegram').textContent = 'Scanne le QR code'; showQr(); }
+  connState('sOpenai', st.hasKey, '', T('conn.keySaved'));
+  if (!st.hasKey) $('sOpenai').textContent = T(st.demoMode || st.testMode ? 'conn.demo' : 'conn.noKey');
+  connState('sAgenda', st.connections.calendar, st.errors.calendar, T('conn.calOk', { n: st.events.length }));
+  connState('sGmail', st.connections.gmail, st.errors.gmail, T('conn.gmailOk', { user: st.mail.user }));
+  connState('sTelegram', st.telegram.chatId, st.errors.telegram, T('conn.tgOk', { bot: st.telegram.botName }));
+  if (st.connections.telegram && !st.telegram.chatId) { $('sTelegram').textContent = T('conn.scan'); showQr(); }
   if (st.telegram.chatId) $('qr').hidden = true;
   const w = $('watches');
   w.innerHTML = '';
   for (const x of st.mail.watches) {
-    const b = el('button', { textContent: '×', ariaLabel: `Ne plus attendre : ${x.query}` });
+    const b = el('button', { textContent: '×', ariaLabel: T('conn.unwatch', { q: x.query }) });
     b.onclick = () => window.nox.unwatch(x.id);
-    w.append(el('li', {}, el('span', { textContent: `⏳ J'attends : ${x.query}` }), b));
+    w.append(el('li', {}, el('span', { textContent: T('conn.waiting', { q: x.query }) }), b));
   }
 }
 async function showQr(data) {
@@ -206,13 +208,23 @@ wire('fAgenda', () => window.nox.setCalendar($('iAgenda').value));
 wire('fGmail', () => window.nox.setGmail($('iGmailUser').value, $('iGmailPass').value));
 wire('fTelegram', async () => { const r = await window.nox.setTelegram($('iTelegram').value); if (r.ok) showQr(r); return r; });
 
-let skills = {};
-function render(st) {
+let skills = {}, levels = [];
+// Change la langue : textes statiques + catalogue traduit
+async function setLang(l) {
+  lang = l;
+  applyI18n(lang);
+  document.title = `Nox — ${T('dash.title')}`;
+  $('qr').alt = T('conn.qrAlt');
+  ({ methods, onboarding, skills, levels } = await window.nox.getCatalog());
+}
+async function render(st) {
+  if (st.lang && st.lang !== lang) await setLang(st.lang);
   renderHeader(st); renderNow(st); renderToday(st); renderGame(st); renderAgenda(st); renderSteps(st); renderMemory(st); renderMethods(st); renderConnections(st); renderHistory(st);
 }
 
 (async () => {
-  ({ methods, onboarding, skills } = await window.nox.getCatalog());
-  render(await window.nox.getState());
+  const st = await window.nox.getState();
+  await setLang(st.lang || 'fr');
+  render(st);
   window.nox.onState(render);
 })();

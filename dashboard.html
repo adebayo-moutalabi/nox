@@ -154,86 +154,87 @@
 
   <main class="grid">
     <section class="card now span-8" aria-labelledby="nowTitle">
-      <h2 id="nowTitle">Maintenant</h2>
+      <h2 id="nowTitle" data-i18n="dash.now"></h2>
       <div id="nowBody"></div>
     </section>
 
     <section class="card span-4" aria-labelledby="todayTitle">
-      <h2 id="todayTitle">Aujourd'hui</h2>
+      <h2 id="todayTitle" data-i18n="dash.today"></h2>
       <div class="stats">
-        <div class="stat"><b id="sSteps">0</b><span>étapes faites</span></div>
-        <div class="stat"><b id="sFocus">0</b><span>min de focus</span></div>
-        <div class="stat"><b id="sTasks">0</b><span>tâches finies</span></div>
+        <div class="stat"><b id="sSteps">0</b><span data-i18n="dash.stepsDone"></span></div>
+        <div class="stat"><b id="sFocus">0</b><span data-i18n="dash.focusMin"></span></div>
+        <div class="stat"><b id="sTasks">0</b><span data-i18n="dash.tasksDone"></span></div>
       </div>
-      <p class="chart-title" id="chartTitle">Minutes de concentration, 7 derniers jours</p>
+      <p class="chart-title" id="chartTitle" data-i18n="dash.chart"></p>
       <div class="bars" id="bars" role="img" aria-describedby="chartTable"></div>
       <div class="bar-labels" id="barLabels" aria-hidden="true"></div>
       <table class="sr" id="chartTable"></table>
     </section>
 
     <section class="card span-6" aria-labelledby="gameTitle">
-      <h2 id="gameTitle">Progression</h2>
-      <div class="level"><div class="badge-lv" id="lvNum">1</div><div><b id="lvGrade">Étincelle</b><span id="lvNext"></span></div></div>
+      <h2 id="gameTitle" data-i18n="dash.progress"></h2>
+      <div class="level"><div class="badge-lv" id="lvNum">1</div><div><b id="lvGrade"></b><span id="lvNext"></span></div></div>
       <div class="xpbar" role="img" id="xpBar"><i id="xpFill"></i></div>
       <div class="skills" id="skills"></div>
     </section>
 
     <section class="card span-6" aria-labelledby="agendaTitle">
-      <h2 id="agendaTitle">Agenda des prochaines 24 h</h2>
+      <h2 id="agendaTitle" data-i18n="dash.agenda"></h2>
       <ul class="agenda" id="agenda"></ul>
     </section>
 
     <section class="card span-6" aria-labelledby="stepsTitle">
-      <h2 id="stepsTitle">Étapes</h2>
+      <h2 id="stepsTitle" data-i18n="dash.steps"></h2>
       <ul class="steps" id="steps"></ul>
     </section>
 
     <section class="card span-6" aria-labelledby="memTitle">
-      <h2 id="memTitle">Ce que Nox sait de toi</h2>
+      <h2 id="memTitle" data-i18n="dash.memory"></h2>
       <div class="profile" id="profile"></div>
       <ul class="facts" id="facts"></ul>
     </section>
 
     <section class="card span-12" aria-labelledby="methTitle">
-      <h2 id="methTitle">Méthodes de travail</h2>
+      <h2 id="methTitle" data-i18n="dash.methods"></h2>
       <div class="methods" id="methods"></div>
     </section>
 
     <section class="card span-12" aria-labelledby="connTitle">
-      <h2 id="connTitle">Connexions</h2>
+      <h2 id="connTitle" data-i18n="dash.connections"></h2>
       <div class="conns">
         <div class="conn" id="cOpenai">
-          <b>🎙 Voix OpenAI</b><span class="state" id="sOpenai"></span>
-          <small>Ta clé reste chiffrée sur ton PC. Sans clé, Nox tourne en mode démo.</small>
-          <form id="fOpenai"><input type="password" id="iOpenai" placeholder="sk-…" autocomplete="off"><button class="mini">Enregistrer</button></form>
+          <b data-i18n="conn.openai"></b><span class="state" id="sOpenai"></span>
+          <small data-i18n="conn.openai.help"></small>
+          <form id="fOpenai"><input type="password" id="iOpenai" placeholder="sk-…" autocomplete="off"><button class="mini" data-i18n="conn.save"></button></form>
         </div>
         <div class="conn" id="cAgenda">
-          <b>📅 Google Agenda</b><span class="state" id="sAgenda"></span>
-          <small>Google Agenda → Paramètres → ton agenda → « Adresse secrète au format iCal ». Rappels 60 et 30 min avant.</small>
-          <form id="fAgenda"><input id="iAgenda" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics"><button class="mini">Relier</button></form>
+          <b data-i18n="conn.calendar"></b><span class="state" id="sAgenda"></span>
+          <small data-i18n="conn.calendar.help"></small>
+          <form id="fAgenda"><input id="iAgenda" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics"><button class="mini" data-i18n="conn.link"></button></form>
         </div>
         <div class="conn" id="cGmail">
-          <b>📬 Gmail</b><span class="state" id="sGmail"></span>
-          <small>Crée un « mot de passe d'application » sur myaccount.google.com/apppasswords. Nox signale les mails importants et ceux que tu attends.</small>
-          <form id="fGmail"><input id="iGmailUser" placeholder="toi@gmail.com"><input type="password" id="iGmailPass" placeholder="mot de passe d'application" autocomplete="off"><button class="mini">Relier</button></form>
+          <b data-i18n="conn.gmail"></b><span class="state" id="sGmail"></span>
+          <small data-i18n="conn.gmail.help"></small>
+          <form id="fGmail"><input id="iGmailUser" placeholder="toi@gmail.com"><input type="password" id="iGmailPass" data-i18n-ph="conn.ph.gmailPass" autocomplete="off"><button class="mini" data-i18n="conn.link"></button></form>
           <ul class="watches" id="watches"></ul>
         </div>
         <div class="conn" id="cTelegram">
-          <b>📱 Telegram</b><span class="state" id="sTelegram"></span>
-          <small>Crée ton bot avec @BotFather, colle son jeton, puis scanne le QR code avec ton téléphone.</small>
-          <form id="fTelegram"><input type="password" id="iTelegram" placeholder="jeton du bot" autocomplete="off"><button class="mini">Relier</button></form>
-          <img id="qr" alt="QR code pour relier Telegram" hidden>
+          <b data-i18n="conn.telegram"></b><span class="state" id="sTelegram"></span>
+          <small data-i18n="conn.telegram.help"></small>
+          <form id="fTelegram"><input type="password" id="iTelegram" data-i18n-ph="conn.ph.bot" autocomplete="off"><button class="mini" data-i18n="conn.link"></button></form>
+          <img id="qr" alt="" hidden>
         </div>
       </div>
     </section>
 
     <section class="card span-12" aria-labelledby="histTitle">
-      <h2 id="histTitle">Historique</h2>
+      <h2 id="histTitle" data-i18n="dash.history"></h2>
       <ul class="history" id="history"></ul>
     </section>
   </main>
-  <p class="foot">Tout reste sur ton PC. Supprime un souvenir d'un clic sur ×.</p>
+  <p class="foot" data-i18n="dash.foot"></p>
 </div>
+<script src="i18n.js"></script>
 <script src="dashboard.js"></script>
 </body>
 </html>
