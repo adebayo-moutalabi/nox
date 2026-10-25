@@ -37,7 +37,8 @@
       "!tools/**",
       "!dist/**",
       "!*.md",
-      "!.gitattributes"
+      "!.gitattributes",
+      "!video/**"
     ],
     "win": {
       "target": [

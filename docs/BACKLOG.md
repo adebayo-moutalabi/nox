@@ -61,6 +61,7 @@ Tes retours d'abord (ce que tu veux ajouter, améliorer, mettre en avant). Piste
 - [ ] **Outils via MCP** : Notion, Slack, agenda…
 - [ ] **Apprentissage des schémas** de procrastination.
 - [ ] **Signature de l'installeur** (plus d'alerte SmartScreen).
+- [ ] **Version macOS** : plan complet dans [MACOS.md](MACOS.md) (adaptations du code, GitHub Actions, signature Apple, tests sur un vrai Mac).
 
 ## 6. Communication 🟢
 
