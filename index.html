@@ -137,6 +137,10 @@
   #input { display:none; width:200px; border:0; outline:0; border-radius:var(--radius-pill);
     padding:6px 12px; font-size:var(--text-md); background:var(--surface-solid); color:var(--ink); }
   #bar.typing #input { display:block; }
+  /* En ecriture : le champ prend la place des autres boutons (sinon il deborde de la fenetre) */
+  #bar.typing { width:280px; }
+  #bar.typing #input { flex:1; min-width:0; width:auto; }
+  #bar.typing button:not(#write) { display:none; }
 
   /* Panneaux (verre) */
   .panel { position:absolute; inset:8px 8px 60px 8px; background:var(--surface); border:1px solid var(--line);
