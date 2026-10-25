@@ -454,12 +454,12 @@ window.nox.onMail(async (m) => {
 // ---------- Reglages ----------
 $('settings').onclick = async () => {
   const st = await window.nox.getState();
-  $('pLang').value = st.lang; $('pMode').value = st.mode; $('pFirm').value = st.firmness; $('pWatch').checked = st.watchWindows;
+  $('pLang').value = st.lang; $('pSize').value = st.size || 'm'; $('pMode').value = st.mode; $('pFirm').value = st.firmness; $('pWatch').checked = st.watchWindows;
   $('prefs').classList.add('show');
 };
 $('pSave').onclick = async () => {
   const changed = $('pLang').value !== lang;
-  const st = await window.nox.setSettings({ lang: $('pLang').value, mode: $('pMode').value, firmness: $('pFirm').value, watchWindows: $('pWatch').checked, watchAsked: true });
+  const st = await window.nox.setSettings({ lang: $('pLang').value, size: $('pSize').value, mode: $('pMode').value, firmness: $('pFirm').value, watchWindows: $('pWatch').checked, watchAsked: true });
   $('prefs').classList.remove('show');
   if (changed) { await setLang(st.lang); if (Realtime.open) Realtime.close(); } // la voix reprend dans la nouvelle langue au prochain clic
   setMood(st.mode === 'repos' || st.mode === 'off' ? 'idle' : 'focus');
@@ -467,6 +467,7 @@ $('pSave').onclick = async () => {
 $('pReset').onclick = async () => { await window.nox.resetTask(); stopTimer(); $('prefs').classList.remove('show'); say(T('say.taskDone')); setMood('proud'); };
 $('pOnboard').onclick = async () => { $('prefs').classList.remove('show'); await window.nox.resetOnboarding(); runOnboarding(await window.nox.getState()); };
 $('pQuit').onclick = () => window.nox.quit();
+$('pHide').onclick = () => { $('prefs').classList.remove('show'); window.nox.hide(); };
 $('dashboard').onclick = () => window.nox.openDashboard();
 $('pDash').onclick = () => { $('prefs').classList.remove('show'); window.nox.openDashboard(); };
 

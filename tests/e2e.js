@@ -121,6 +121,26 @@ const bubbleText = (page) => page.locator('#bubble').innerText();
     check('Mail sans rapport ignore', !matchWatch({ query: 'Marie Dupont' }, { from: 'Newsletter <news@x.fr>', subject: 'Promo' }));
     check('Mail urgent repere', looksImportant({ subject: 'Rappel : facture à régler', text: '' }) && !looksImportant({ subject: 'Les nouveautés de la semaine', text: '' }));
 
+    // 5e) Fenetre de Nox : visible en entier, taille reglable, mode discret
+    const bounds = () => app.evaluate(({ BrowserWindow, screen }) => {
+      const w = BrowserWindow.getAllWindows().find((x) => x.webContents.getURL().endsWith('index.html'));
+      const b = w.getBounds(), wa = screen.getDisplayMatching(b).workArea;
+      return { ...b, visible: w.isVisible(), inside: b.x >= wa.x && b.y >= wa.y && b.x + b.width <= wa.x + wa.width && b.y + b.height <= wa.y + wa.height };
+    });
+    let b = await bounds();
+    check('Nox entierement dans la zone visible', b.inside && b.visible, JSON.stringify(b));
+    await mascot.evaluate(() => window.nox.setSettings({ size: 'l' }));
+    await mascot.waitForTimeout(400);
+    b = await bounds();
+    check('Taille grand : fenetre agrandie et toujours visible', b.width === 390 && b.inside, `${b.width}x${b.height}`);
+    await mascot.evaluate(() => window.nox.setSettings({ size: 'm' }));
+    await mascot.evaluate(() => window.nox.hide());
+    await mascot.waitForTimeout(400);
+    check('Mode discret : Nox cache', !(await bounds()).visible);
+    await mascot.evaluate(() => window.nox.show());
+    await mascot.waitForTimeout(400);
+    check('Mode discret : Nox rappele', (await bounds()).visible);
+
     // 6) Relance : Nox se souvient
     await app.close();
     ({ app, mascot } = await launch());

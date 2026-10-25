@@ -17,6 +17,8 @@ contextBridge.exposeInMainWorld('nox', {
   newTask: (text) => ipcRenderer.invoke('nox:newTask', text),
   startTimer: (min) => ipcRenderer.send('nox:startTimer', min),
   openDashboard: () => ipcRenderer.send('nox:openDashboard'),
+  hide: () => ipcRenderer.send('nox:hide'),
+  show: () => ipcRenderer.send('nox:show'),
   onState: (cb) => ipcRenderer.on('nox:state', (_e, d) => cb(d)),
   onStartTimer: (cb) => ipcRenderer.on('nox:startTimer', (_e, m) => cb(m)),
   onAskWatch: (cb) => ipcRenderer.on('nox:askWatch', () => cb()),

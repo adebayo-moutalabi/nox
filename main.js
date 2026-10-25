@@ -35,7 +35,7 @@ const APPS = { word: 'winword', excel: 'excel', bloc: 'notepad', notepad: 'notep
 // Sites de travail que Nox peut ouvrir sans que l'utilisateur ait cite le domaine
 const SAFE_SITES = ['docs.google.com', 'drive.google.com', 'notion.so', 'office.com', 'github.com', 'chatgpt.com'];
 // Reglages modifiables depuis l'interface (le reste de l'etat est gere ici)
-const SETTINGS_KEYS = ['mode', 'firmness', 'watchWindows', 'watchAsked', 'method', 'lang'];
+const SETTINGS_KEYS = ['mode', 'firmness', 'watchWindows', 'watchAsked', 'method', 'lang', 'size'];
 
 // Dossier de donnees isole pour les tests (avant le verrou, qui en depend)
 if (process.env.NOX_USER_DATA) app.setPath('userData', process.env.NOX_USER_DATA);
@@ -59,6 +59,8 @@ let state = {
   facts: [], journal: [], stats: {}, method: null,
   demoMode: false,            // essayer sans cle OpenAI (cerveau local)
   lang: null,                 // fr | en : interface et conversation (par defaut, langue du systeme)
+  size: 'm',                  // taille de Nox : s | m | l
+  hidden: false,              // mode discret : Nox cache, rappele par l'icone pres de l'horloge ou Ctrl+Alt+N
   secrets: {},                // cle OpenAI, mot de passe Gmail, jeton Telegram : chiffres (safeStorage)
   calendar: { url: '', notified: {}, lastReview: '' },
   mail: { user: '', lastUid: 0, watches: [], pending: [] },
@@ -127,16 +129,76 @@ function broadcast(channel, payload) { for (const w of [win, dash]) if (w && !w.
 
 // ---------- Fenetres ----------
 const WEB_PREFS = { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, autoplayPolicy: 'no-user-gesture-required' };
+// Taille de Nox : petit, moyen, grand (fenetre et contenu agrandis ensemble)
+const SIZES = { s: 0.8, m: 1, l: 1.3 };
+const BASE_W = 300, BASE_H = 430; // assez haut pour une carte de question complete au-dessus de la mascotte
+const zoom = () => SIZES[state.size] || 1;
+
+// Place la fenetre entierement dans la zone visible de l'ecran (barre des taches exclue).
+// Sans position connue : en bas a droite. Sinon : on garde le coin bas-droit ou il etait.
+function placeWindow(first = false) {
+  if (!win || win.isDestroyed()) return;
+  const W = Math.round(BASE_W * zoom()), H = Math.round(BASE_H * zoom());
+  const old = win.getBounds();
+  const anchor = first ? null : { x: old.x + old.width, y: old.y + old.height };
+  const wa = screen.getDisplayNearestPoint(anchor || screen.getCursorScreenPoint()).workArea;
+  let x = anchor ? anchor.x - W : wa.x + wa.width - W - 16;
+  let y = anchor ? anchor.y - H : wa.y + wa.height - H - 8;
+  x = Math.min(Math.max(x, wa.x), wa.x + wa.width - W);
+  y = Math.min(Math.max(y, wa.y), wa.y + wa.height - H);
+  win.setBounds({ x, y, width: W, height: H });
+  win.webContents.setZoomFactor(zoom());
+}
+
 function createWindow() {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  const W = 300, H = 430; // assez haut pour une carte de question complete au-dessus de la mascotte
+  const wa = screen.getPrimaryDisplay().workArea;
   win = new BrowserWindow({
-    width: W, height: H, x: width - W - 16, y: height - H - 8,
+    width: BASE_W, height: BASE_H, x: wa.x + wa.width - BASE_W - 16, y: wa.y + wa.height - BASE_H - 8,
     frame: false, transparent: true, resizable: false, alwaysOnTop: true,
-    skipTaskbar: true, hasShadow: false, webPreferences: WEB_PREFS
+    skipTaskbar: true, hasShadow: false, show: false, webPreferences: WEB_PREFS
   });
   win.setAlwaysOnTop(true, 'floating');
   win.loadFile('index.html');
+  win.webContents.on('did-finish-load', () => placeWindow(true));
+  // Toujours au premier plan, sans voler le focus de ce que l'utilisateur fait
+  win.once('ready-to-show', () => { if (!state.hidden) { win.showInactive(); win.moveTop(); } });
+  // Ecran change (branche, debranche, resolution) : Nox reste visible
+  screen.on('display-metrics-changed', () => placeWindow());
+  screen.on('display-removed', () => placeWindow(true));
+}
+
+// ---------- Mode discret : icone pres de l'horloge + raccourci ----------
+let tray = null;
+function toggleNox(show = win && !win.isVisible()) {
+  if (!win || win.isDestroyed()) return;
+  state.hidden = !show;
+  if (show) { win.showInactive(); win.moveTop(); placeWindow(); } else win.hide();
+  saveState();
+  buildTray();
+}
+function setSize(size) {
+  if (!SIZES[size]) return;
+  state.size = size;
+  placeWindow();
+  saveState();
+  buildTray();
+}
+function buildTray() {
+  const { Tray, Menu, nativeImage } = require('electron');
+  if (!tray) {
+    const icon = nativeImage.createFromPath(path.join(__dirname, 'assets', 'icon.png')).resize({ width: 32, height: 32 });
+    tray = new Tray(icon);
+    tray.setToolTip(NAME);
+    tray.on('click', () => toggleNox());
+  }
+  const visible = win && !win.isDestroyed() && win.isVisible();
+  tray.setContextMenu(Menu.buildFromTemplate([
+    { label: tr(visible ? 'tray.hide' : 'tray.show'), click: () => toggleNox(!visible) },
+    { label: tr('tray.dashboard'), click: () => openDashboard() },
+    { label: tr('prefs.size'), submenu: ['s', 'm', 'l'].map((k) => ({ label: tr(`size.${k}`), type: 'radio', checked: (state.size || 'm') === k, click: () => setSize(k) })) },
+    { type: 'separator' },
+    { label: tr('tray.quit'), click: () => app.quit() }
+  ]));
 }
 
 // Tableau de bord : vraie fenetre, matiere Mica sous Windows 11
@@ -651,7 +713,10 @@ ipcMain.handle('nox:setSettings', (_e, s) => {
   const before = state.method;
   for (const k of SETTINGS_KEYS) if (k in s) state[k] = s[k];
   if (s.method !== undefined && !memory.METHODS[state.method]) state.method = null;
+  if (!SIZES[state.size]) state.size = 'm';
   saveState(); syncWindowWatcher();
+  if ('size' in s) placeWindow();
+  if ('size' in s || 'lang' in s) buildTray();
   // Nouvelle methode choisie : Nox l'annonce et propose le minuteur adapte
   if (s.method && s.method !== before && state.profile.onboardedAt) {
     const m = catalog().methods[s.method];
@@ -686,6 +751,8 @@ ipcMain.handle('nox:newTask', async (_e, text) => {
 });
 ipcMain.on('nox:startTimer', (_e, min) => send('nox:startTimer', Number(min) || memory.timerMinutes(state)));
 ipcMain.on('nox:openDashboard', () => openDashboard());
+ipcMain.on('nox:hide', () => toggleNox(false));
+ipcMain.on('nox:show', () => toggleNox(true));
 // Salutation au lancement : Nox parle en premier
 ipcMain.handle('nox:greet', () => {
   const h = new Date().getHours();
@@ -720,6 +787,11 @@ app.whenReady().then(() => {
   loadState();
   session.defaultSession.setPermissionRequestHandler((_wc, perm, cb) => cb(perm === 'media'));
   createWindow();
+  buildTray();
+  // Ctrl+Alt+N : cacher / rappeler Nox depuis n'importe ou
+  const { globalShortcut } = require('electron');
+  globalShortcut.register('CommandOrControl+Alt+N', () => toggleNox());
+  app.on('will-quit', () => globalShortcut.unregisterAll());
   syncWindowWatcher();
   setInterval(tick, 3000);
   // Connexions : agenda toutes les 5 min, mails toutes les 3 min, Telegram en ecoute continue

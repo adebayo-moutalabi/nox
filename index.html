@@ -153,6 +153,8 @@
   .panel p { color:var(--ink-soft); line-height:1.45; }
   .panel b { color:var(--ink); }
   .panel label { display:flex; gap:6px; align-items:flex-start; }
+  .panel label:has(select) { align-items:center; }
+  .panel label:has(select) > span { flex:none; min-width:52px; }
   .panel select, .panel input:not([type]) { width:100%; padding:5px 8px; border-radius:var(--radius-sm); border:1px solid var(--line);
     background:var(--surface-2); color:var(--ink); font-size:var(--text-sm); }
   .panel input[type="checkbox"] { accent-color:var(--nox-blue); margin-top:2px; }
@@ -194,10 +196,13 @@
       <select id="pMode"><option value="travail" data-i18n="mode.travail"></option><option value="etudes" data-i18n="mode.etudes"></option><option value="repos" data-i18n="mode.repos"></option><option value="off" data-i18n="mode.off"></option></select></label>
     <label><span data-i18n="prefs.firm"></span>
       <select id="pFirm"><option value="douce" data-i18n="firm.douce"></option><option value="normale" data-i18n="firm.normale"></option><option value="stricte" data-i18n="firm.stricte"></option></select></label>
+    <label><span data-i18n="prefs.size"></span>
+      <select id="pSize"><option value="s" data-i18n="size.s"></option><option value="m" data-i18n="size.m"></option><option value="l" data-i18n="size.l"></option></select></label>
     <label><input type="checkbox" id="pWatch"> <span data-i18n="prefs.watch"></span></label>
     <button class="ghost" id="pDash" data-i18n="prefs.dash"></button>
     <button class="ghost" id="pOnboard" data-i18n="prefs.onboard"></button>
     <button class="ghost" id="pReset" data-i18n="prefs.reset"></button>
+    <button class="ghost" id="pHide" data-i18n="prefs.hide"></button>
     <button class="ghost" id="pQuit" data-i18n="prefs.quit"></button>
     <button class="go" id="pSave" data-i18n="prefs.ok"></button>
   </div>
