@@ -705,7 +705,8 @@ app.whenReady().then(() => {
   setTimeout(checkMail, 12000); setInterval(checkMail, 3 * 60000);
   if (getSecret('telegram')) telegramLoop();
   // En dev (npm start), on n'inscrit pas Electron au demarrage de Windows
-  if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: true });
+  // (ni pendant les tests, qui utilisent un dossier de donnees temporaire)
+  if (app.isPackaged && !process.env.NOX_USER_DATA) app.setLoginItemSettings({ openAtLogin: true });
 });
 // Fermer le tableau de bord ne quitte pas Nox
 app.on('window-all-closed', () => app.quit());
