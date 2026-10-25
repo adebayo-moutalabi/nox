@@ -9,7 +9,7 @@ const METHODS = {
     prompt: "Methode regle des 5 minutes : propose toujours un minuteur de 5 min ; a la fin, demande s'il veut continuer, sans pression." },
   pomodoro: { name: 'Pomodoro', emoji: '🍅', focusMin: 25, breakMin: 5, checkInMin: 0,
     short: '25 min de focus, 5 min de pause. On répète.',
-    prompt: 'Methode Pomodoro : minuteur de focus a la duree preferee, puis propose une vraie pause de 5 min.' },
+    prompt: 'Methode Pomodoro : seances de 25 min de focus, puis une vraie pause de 5 min.' },
   body_doubling: { name: 'Body doubling', emoji: '👥', focusMin: 25, breakMin: 5, checkInMin: 10,
     short: 'Je reste avec toi et je prends des nouvelles.',
     prompt: 'Methode body doubling : tu travailles "a cote" de lui ; prends des nouvelles regulierement, tres brievement, sans juger.' },
@@ -182,7 +182,7 @@ function summary(state) {
   if (p.name) lines.push(`Prenom : ${p.name}.`);
   if (p.blocker) lines.push(`Il ${LABELS.blocker[p.blocker] || p.blocker}.`);
   if (p.energy) lines.push(`Energie : ${LABELS.energy[p.energy] || p.energy}.`);
-  if (p.focusMin) lines.push(`Concentration confortable : ${p.focusMin} min (duree par defaut du minuteur).`);
+  if (p.focusMin) lines.push(`Concentration confortable : ${p.focusMin} min.`);
   if (m) lines.push(`Methode choisie : ${m.name}. ${m.prompt}`);
   if (state.facts.length) lines.push(`Ce que tu sais de lui : ${state.facts.slice(-12).map((f) => f.text).join(' ; ')}.`);
   if (state.notes.length) lines.push(`Ses notes (les plus recentes, a relire s'il le demande) : ${state.notes.slice(-8).map((n) => `"${n.text}"`).join(' ; ')}.`);

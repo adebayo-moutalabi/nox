@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('nox', {
   startTimer: (min) => ipcRenderer.send('nox:startTimer', min),
   openDashboard: () => ipcRenderer.send('nox:openDashboard'),
   hide: () => ipcRenderer.send('nox:hide'),
+  testWindow: (title) => ipcRenderer.send('nox:test:window', title), // sans effet hors mode test
   openApp: (id) => ipcRenderer.invoke('nox:openApp', id),
   onSuggestApp: (cb) => ipcRenderer.on('nox:suggestApp', (_e, a) => cb(a)),
   show: () => ipcRenderer.send('nox:show'),

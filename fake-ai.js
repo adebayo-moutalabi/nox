@@ -25,6 +25,7 @@ const R = {
     window: (w) => `Tu es sur « ${w} ». C'est bien là que tu voulais être ?`,
     can: "Je découpe tes tâches en petites étapes, je lance ou j'arrête un minuteur, j'ouvre la bonne appli, je prends tes notes et je te ramène quand tu décroches. Je ne lis pas encore le contenu de tes pages.",
     timerStopped: 'Minuteur arrêté. On reprend quand tu veux.',
+    drift: 'Hé, YouTube peut attendre ta pause 😉 On revient sur ton étape ?',
     timerStarted: (m) => `C'est parti pour ${m} minutes ⏱`,
     chat: ["Je t'écoute 🙂 Tu bosses sur quoi en ce moment ?", "Ah, raconte ! Et côté travail, ça avance ?", "Je suis là. Si tu as une tâche qui traîne, dis-la moi, on la découpe ensemble."]
   },
@@ -52,6 +53,7 @@ const R = {
     window: (w) => `You're on "${w}". Is that where you meant to be?`,
     can: "I break your tasks into tiny steps, start or stop a timer, open the right app, take your notes and bring you back when you drift. I can't read the content of your pages yet.",
     timerStopped: 'Timer stopped. We can pick up whenever you like.',
+    drift: "Hey, YouTube can wait for your break 😉 Shall we get back to your step?",
     timerStarted: (m) => `${m} minutes, here we go ⏱`,
     chat: ["I'm listening 🙂 What are you working on right now?", 'Oh, tell me more! And how is work going?', "I'm here. Got a task that keeps slipping? Tell me and we'll break it down together."]
   }
@@ -70,6 +72,7 @@ function fakeThink(state, text, ctx = {}) {
     if (t.includes('minuteur')) return { reply: r.timer, mood: 'proud' };
     if (t.includes('revient')) return { reply: r.back(name, step), mood: 'happy' };
     if (t.includes('nouvelles')) return { reply: r.checkIn, mood: 'focus' };
+    if (t.includes('ramene-le')) return { reply: r.drift, mood: 'worried' };
     if (t.includes('agenda')) { const ev = text.match(/"([^"]+)"/); return { reply: r.agenda(ev && ev[1]), mood: 'worried' }; }
     if (t.includes('derniere etape')) return { reply: r.taskDone, mood: 'proud' };
     if (t.includes('coche une etape')) return { reply: r.stepDone(step), mood: 'proud' };

@@ -91,7 +91,8 @@ async function handle(out) {
 
 async function ask(text) {
   if (!text.trim()) return;
-  if (pendingAnswer) { pendingAnswer(text.trim()); return; } // reponse parlee/ecrite a une question
+  if (pendingAnswer) { pendingAnswer(text.trim()); return; } // reponse parlee/ecrite a une question de l'onboarding
+  if (cardDismiss) cardDismiss(); // une autre carte (appli, pause…) laisse la place a la conversation
   if (mood === 'idle') setMood('focus');
   if (mood === 'idle') setMood('focus');
   setAct('thinking');
@@ -150,7 +151,7 @@ input.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return;
   const t = input.value.trim(); input.value = ''; bar.classList.remove('typing');
   if (!t) return;
-  if (Realtime.open) { window.nox.remember('user', t); setAct('thinking'); Realtime.sendText(t); } else ask(t);
+  if (Realtime.open) { if (cardDismiss) cardDismiss(); window.nox.remember('user', t); setAct('thinking'); Realtime.sendText(t); } else ask(t);
 });
 
 // Evenement systeme : injecte dans la session vocale si elle est ouverte, sinon via le chat
@@ -195,7 +196,7 @@ Realtime.on = {
     rtAnalyser.fftSize = 512;
     actx.createMediaStreamSource(s).connect(rtAnalyser); // mesure seulement : l'element audio joue deja la voix
   },
-  listening() { lastVoiceAt = Date.now(); stopSpeaking(); if (mood === 'idle') setMood('focus'); setAct('listening'); },
+  listening() { if (cardDismiss) cardDismiss(); lastVoiceAt = Date.now(); stopSpeaking(); if (mood === 'idle') setMood('focus'); setAct('listening'); },
   thinking() { setAct('thinking'); },
   userText(t) { window.nox.remember('user', t); },
   caption(text) { say(text, currentStep); },
@@ -357,11 +358,13 @@ let lastMove = '';
 // ---------- Cartes de question (onboarding, permissions) ----------
 // Une question a la fois, grosses pastilles, toujours "Passer". Elle est aussi dite a voix haute,
 // et on peut repondre en parlant (clic sur la mascotte) ou en ecrivant.
-let card = null, pendingAnswer = null, methods = {}, currentMethod = null;
+let card = null, pendingAnswer = null, cardDismiss = null, methods = {}, currentMethod = null;
 // Une seule carte a la fois : les suivantes (mail, recompense) attendent leur tour
 let cardQueue = Promise.resolve();
 function showCardQueued(opts) { const p = cardQueue.then(() => showCard(opts)); cardQueue = p.catch(() => {}); return p; }
-function showCard({ text, options = [], input = false, secret = false, error = '', step = 0, total = 0, skip = T('card.skip') }) {
+// capture : la carte attend une reponse libre (onboarding). Sinon (appli, pause, mail, recompense),
+// elle s'efface des que l'utilisateur parle ou ecrit a Nox, et son message passe normalement.
+function showCard({ text, options = [], input = false, secret = false, error = '', step = 0, total = 0, skip = T('card.skip'), capture = false }) {
   return new Promise((resolve) => {
     card = true;
     clearTimeout(hideTimer);
@@ -376,7 +379,8 @@ function showCard({ text, options = [], input = false, secret = false, error = '
     }
     const q = document.createElement('p'); q.className = 'q'; q.textContent = text; bubble.append(q);
     if (error) { const er = document.createElement('p'); er.className = 'err'; er.textContent = error; bubble.append(er); }
-    const finish = (v) => { card = null; pendingAnswer = null; bubble.classList.remove('card'); resolve(v); };
+    const finish = (v) => { card = null; pendingAnswer = null; cardDismiss = null; bubble.classList.remove('card'); resolve(v); };
+    cardDismiss = capture ? null : () => finish(null);
     const pills = document.createElement('div'); pills.className = 'pills';
     for (const [value, label] of options) {
       const b = document.createElement('button'); b.className = 'pill'; b.textContent = label;
@@ -395,7 +399,7 @@ function showCard({ text, options = [], input = false, secret = false, error = '
     if (options.length) bubble.append(pills);
     if (skip) { const s = document.createElement('button'); s.className = 'skip'; s.textContent = skip; s.onclick = () => finish(null); bubble.append(s); }
     // Reponse parlee ou ecrite dans la barre : on la rapproche d'une pastille
-    pendingAnswer = (said) => {
+    if (capture) pendingAnswer = (said) => {
       const low = said.toLowerCase();
       const hit = options.find(([v, l]) => low.includes(String(l).toLowerCase().split(' ')[0]) || low.includes(String(v)));
       if (hit) finish(hit[0]); else if (input) finish(said.replace(/^(je m'appelle|moi c'est|c'est)\s*/i, '').replace(/[.!]$/, ''));
@@ -414,16 +418,16 @@ async function setLang(l) {
 async function runOnboarding(st) {
   setMood('happy');
   // 1) Langue : pre-reglee sur celle de Windows, l'utilisateur confirme ou change
-  const chosen = await showCard({ text: T('card.lang'), options: [['fr', 'Français'], ['en', 'English']], skip: null });
+  const chosen = await showCard({ text: T('card.lang'), options: [['fr', 'Français'], ['en', 'English']], skip: null, capture: true });
   await window.nox.setSettings({ lang: chosen });
   await setLang(chosen);
   const { onboarding } = await window.nox.getCatalog();
-  await showCard({ text: T('ob.hello', { name: st.name, n: onboarding.length }), options: [['go', T('ob.go')]], skip: null });
+  await showCard({ text: T('ob.hello', { name: st.name, n: onboarding.length }), options: [['go', T('ob.go')]], skip: null, capture: true });
   // 2) Cle OpenAI de l'utilisateur (chiffree sur son PC), ou mode demo sans cle
   if (!st.hasKey && !st.testMode && !st.demoMode) {
     let error = '';
     for (;;) {
-      const v = await showCard({ text: T('ob.key'), input: true, secret: true, error, options: [['demo', T('ob.demo')]], skip: null });
+      const v = await showCard({ text: T('ob.key'), input: true, secret: true, error, options: [['demo', T('ob.demo')]], skip: null, capture: true });
       if (v === 'demo' || v === null) { await window.nox.setDemo(true); break; }
       const r = await window.nox.setApiKey(v);
       if (r.ok) break;
@@ -436,7 +440,7 @@ async function runOnboarding(st) {
     const q = onboarding[i];
     const text = q.key === 'blocker' && answers.name ? T('ob.blockerNamed', { name: answers.name }) : q.ask;
     flash('jump', 450);
-    const v = await showCard({ text, options: q.options || [], input: q.input, step: i + 1, total: onboarding.length });
+    const v = await showCard({ text, options: q.options || [], input: q.input, step: i + 1, total: onboarding.length, capture: true });
     if (v !== null) answers[q.key] = v;
   }
   await window.nox.saveProfile(answers);

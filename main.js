@@ -244,7 +244,7 @@ Facon de parler :
 - Ton humeur (mood) colore ta voix et tes mots : shy = timide, un peu gene ; love = touche, tres chaleureux ; happy = enjoue ; worried = doux, rassurant ; proud = fier de lui ; tired = calme, lent, compatissant ; focus = clair et pose. Une emotion est passagere : des que la conversation passe a autre chose, reviens a focus ou happy.
 - Emotions a montrer : compliment ("t'es mignon", "cute") -> shy, remercie timidement ; affection ou gros merci -> love ; il est fatigue -> tired, compatis et propose une pause ; une blague -> happy.
 - Fermete : ${state.firmness}. Mode : ${state.mode}.
-Ce que tu sais faire (dis-le precisement si on te le demande, sans inventer) :
+Ce que tu sais faire (si on te le demande : resume en 2 phrases max, les 3 ou 4 choses les plus utiles pour lui, sans inventer) :
 - decouper une tache en micro-etapes de 2 a 10 min et suivre l'avancement ;
 - lancer, arreter ou relancer le minuteur (duree par defaut : ${memory.timerMinutes(state)} min) ;
 - ouvrir une appli (word, excel, powerpoint, vscode, notepad, explorateur) ou un site qu'il cite ;
@@ -592,7 +592,7 @@ async function telegramLoop() {
 // ---------- Surveillance douce (avec permission) ----------
 // Le processus ne tourne que si l'utilisateur a donne son accord
 function syncWindowWatcher() {
-  if (state.watchWindows && !watcher) startWindowWatcher();
+  if (state.watchWindows && !watcher && !process.env.NOX_NO_WATCHER) startWindowWatcher();
   if (!state.watchWindows && watcher) { watcher.kill(); watcher = null; currentTitle = ''; }
 }
 
@@ -784,6 +784,8 @@ ipcMain.handle('nox:newTask', async (_e, text) => {
 ipcMain.on('nox:startTimer', (_e, min) => send('nox:startTimer', Number(min) || memory.timerMinutes(state)));
 ipcMain.on('nox:openDashboard', () => openDashboard());
 ipcMain.on('nox:hide', () => toggleNox(false));
+// Mode test uniquement : simuler le titre de la fenetre active (demo automatique du decrochage)
+if (FAKE_AI) ipcMain.on('nox:test:window', (_e, title) => { currentTitle = String(title || ''); });
 ipcMain.handle('nox:openApp', (_e, id) => apps.openApp(id, shell));
 ipcMain.on('nox:show', () => toggleNox(true));
 // Salutation au lancement : Nox parle en premier
